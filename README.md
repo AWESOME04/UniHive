@@ -1,5 +1,7 @@
 # UniHive
 
+![Image](https://github.com/user-attachments/assets/bad9df85-ceb6-4876-aaa6-3e635158ac86)
+
 > A university-specific services platform that connects students for tasks, tutoring, and item exchange.
 
 UniHive is a comprehensive application that allows university students to post tasks, offer services, and trade items within their verified university community. Students can earn money by completing tasks for others or save time by outsourcing their tasks to fellow students.
@@ -130,8 +132,8 @@ Coming soon...
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/AWESOME04"><img src="https://github.com/AWESOME04.png" width="100px;" alt="Evans Acheampong"/><br /><sub><b>Evans Acheampong</b></sub></a><br />Frontend & Hardware</td>
-    <td align="center"><a href="https://github.com/Mintahandrews"><img src="https://github.com/mikkayadu.png" width="100px;" alt="Andrews Mintah"/><br /><sub><b>Michael Adu-Gyamfi</b></sub></a><br />Backend & ML</td>
+     <td align="center"><a href="https://github.com/Mintahandrews"><img src="https://github.com/Mintahandrews.png" width="100px;" alt="Andrews Mintah"/><br /><sub><b>Andrews Mintah</b></sub></a><br />Frontend</td>
+    <td align="center"><a href="https://github.com/AWESOME04"><img src="https://github.com/AWESOME04.png" width="100px;" alt="Evans Acheampong"/><br /><sub><b>Evans Acheampong</b></sub></a><br />Backend</td>
   </tr>
 </table>
 
