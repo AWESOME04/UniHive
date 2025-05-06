@@ -7,16 +7,15 @@ import routes from './routes';
 import { sequelize } from './config/database';
 import setupAssociations from './models/index';
 
-// Load environment variables
 dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(helmet()); // Security headers
+app.use(helmet());
 app.use(cors());
-app.use(morgan('dev')); // Logging
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,13 +46,11 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('Database connection has been established successfully.');
     
-    // Setup associations between models
     setupAssociations();
     console.log('Model associations initialized successfully.');
     
-    // Force sync models with database (this will drop and recreate tables)
-    await sequelize.sync({ force: true });
-    console.log('Database synchronized successfully (tables recreated).');
+    await sequelize.sync({ alter: true });
+    console.log('Database synchronized successfully (tables updated if needed).');
     
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
