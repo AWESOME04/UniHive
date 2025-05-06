@@ -1,29 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
-import { Hive, HiveType, EssentialsHive } from '../models';
+import { Hive, HiveType, ArchiveHive } from '../models';
 import { sequelize } from '../config/database';
 import { Op } from 'sequelize';
 
-// Create a new Essentials Hive with image upload support
-export const createEssentialsHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// Create a new Archive Hive with file upload support
+export const createArchiveHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
   try {
     const userId = req.user.id;
     const { 
       title, 
-      description, 
-      price,
-      condition,
-      brand,
-      purchaseDate,
-      itemCategory,
-      photos,
-      pickupLocation
+      description,
+      courseCode,
+      resourceType,
+      professor,
+      semester,
+      year,
+      fileUrl,
+      fileFormat
     } = req.body;
     
-    // Find the Essentials hive type
+    // Find the Archive hive type
     const hiveType = await HiveType.findOne({
-      where: { name: 'Essentials' },
+      where: { name: 'Archive' },
       transaction
     });
     
@@ -31,7 +31,7 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
       await transaction.rollback();
       res.status(404).json({
         status: 'error',
-        message: 'Essentials hive type not found'
+        message: 'Archive hive type not found'
       });
       return;
     }
@@ -40,21 +40,24 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
     const hive = await Hive.create({
       title,
       description,
-      price,
+      price: 0,
       status: 'open',
       postedById: userId,
       hiveTypeId: hiveType.id
     }, { transaction });
     
-    // Create essentials specific details
-    await EssentialsHive.create({
+    // Create archive specific details
+    await ArchiveHive.create({
       hiveId: hive.id,
-      condition,
-      brand,
-      purchaseDate: purchaseDate ? new Date(purchaseDate) : null,
-      itemCategory,
-      photos: Array.isArray(photos) ? photos : photos ? [photos] : [],
-      pickupLocation
+      courseCode,
+      resourceType,
+      professor,
+      semester,
+      year,
+      fileFormat,
+      fileUrl,
+      downloadCount: 0,
+      rating: 0
     }, { transaction });
     
     await transaction.commit();
@@ -64,29 +67,29 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
       include: [
         { model: HiveType },
         { 
-          model: EssentialsHive,
-          as: 'essentialsDetails'
+          model: ArchiveHive,
+          as: 'archiveDetails'
         }
       ]
     });
     
     res.status(201).json({
       status: 'success',
-      message: 'Essentials listing created successfully',
+      message: 'Archive resource created successfully',
       data: completeHive
     });
   } catch (error) {
     await transaction.rollback();
-    console.error('Error creating essentials hive:', error);
+    console.error('Error creating archive hive:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to create essentials listing'
+      message: 'Failed to create archive resource'
     });
   }
 };
 
-// Update an Essentials Hive
-export const updateEssentialsHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// Update an Archive Hive
+export const updateArchiveHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
   try {
@@ -94,14 +97,14 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
     const userId = req.user.id;
     const { 
       title, 
-      description, 
-      price,
-      condition,
-      brand,
-      purchaseDate,
-      itemCategory,
-      photos,
-      pickupLocation
+      description,
+      courseCode,
+      resourceType,
+      professor,
+      semester,
+      year,
+      fileFormat,
+      fileUrl
     } = req.body;
     
     // Find the hive
@@ -121,7 +124,7 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
       await transaction.rollback();
       res.status(403).json({
         status: 'error',
-        message: 'You are not authorized to update this listing'
+        message: 'You are not authorized to update this resource'
       });
       return;
     }
@@ -129,34 +132,34 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
     // Update main hive record
     if (title) hive.title = title;
     if (description) hive.description = description;
-    if (price) hive.price = price;
     
     await hive.save({ transaction });
     
-    // Find and update essentials details
-    const essentialsDetails = await EssentialsHive.findOne({
+    // Find and update archive details
+    const archiveDetails = await ArchiveHive.findOne({
       where: { hiveId: id },
       transaction
     });
     
-    if (!essentialsDetails) {
+    if (!archiveDetails) {
       await transaction.rollback();
       res.status(404).json({
         status: 'error',
-        message: 'Essentials details not found'
+        message: 'Archive details not found'
       });
       return;
     }
     
-    // Update essentials specific fields
-    if (condition) essentialsDetails.condition = condition;
-    if (brand) essentialsDetails.brand = brand;
-    if (purchaseDate) essentialsDetails.purchaseDate = new Date(purchaseDate);
-    if (itemCategory) essentialsDetails.itemCategory = itemCategory;
-    if (photos) essentialsDetails.photos = photos;
-    if (pickupLocation) essentialsDetails.pickupLocation = pickupLocation;
+    // Update archive specific fields
+    if (courseCode) archiveDetails.courseCode = courseCode;
+    if (resourceType) archiveDetails.resourceType = resourceType;
+    if (professor) archiveDetails.professor = professor;
+    if (semester) archiveDetails.semester = semester;
+    if (year) archiveDetails.year = year;
+    if (fileFormat) archiveDetails.fileFormat = fileFormat;
+    if (fileUrl) archiveDetails.fileUrl = fileUrl;
     
-    await essentialsDetails.save({ transaction });
+    await archiveDetails.save({ transaction });
     
     await transaction.commit();
     
@@ -165,49 +168,48 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
       include: [
         { model: HiveType },
         { 
-          model: EssentialsHive,
-          as: 'essentialsDetails'
+          model: ArchiveHive,
+          as: 'archiveDetails'
         }
       ]
     });
     
     res.status(200).json({
       status: 'success',
-      message: 'Essentials listing updated successfully',
+      message: 'Archive resource updated successfully',
       data: updatedHive
     });
   } catch (error) {
     await transaction.rollback();
-    console.error('Error updating essentials hive:', error);
+    console.error('Error updating archive hive:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to update essentials listing'
+      message: 'Failed to update archive resource'
     });
   }
 };
 
-// Get all Essentials Hives with filter options
-export const getAllEssentialsHives = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// Get all Archive Hives with filter options
+export const getAllArchiveHives = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { 
-      condition, 
-      itemCategory, 
-      minPrice, 
-      maxPrice,
+      courseCode, 
+      resourceType, 
+      professor,
       search,
       limit = 10,
       offset = 0
     } = req.query;
     
-    // Find the Essentials hive type
+    // Find the Archive hive type
     const hiveType = await HiveType.findOne({
-      where: { name: 'Essentials' }
+      where: { name: 'Archive' }
     });
     
     if (!hiveType) {
       res.status(404).json({
         status: 'error',
-        message: 'Essentials hive type not found'
+        message: 'Archive hive type not found'
       });
       return;
     }
@@ -215,13 +217,6 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
     const whereClause: any = {
       hiveTypeId: hiveType.id
     };
-    
-    // Filter by price range
-    if (minPrice || maxPrice) {
-      whereClause.price = {};
-      if (minPrice) whereClause.price[Op.gte] = Number(minPrice);
-      if (maxPrice) whereClause.price[Op.lte] = Number(maxPrice);
-    }
     
     // Search in title or description
     if (search) {
@@ -231,16 +226,21 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       ];
     }
     
-    const essentialsWhere: any = {};
+    const archiveWhere: any = {};
     
-    // Filter by condition
-    if (condition) {
-      essentialsWhere.condition = condition;
+    // Filter by courseCode
+    if (courseCode) {
+      archiveWhere.courseCode = courseCode;
     }
     
-    // Filter by item category
-    if (itemCategory) {
-      essentialsWhere.itemCategory = itemCategory;
+    // Filter by resourceType
+    if (resourceType) {
+      archiveWhere.resourceType = resourceType;
+    }
+    
+    // Filter by professor
+    if (professor) {
+      archiveWhere.professor = { [Op.iLike]: `%${professor}%` };
     }
     
     const hives = await Hive.findAndCountAll({
@@ -250,9 +250,9 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       include: [
         { model: HiveType },
         { 
-          model: EssentialsHive,
-          as: 'essentialsDetails',
-          where: essentialsWhere
+          model: ArchiveHive,
+          as: 'archiveDetails',
+          where: archiveWhere
         }
       ],
       order: [['createdAt', 'DESC']]
@@ -271,10 +271,10 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       }
     });
   } catch (error) {
-    console.error('Error fetching essentials hives:', error);
+    console.error('Error fetching archive hives:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to fetch essentials listings'
+      message: 'Failed to fetch archive resources'
     });
   }
 };

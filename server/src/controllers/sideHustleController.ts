@@ -1,29 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
-import { Hive, HiveType, EssentialsHive } from '../models';
+import { Hive, HiveType, SideHustleHive } from '../models';
 import { sequelize } from '../config/database';
 import { Op } from 'sequelize';
 
-// Create a new Essentials Hive with image upload support
-export const createEssentialsHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// Create a new Side Hustle Hive
+export const createSideHustleHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
   try {
     const userId = req.user.id;
     const { 
       title, 
-      description, 
+      description,
       price,
-      condition,
-      brand,
-      purchaseDate,
-      itemCategory,
-      photos,
-      pickupLocation
+      skillCategory,
+      estimatedHours,
+      workLocation,
+      compensationType,
+      applicationDeadline,
+      experienceLevel,
+      openPositions
     } = req.body;
     
-    // Find the Essentials hive type
+    // Find the SideHustle hive type
     const hiveType = await HiveType.findOne({
-      where: { name: 'Essentials' },
+      where: { name: 'SideHustle' },
       transaction
     });
     
@@ -31,7 +32,7 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
       await transaction.rollback();
       res.status(404).json({
         status: 'error',
-        message: 'Essentials hive type not found'
+        message: 'SideHustle hive type not found'
       });
       return;
     }
@@ -46,15 +47,16 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
       hiveTypeId: hiveType.id
     }, { transaction });
     
-    // Create essentials specific details
-    await EssentialsHive.create({
+    // Create side hustle specific details
+    await SideHustleHive.create({
       hiveId: hive.id,
-      condition,
-      brand,
-      purchaseDate: purchaseDate ? new Date(purchaseDate) : null,
-      itemCategory,
-      photos: Array.isArray(photos) ? photos : photos ? [photos] : [],
-      pickupLocation
+      skillCategory,
+      estimatedHours: estimatedHours || null,
+      workLocation,
+      compensationType,
+      applicationDeadline: applicationDeadline ? new Date(applicationDeadline) : null,
+      experienceLevel,
+      openPositions: openPositions || 1
     }, { transaction });
     
     await transaction.commit();
@@ -64,29 +66,29 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
       include: [
         { model: HiveType },
         { 
-          model: EssentialsHive,
-          as: 'essentialsDetails'
+          model: SideHustleHive,
+          as: 'sideHustleDetails'
         }
       ]
     });
     
     res.status(201).json({
       status: 'success',
-      message: 'Essentials listing created successfully',
+      message: 'Side hustle created successfully',
       data: completeHive
     });
   } catch (error) {
     await transaction.rollback();
-    console.error('Error creating essentials hive:', error);
+    console.error('Error creating side hustle:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to create essentials listing'
+      message: 'Failed to create side hustle'
     });
   }
 };
 
-// Update an Essentials Hive
-export const updateEssentialsHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// Update a Side Hustle Hive
+export const updateSideHustleHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
   try {
@@ -94,14 +96,15 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
     const userId = req.user.id;
     const { 
       title, 
-      description, 
+      description,
       price,
-      condition,
-      brand,
-      purchaseDate,
-      itemCategory,
-      photos,
-      pickupLocation
+      skillCategory,
+      estimatedHours,
+      workLocation,
+      compensationType,
+      applicationDeadline,
+      experienceLevel,
+      openPositions
     } = req.body;
     
     // Find the hive
@@ -121,7 +124,7 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
       await transaction.rollback();
       res.status(403).json({
         status: 'error',
-        message: 'You are not authorized to update this listing'
+        message: 'You are not authorized to update this side hustle'
       });
       return;
     }
@@ -129,34 +132,35 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
     // Update main hive record
     if (title) hive.title = title;
     if (description) hive.description = description;
-    if (price) hive.price = price;
+    if (price !== undefined) hive.price = price;
     
     await hive.save({ transaction });
     
-    // Find and update essentials details
-    const essentialsDetails = await EssentialsHive.findOne({
+    // Find and update side hustle details
+    const sideHustleDetails = await SideHustleHive.findOne({
       where: { hiveId: id },
       transaction
     });
     
-    if (!essentialsDetails) {
+    if (!sideHustleDetails) {
       await transaction.rollback();
       res.status(404).json({
         status: 'error',
-        message: 'Essentials details not found'
+        message: 'Side hustle details not found'
       });
       return;
     }
     
-    // Update essentials specific fields
-    if (condition) essentialsDetails.condition = condition;
-    if (brand) essentialsDetails.brand = brand;
-    if (purchaseDate) essentialsDetails.purchaseDate = new Date(purchaseDate);
-    if (itemCategory) essentialsDetails.itemCategory = itemCategory;
-    if (photos) essentialsDetails.photos = photos;
-    if (pickupLocation) essentialsDetails.pickupLocation = pickupLocation;
+    // Update side hustle specific fields
+    if (skillCategory) sideHustleDetails.skillCategory = skillCategory;
+    if (estimatedHours !== undefined) sideHustleDetails.estimatedHours = estimatedHours;
+    if (workLocation) sideHustleDetails.workLocation = workLocation;
+    if (compensationType) sideHustleDetails.compensationType = compensationType;
+    if (applicationDeadline) sideHustleDetails.applicationDeadline = new Date(applicationDeadline);
+    if (experienceLevel) sideHustleDetails.experienceLevel = experienceLevel;
+    if (openPositions !== undefined) sideHustleDetails.openPositions = openPositions;
     
-    await essentialsDetails.save({ transaction });
+    await sideHustleDetails.save({ transaction });
     
     await transaction.commit();
     
@@ -165,33 +169,34 @@ export const updateEssentialsHive = async (req: Request, res: Response, next: Ne
       include: [
         { model: HiveType },
         { 
-          model: EssentialsHive,
-          as: 'essentialsDetails'
+          model: SideHustleHive,
+          as: 'sideHustleDetails'
         }
       ]
     });
     
     res.status(200).json({
       status: 'success',
-      message: 'Essentials listing updated successfully',
+      message: 'Side hustle updated successfully',
       data: updatedHive
     });
   } catch (error) {
     await transaction.rollback();
-    console.error('Error updating essentials hive:', error);
+    console.error('Error updating side hustle:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to update essentials listing'
+      message: 'Failed to update side hustle'
     });
   }
 };
 
-// Get all Essentials Hives with filter options
-export const getAllEssentialsHives = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// Get all Side Hustle Hives with filter options
+export const getAllSideHustleHives = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { 
-      condition, 
-      itemCategory, 
+      skillCategory, 
+      workLocation, 
+      experienceLevel,
       minPrice, 
       maxPrice,
       search,
@@ -199,15 +204,15 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       offset = 0
     } = req.query;
     
-    // Find the Essentials hive type
+    // Find the SideHustle hive type
     const hiveType = await HiveType.findOne({
-      where: { name: 'Essentials' }
+      where: { name: 'SideHustle' }
     });
     
     if (!hiveType) {
       res.status(404).json({
         status: 'error',
-        message: 'Essentials hive type not found'
+        message: 'SideHustle hive type not found'
       });
       return;
     }
@@ -231,16 +236,21 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       ];
     }
     
-    const essentialsWhere: any = {};
+    const sideHustleWhere: any = {};
     
-    // Filter by condition
-    if (condition) {
-      essentialsWhere.condition = condition;
+    // Filter by skill category
+    if (skillCategory) {
+      sideHustleWhere.skillCategory = skillCategory;
     }
     
-    // Filter by item category
-    if (itemCategory) {
-      essentialsWhere.itemCategory = itemCategory;
+    // Filter by work location
+    if (workLocation) {
+      sideHustleWhere.workLocation = workLocation;
+    }
+    
+    // Filter by experience level
+    if (experienceLevel) {
+      sideHustleWhere.experienceLevel = experienceLevel;
     }
     
     const hives = await Hive.findAndCountAll({
@@ -250,9 +260,9 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       include: [
         { model: HiveType },
         { 
-          model: EssentialsHive,
-          as: 'essentialsDetails',
-          where: essentialsWhere
+          model: SideHustleHive,
+          as: 'sideHustleDetails',
+          where: sideHustleWhere
         }
       ],
       order: [['createdAt', 'DESC']]
@@ -271,10 +281,10 @@ export const getAllEssentialsHives = async (req: Request, res: Response, next: N
       }
     });
   } catch (error) {
-    console.error('Error fetching essentials hives:', error);
+    console.error('Error fetching side hustle hives:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to fetch essentials listings'
+      message: 'Failed to fetch side hustles'
     });
   }
 };

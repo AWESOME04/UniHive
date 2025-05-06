@@ -3,7 +3,7 @@ import { Hive, HiveType, BuzzHive } from '../models';
 import { sequelize } from '../config/database';
 import { Op } from 'sequelize';
 
-// Create a new Buzz Hive
+// Create a new Buzz Hive with image upload support
 export const createBuzzHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
@@ -19,7 +19,8 @@ export const createBuzzHive = async (req: Request, res: Response, next: NextFunc
       admission,
       capacity,
       registrationLink,
-      promotionalImage
+      promotionalImage,
+      isItem13 // Add the new field
     } = req.body;
     
     // Find the Buzz hive type
@@ -57,7 +58,8 @@ export const createBuzzHive = async (req: Request, res: Response, next: NextFunc
       admission,
       capacity: capacity || null,
       registrationLink,
-      promotionalImage
+      promotionalImage,
+      isItem13: isItem13 || false // Set default to false if not provided
     }, { transaction });
     
     await transaction.commit();
@@ -105,7 +107,8 @@ export const updateBuzzHive = async (req: Request, res: Response, next: NextFunc
       admission,
       capacity,
       registrationLink,
-      promotionalImage
+      promotionalImage,
+      isItem13 // Add the new field
     } = req.body;
     
     // Find the hive
@@ -160,6 +163,7 @@ export const updateBuzzHive = async (req: Request, res: Response, next: NextFunc
     if (capacity !== undefined) buzzDetails.capacity = capacity;
     if (registrationLink) buzzDetails.registrationLink = registrationLink;
     if (promotionalImage) buzzDetails.promotionalImage = promotionalImage;
+    if (isItem13 !== undefined) buzzDetails.isItem13 = isItem13; // Add this line to handle the new field
     
     await buzzDetails.save({ transaction });
     
@@ -200,6 +204,7 @@ export const getAllBuzzHives = async (req: Request, res: Response, next: NextFun
       fromDate,
       toDate,
       search,
+      isItem13, // Add filter for Item 13
       limit = 10,
       offset = 0
     } = req.query;
@@ -238,6 +243,11 @@ export const getAllBuzzHives = async (req: Request, res: Response, next: NextFun
     
     if (admission) {
       buzzWhere.admission = admission;
+    }
+    
+    // Add filter for Item 13 if provided
+    if (isItem13 !== undefined) {
+      buzzWhere.isItem13 = isItem13 === 'true';
     }
     
     // Filter by date range

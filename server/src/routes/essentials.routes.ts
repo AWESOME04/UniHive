@@ -5,6 +5,7 @@ import {
   updateEssentialsHive,
   getAllEssentialsHives
 } from '../controllers/essentialsController';
+import { uploadEssentialsImages } from '../middleware/upload';
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const router = express.Router();
 router.get('/', getAllEssentialsHives);
 
 // Protected routes
-router.post('/', authenticate, createEssentialsHive);
-router.put('/:id', authenticate, updateEssentialsHive);
+router.post('/', authenticate, uploadEssentialsImages(), createEssentialsHive);
+router.put('/:id', authenticate, uploadEssentialsImages(), updateEssentialsHive);
 
 export default router;

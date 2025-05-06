@@ -3,6 +3,13 @@ import authRoutes from './auth.routes';
 import userRoutes from './user.routes';
 import hiveRoutes from './hive.routes';
 import essentialsRoutes from './essentials.routes';
+import academiaRoutes from './academia.routes';
+import logisticsRoutes from './logistics.routes';
+import buzzRoutes from './buzz.routes';
+import archiveRoutes from './archive.routes';
+import sideHustleRoutes from './sidehustle.routes';
+import applicationRoutes from './application.routes';
+import reviewRoutes from './review.routes';
 
 const router = express.Router();
 
@@ -21,10 +28,18 @@ router.use('/auth', authRoutes);
 // User routes
 router.use('/users', userRoutes);
 
-// Hive routes
+// General hive routes
 router.use('/hives', hiveRoutes);
 
-// Essentials routes
+// Specific hive type routes
 router.use('/essentials', essentialsRoutes);
+router.use('/academia', academiaRoutes);
+router.use('/logistics', logisticsRoutes);
+router.use('/buzz', buzzRoutes);
+router.use('/archive', archiveRoutes);
+router.use('/sidehustle', sideHustleRoutes);
+
+router.use('/hives', applicationRoutes);
+router.use('/hives', reviewRoutes);
 
 export default router;
