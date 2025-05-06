@@ -5,6 +5,7 @@ import {
   updateBuzzHive,
   getAllBuzzHives
 } from '../controllers/buzzController';
+import { uploadEventImage } from '../middleware/upload';
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const router = express.Router();
 router.get('/', getAllBuzzHives);
 
 // Protected routes
-router.post('/', authenticate, createBuzzHive);
-router.put('/:id', authenticate, updateBuzzHive);
+router.post('/', authenticate, uploadEventImage(), createBuzzHive);
+router.put('/:id', authenticate, uploadEventImage(), updateBuzzHive);
 
 export default router;

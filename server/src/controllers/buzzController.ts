@@ -3,7 +3,7 @@ import { Hive, HiveType, BuzzHive } from '../models';
 import { sequelize } from '../config/database';
 import { Op } from 'sequelize';
 
-// Create a new Buzz Hive
+// Create a new Buzz Hive with image upload support
 export const createBuzzHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   

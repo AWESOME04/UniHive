@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { User } from '../models/User';
 import { hashPassword, verifyPassword } from '../utils/authUtils';
 
-// Update current user's profile
+// Update current user's profile with image upload support
 export const updateProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user.id;

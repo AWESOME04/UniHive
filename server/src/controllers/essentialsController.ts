@@ -3,6 +3,7 @@ import { Hive, HiveType, EssentialsHive } from '../models';
 import { sequelize } from '../config/database';
 import { Op } from 'sequelize';
 
+// Create a new Essentials Hive with image upload support
 export const createEssentialsHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
@@ -52,7 +53,7 @@ export const createEssentialsHive = async (req: Request, res: Response, next: Ne
       brand,
       purchaseDate: purchaseDate ? new Date(purchaseDate) : null,
       itemCategory,
-      photos,
+      photos: Array.isArray(photos) ? photos : photos ? [photos] : [],
       pickupLocation
     }, { transaction });
     

@@ -5,6 +5,7 @@ import {
   updateArchiveHive,
   getAllArchiveHives
 } from '../controllers/archiveController';
+import { uploadArchiveFile } from '../middleware/upload';
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const router = express.Router();
 router.get('/', getAllArchiveHives);
 
 // Protected routes
-router.post('/', authenticate, createArchiveHive);
-router.put('/:id', authenticate, updateArchiveHive);
+router.post('/', authenticate, uploadArchiveFile(), createArchiveHive);
+router.put('/:id', authenticate, uploadArchiveFile(), updateArchiveHive);
 
 export default router;

@@ -3,7 +3,7 @@ import { Hive, HiveType, ArchiveHive } from '../models';
 import { sequelize } from '../config/database';
 import { Op } from 'sequelize';
 
-// Create a new Archive Hive
+// Create a new Archive Hive with file upload support
 export const createArchiveHive = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const transaction = await sequelize.transaction();
   
@@ -17,8 +17,8 @@ export const createArchiveHive = async (req: Request, res: Response, next: NextF
       professor,
       semester,
       year,
-      fileFormat,
-      fileUrl
+      fileUrl,
+      fileFormat
     } = req.body;
     
     // Find the Archive hive type
