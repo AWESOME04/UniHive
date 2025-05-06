@@ -23,7 +23,6 @@ export const sendOTPEmail = async (email: string, name: string, otp: string) => 
     console.log('Email configuration:', {
       service: EMAIL_SERVICE,
       user: EMAIL_USER,
-      // Don't log the password for security
       passwordProvided: !!EMAIL_PASSWORD
     });
 
