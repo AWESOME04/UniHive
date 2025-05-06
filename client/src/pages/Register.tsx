@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Eye, EyeOff, GraduationCap, Users, ChevronDown } from 'lucide-react';
+import authService from '../services/authService';
 
 // Define university interface
 interface University {
@@ -107,10 +108,17 @@ function Register() {
       
       const email = `${values.emailUsername}@${university.emailDomain}`;
       
-      // Simulate API call for registration
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Call the server API to register the user
+      const response = await authService.register({
+        name: values.fullName,
+        email,
+        password: values.password,
+        university: university.name
+      });
       
-      // Instead of completing registration here, navigate to OTP verification
+      toast.success(response.message || 'Registration initiated! Please verify your email.');
+      
+      // Navigate to OTP verification with email
       navigate('/otp-verification', { 
         state: { 
           email,
@@ -118,11 +126,10 @@ function Register() {
           password: values.password
         } 
       });
-      
-      toast.success('Registration initiated! Please verify your email.');
     } catch (err) {
-      toast.error('Registration failed. Please try again.');
-      setStatus('Registration failed. Email may already be in use.');
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      toast.error(errorMessage);
+      setStatus(errorMessage);
     } finally {
       setLoading(false);
       setSubmitting(false);

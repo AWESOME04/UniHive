@@ -2,6 +2,7 @@ import { CalendarClock, Clock, MapPin, Briefcase, Tag, ArrowRight } from 'lucide
 import { Link } from 'react-router-dom';
 import { Task } from '../../types';
 import { useState } from 'react';
+import { formatCurrency } from '../../utils/formatUtils';
 
 interface TaskCardProps {
   task: Task;
@@ -137,9 +138,16 @@ function TaskCard({ task }: TaskCardProps) {
               </div>
             )}
           </div>
-          <span className="text-sm font-medium bg-light-orange/30 text-secondary px-3 py-1 rounded-full shadow-sm">
-            {task.points} Points
-          </span>
+          <div className="flex items-center gap-2">
+            {task.price && (
+              <span className="text-sm font-medium bg-light-orange/30 text-secondary px-3 py-1 rounded-full shadow-sm">
+                {typeof task.price === 'string' ? task.price : formatCurrency(task.price)}
+              </span>
+            )}
+            <span className="text-sm font-medium bg-light-orange/30 text-secondary px-3 py-1 rounded-full shadow-sm">
+              {task.points} Points
+            </span>
+          </div>
         </div>
         
         <div className="mt-4 flex justify-end">

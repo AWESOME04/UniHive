@@ -3,10 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CheckCircle, GraduationCap, BookOpen } from 'lucide-react';
+import authService from '../services/authService';
 
 function OTPVerification() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { email } = location.state || { email: '' };
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
@@ -15,15 +17,9 @@ function OTPVerification() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   
-  // Get email from location state
-  const email = location.state?.email || '';
-  // We're storing these values for potential future use when completing registration
-  // after OTP verification, but not using them directly in this component
-  const _fullName = location.state?.fullName || '';
-  const _password = location.state?.password || '';
-  
   useEffect(() => {
     if (!email) {
+      // If no email is provided, redirect to registration
       navigate('/register');
       toast.error('Please complete registration first');
     }
@@ -108,12 +104,18 @@ function OTPVerification() {
     }
   };
 
-  const handleResendOTP = () => {
+  const handleResendOTP = async () => {
     setResendDisabled(true);
     setCountdown(60);
     
-    // Simulate OTP resend
-    toast.info(`New OTP sent to ${email}`);
+    try {
+      // Call server API to resend OTP
+      const response = await authService.resendOTP(email);
+      toast.info(response.message || 'New OTP sent to your email');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to resend OTP';
+      toast.error(errorMessage);
+    }
     
     // Restart countdown
     const timer = setInterval(() => {
@@ -139,19 +141,22 @@ function OTPVerification() {
     setLoading(true);
     
     try {
-      // Simulate API verification
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Call server API to verify OTP
+      const response = await authService.verifyOTP({
+        email,
+        otp: otpValue
+      });
       
-      // For demo purposes, any 6-digit OTP is valid
       setVerificationComplete(true);
       
       // Wait for animation to complete before redirecting
       setTimeout(() => {
-        toast.success('Email verified successfully!');
+        toast.success(response.message || 'Email verified successfully!');
         navigate('/login');
       }, 2000);
-    } catch (error) {
-      toast.error('Verification failed. Please try again.');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Verification failed. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

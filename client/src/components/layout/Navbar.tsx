@@ -1,15 +1,18 @@
 import { Bell, Menu, User, X, Search, MessageSquare, Briefcase } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { logout } from '../../store/slices/authSlice';
 import { RootState } from '../../store';
+import authService from '../../services/authService';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
 
   // Close dropdown when clicking outside
@@ -33,7 +36,17 @@ const Navbar = () => {
   }, [location]);
 
   const handleLogout = () => {
+    // Call auth service to clear token
+    authService.logout();
+    
+    // Update Redux state
     dispatch(logout());
+    
+    // Show success message
+    toast.success('Logged out successfully');
+    
+    // Redirect to home page
+    navigate('/');
   };
 
   return (
@@ -181,151 +194,93 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          <div className="-mr-2 flex items-center sm:hidden">
-            {/* Mobile menu button */}
+          <div className="flex items-center md:hidden">
             <button
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary"
-              aria-controls="mobile-menu"
-              aria-expanded="false"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
-                <X className="block h-6 w-6" />
+                <X className="block h-6 w-6" aria-hidden="true" />
               ) : (
-                <Menu className="block h-6 w-6" />
+                <Menu className="block h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on menu state */}
+      {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="sm:hidden" id="mobile-menu">
-          <div className="pt-2 pb-3 space-y-1">
+        <div className="md:hidden absolute top-16 inset-x-0 z-50 bg-white shadow-lg rounded-b-lg border-t border-gray-100 transition-all duration-300 ease-in-out">
+          <div className="px-4 pt-2 pb-3 space-y-1">
             <Link
               to="/"
-              className={`${
-                location.pathname === '/'
-                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+              onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
-            {isAuthenticated && (
+            <Link
+              to="/jobs"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Jobs
+            </Link>
+            <Link
+              to="/universities"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Universities
+            </Link>
+            {isAuthenticated ? (
               <>
                 <Link
-                  to="/dashboard"
-                  className={`${
-                    location.pathname === '/dashboard'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/search"
-                  className={`${
-                    location.pathname === '/search'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Find Jobs
-                </Link>
-                <Link
                   to="/messages"
-                  className={`${
-                    location.pathname === '/messages'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Messages
                 </Link>
                 <Link
-                  to="/notifications"
-                  className={`${
-                    location.pathname === '/notifications'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+                  to="/profile"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Notifications
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-white hover:bg-primary-dark px-3 py-2 rounded-md"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Register
                 </Link>
               </>
             )}
           </div>
-          {isAuthenticated ? (
-            <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="flex items-center px-4">
-                <div className="flex-shrink-0">
-                  {user?.avatarUrl ? (
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.avatarUrl}
-                      alt={user.username || "User profile"}
-                    />
-                  ) : (
-                    <div className="h-10 w-10 rounded-full bg-secondary text-white flex items-center justify-center">
-                      <User size={20} />
-                    </div>
-                  )}
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user?.username || "User"}</div>
-                  <div className="text-sm font-medium text-gray-500">{user?.email || ""}</div>
-                </div>
-              </div>
-              <div className="mt-3 space-y-1">
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Your Profile
-                </Link>
-                <Link
-                  to="/saved-jobs"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Saved Jobs
-                </Link>
-                <Link
-                  to="/settings"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Settings
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Sign out
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="flex flex-col space-y-2 px-4">
-                <Link
-                  to="/login"
-                  className="block text-center px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md"
-                >
-                  Log in
-                </Link>
-                <Link
-                  to="/register"
-                  className="block text-center px-4 py-2 text-base font-medium bg-secondary text-white hover:bg-opacity-90 rounded-md"
-                >
-                  Sign up
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </nav>

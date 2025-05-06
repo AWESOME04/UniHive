@@ -6,7 +6,8 @@ import { useAppDispatch } from '../store';
 import { setCredentials } from '../store/slices/authSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Eye, EyeOff, GraduationCap, BookOpen, Briefcase } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, BookOpen } from 'lucide-react';
+import authService from '../services/authService';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -46,33 +47,41 @@ function Login() {
     };
   }, []);
 
-  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
+  const handleSubmit = async (
+    values: { email: string; password: string; rememberMe: boolean },
+    { setSubmitting, setStatus }: { setSubmitting: (isSubmitting: boolean) => void; setStatus: (status: string | null) => void }
+  ) => {
     setLoading(true);
     setStatus(null);
     
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Call server API to login
+      const response = await authService.login({
+        email: values.email,
+        password: values.password
+      });
       
-      // Mock successful login
-      const userData = {
-        id: '123',
+      // Get user data from response
+      const userData = response.data.user || {
+        id: response.data.userId,
         username: values.email.split('@')[0],
         email: values.email,
       };
       
+      // Update Redux state with user data
       dispatch(
         setCredentials({
           user: userData,
-          token: 'fake-token-12345',
+          token: response.data.token,
         })
       );
       
-      toast.success('Login successful!');
+      toast.success(response.message || 'Login successful!');
       navigate('/');
     } catch (err) {
-      toast.error('Login failed. Please check your credentials.');
-      setStatus('Invalid email or password');
+      const errorMessage = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
+      toast.error(errorMessage);
+      setStatus(errorMessage);
     } finally {
       setLoading(false);
       setSubmitting(false);
