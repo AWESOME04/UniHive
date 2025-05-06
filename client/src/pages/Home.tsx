@@ -1,22 +1,17 @@
-import { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import { useEffect, useState, useCallback, useMemo, memo } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Briefcase, CirclePlus, GraduationCap, Search, TrendingUp, Users, ArrowRight, MapPin, Star, ChevronRight, Clock, DollarSign, CheckCircle } from 'lucide-react';
+import { throttle as lodashThrottle } from 'lodash';
+import { 
+  Briefcase, CirclePlus, GraduationCap, Users, Star, 
+  TrendingUp, BookOpen, ChevronRight, DollarSign, ArrowRight,
+  Search
+} from 'lucide-react';
+import UniversityDirectory from '../components/universities/UniversityDirectory';
+import GhanaJobCategories from '../components/jobs/GhanaJobCategories';
+import GhanaPaymentMethods from '../components/payment/GhanaPaymentMethods';
 import { useAppSelector } from '../store';
 import TaskCard from '../components/tasks/TaskCard';
 import { RootState } from '../store';
-
-// Helper function to throttle events
-const throttle = (callback: Function, delay: number) => {
-  let lastCall = 0;
-  return function(...args: any[]) {
-    const now = new Date().getTime();
-    if (now - lastCall < delay) {
-      return;
-    }
-    lastCall = now;
-    return callback(...args);
-  };
-};
 
 // Memoized TaskCard component to prevent unnecessary re-renders
 const MemoizedTaskCard = memo(TaskCard);
@@ -47,7 +42,7 @@ function Home() {
 
   // Optimize mouse move handler with useCallback and throttling
   const handleMouseMove = useCallback(
-    throttle((e: MouseEvent) => {
+    lodashThrottle((e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
     }, 50), // Throttle to 50ms (20 updates per second)
     []
@@ -308,6 +303,56 @@ function Home() {
         </div>
       </section>
 
+      {/* Recent Side Hustles */}
+      <section className="py-16 px-4 md:px-8 lg:px-16">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Recent Side Hustles</h2>
+              <p className="text-xl text-gray-600">Find your next opportunity from our latest listings</p>
+            </div>
+            <Link to="/search" className="mt-4 md:mt-0 inline-flex items-center text-secondary font-medium">
+              View all opportunities
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {recentTasks.map((job, index) => (
+              <TaskCard key={index} task={job} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ghana Universities Section */}
+      <UniversityDirectory limit={4} showViewAll={true} />
+
+      {/* Ghana Job Categories */}
+      <GhanaJobCategories limit={8} showViewAll={true} />
+
+      {/* Ghana Payment Methods */}
+      <GhanaPaymentMethods showExample={true} />
+
+      {/* CTA Section */}
+      <section className="py-16 px-4 md:px-8 lg:px-16 bg-secondary text-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to start earning?</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">Join thousands of students who are already using UniHive to find side hustles and earn while they study.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/register" className="bg-white text-secondary px-8 py-3 rounded-xl font-medium hover:bg-light-orange transition-default">
+              Sign Up Now
+            </Link>
+            <Link to="/tasks" className="bg-dark-orange text-white px-8 py-3 rounded-xl font-medium hover:bg-opacity-90 transition-default">
+              Browse Tasks
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <section className="py-16 px-4 md:px-8 lg:px-16 bg-background">
         <div className="container mx-auto">
@@ -356,25 +401,8 @@ function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 bg-secondary text-white">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to start earning?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">Join thousands of students who are already using UniHive to find side hustles and earn while they study.</p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/register" className="bg-white text-secondary px-8 py-3 rounded-xl font-medium hover:bg-light-orange transition-default">
-              Sign Up Now
-            </Link>
-            <Link to="/tasks" className="bg-dark-orange text-white px-8 py-3 rounded-xl font-medium hover:bg-opacity-90 transition-default">
-              Browse Tasks
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* CSS for hiding scrollbar but allowing scroll */}
-      <style jsx>{`
+      <style>{`
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;

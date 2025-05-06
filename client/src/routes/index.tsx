@@ -18,6 +18,8 @@ import AddJobPosting from '../pages/AddJobPosting';
 import Authentication from '../pages/Authentication';
 import JobDetails from '../pages/JobDetails';
 import JobApplication from '../pages/JobApplication';
+import Universities from '../pages/Universities';
+import OTPVerification from '../pages/OTPVerification';
 
 const router = createBrowserRouter([
   {
@@ -129,8 +131,20 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
+        path: 'otp-verification',
+        element: <OTPVerification />,
+      },
+      {
         path: 'forgot-password',
         element: <ForgotPassword />,
+      },
+      {
+        path: 'universities',
+        element: (
+          <ProtectedRoute>
+            <Universities />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '*',

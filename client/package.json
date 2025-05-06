@@ -28,6 +28,7 @@
     "@babel/parser": "^7.27.0",
     "@babel/traverse": "^7.27.0",
     "@babel/types": "^7.27.0",
+    "@types/lodash": "^4.17.16",
     "@types/node": "^22.15.3",
     "@types/react": "^18.3.6",
     "@types/react-dom": "^18.3.0",
