@@ -286,6 +286,439 @@
           }
         }
       ]
+    },
+    {
+      "name": "Hives",
+      "item": [
+        {
+          "name": "Get Hive Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "types"
+              ]
+            },
+            "description": "Get all available hive types"
+          }
+        },
+        {
+          "name": "Get All Hives",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "Filter by hive type ID",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "open",
+                  "description": "Filter by status: open, assigned, completed, cancelled",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "100",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "keyword",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all hives with filtering options"
+          }
+        },
+        {
+          "name": "Get Hive by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Get details of a specific hive by ID"
+          }
+        },
+        {
+          "name": "Get My Posted Hives",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/my/posted",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "my",
+                "posted"
+              ]
+            },
+            "description": "Get hives posted by the current user"
+          }
+        },
+        {
+          "name": "Get My Assigned Hives",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/my/assigned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "my",
+                "assigned"
+              ]
+            },
+            "description": "Get hives assigned to the current user"
+          }
+        },
+        {
+          "name": "Delete Hive",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Delete a hive (only by poster)"
+          }
+        },
+        {
+          "name": "Update Hive Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Update the status of a hive"
+          }
+        },
+        {
+          "name": "Assign Hive",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignedToId\": \"user-uuid-here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id",
+                "assign"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Assign a hive to a user (only by poster)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Essentials",
+      "item": [
+        {
+          "name": "Get All Essentials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/essentials?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "essentials"
+              ],
+              "query": [
+                {
+                  "key": "condition",
+                  "value": "good",
+                  "disabled": true
+                },
+                {
+                  "key": "itemCategory",
+                  "value": "electronics",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "100",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "keyword",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all essentials listings with filtering options"
+          }
+        },
+        {
+          "name": "Create Essentials Listing",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Rice Cooker for Sale\",\n  \"description\": \"Barely used 1.8L rice cooker in excellent condition\",\n  \"price\": 25.99,\n  \"condition\": \"like-new\",\n  \"brand\": \"Panasonic\",\n  \"purchaseDate\": \"2023-06-15\",\n  \"itemCategory\": \"electronics\",\n  \"photos\": [\"https://example.com/photo1.jpg\", \"https://example.com/photo2.jpg\"],\n  \"pickupLocation\": \"Student Center, Building B\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/essentials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "essentials"
+              ]
+            },
+            "description": "Create a new essentials listing"
+          }
+        },
+        {
+          "name": "Update Essentials Listing",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Rice Cooker for Sale - PRICE REDUCED\",\n  \"description\": \"Barely used 1.8L rice cooker in excellent condition\",\n  \"price\": 19.99,\n  \"condition\": \"like-new\",\n  \"pickupLocation\": \"Student Center, Building B, Room 204\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/essentials/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "essentials",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Essentials Hive ID"
+                }
+              ]
+            },
+            "description": "Update an existing essentials listing"
+          }
+        }
+      ]
     }
   ],
   "variable": [
