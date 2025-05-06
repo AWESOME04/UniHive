@@ -51,9 +51,9 @@ const startServer = async () => {
     setupAssociations();
     console.log('Model associations initialized successfully.');
     
-    // Force sync models with database (this will drop and recreate tables)
-    await sequelize.sync({ force: true });
-    console.log('Database synchronized successfully (tables recreated).');
+    // Changed from force: true to alter: true to preserve data
+    await sequelize.sync({ alter: true });
+    console.log('Database synchronized successfully (tables updated if needed).');
     
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);

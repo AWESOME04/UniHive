@@ -19,13 +19,6 @@ const transporter = nodemailer.createTransport({
 // Send OTP email
 export const sendOTPEmail = async (email: string, name: string, otp: string) => {
   try {
-    // Log the configuration for debugging
-    console.log('Email configuration:', {
-      service: EMAIL_SERVICE,
-      user: EMAIL_USER,
-      passwordProvided: !!EMAIL_PASSWORD
-    });
-
     // If no email configuration, fall back to dev mode
     if (!EMAIL_USER || !EMAIL_PASSWORD) {
       console.log('==================================================');
