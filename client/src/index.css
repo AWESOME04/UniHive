@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --cursor-x: 0px;
+  --cursor-y: 0px;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-primary;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-primary font-bold;
+  }
+  
+  a {
+    @apply text-secondary hover:text-dark-orange transition-default;
+  }
+  
+  button {
+    @apply transition-default;
+  }
+}
+
+@layer components {
+  .transition-default {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .btn-primary {
+    @apply bg-secondary text-white py-2 px-4 rounded-lg hover:bg-dark-orange hover:shadow-md transition-default;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary border border-gray-300 py-2 px-4 rounded-lg hover:border-secondary hover:text-secondary transition-default;
+  }
+  
+  .btn-accent {
+    @apply bg-accent-purple text-white py-2 px-4 rounded-lg hover:bg-opacity-90 hover:shadow-md transition-default;
+  }
+  
+  .card {
+    @apply bg-white p-6 rounded-2xl shadow-xl-soft hover:translate-y-[-4px] transition-default;
+  }
+  
+  .form-input {
+    @apply w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-secondary;
+  }
+  
+  .tag {
+    @apply px-3 py-1 bg-light-orange text-secondary rounded-full text-xs hover:bg-accent-purple hover:text-white transition-default;
+  }
+  
+  .hero-section {
+    @apply bg-background py-16 px-4 sm:px-6 lg:px-8 rounded-b-2xl;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-6 relative;
+  }
+  
+  .section-title::after {
+    content: "";
+    @apply absolute bottom-0 left-0 w-16 h-1 bg-secondary rounded-full;
+  }
+  
+  .feature-card {
+    @apply bg-white p-6 rounded-2xl shadow-xl-soft hover:translate-y-[-4px] transition-default border-l-4 border-secondary;
+  }
+  
+  .nav-link {
+    @apply px-3 py-2 rounded-lg hover:bg-light-orange hover:text-secondary transition-default;
+  }
+  
+  .active-nav-link {
+    @apply bg-light-orange text-secondary;
+  }
+  
+  /* Optimized cursor light effect using CSS variables */
+  .cursor-light {
+    background: radial-gradient(600px at var(--cursor-x) var(--cursor-y), rgba(255, 69, 0, 0.15), transparent 80%);
+    will-change: background;
+    contain: paint;
+  }
+  
+  /* Optimized animations */
+  .animate-blob {
+    animation: blob-animation 7s infinite;
+    will-change: transform;
+    contain: layout paint style;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+  
+  @keyframes blob-animation {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  
+  /* Shadow for cards with better performance */
+  .shadow-xl-soft {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    will-change: transform, box-shadow;
+  }
+}
+
+/* Add containment for better performance */
+.contain-paint {
+  contain: paint;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+/* Optimize transitions */
+.optimize-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
