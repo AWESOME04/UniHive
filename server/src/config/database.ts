@@ -5,13 +5,11 @@ import { OTP } from '../models/OTP';
 
 dotenv.config();
 
-// Use connection string if provided, otherwise use individual parameters
 const connectionString = process.env.DATABASE_URL;
 
 let sequelizeConfig: any;
 
 if (connectionString) {
-  // Use connection string (for Neon PostgreSQL)
   sequelizeConfig = {
     dialect: 'postgres',
     dialectOptions: {
@@ -23,7 +21,6 @@ if (connectionString) {
     logging: false
   };
 } else {
-  // Fallback to individual parameters
   const {
     DB_HOST = 'localhost',
     DB_USER = 'postgres',
@@ -43,12 +40,10 @@ if (connectionString) {
   };
 }
 
-// Create and export the sequelize instance
 const sequelize = connectionString 
   ? new Sequelize(connectionString, sequelizeConfig)
   : new Sequelize(sequelizeConfig);
 
-// Add models explicitly - this is the most reliable way
 sequelize.addModels([User, OTP]);
 
 export { sequelize };
