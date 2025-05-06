@@ -5,20 +5,25 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import routes from './routes';
 import { sequelize } from './config/database';
+import setupAssociations from './models/index';
 
+// Load environment variables
 dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(helmet());
+// Middleware
+app.use(helmet()); // Security headers
 app.use(cors());
-app.use(morgan('dev'));
+app.use(morgan('dev')); // Logging
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use('/api', routes);
 
+// Health check route
 app.get('/', (_req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
@@ -26,6 +31,7 @@ app.get('/', (_req: Request, res: Response) => {
   });
 });
 
+// Error handling middleware
 app.use((err: any, _req: Request, res: Response, _next: any) => {
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({
@@ -35,10 +41,19 @@ app.use((err: any, _req: Request, res: Response, _next: any) => {
   });
 });
 
+// Start the server
 const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log('Database connection has been established successfully.');
+    
+    // Setup associations between models
+    setupAssociations();
+    console.log('Model associations initialized successfully.');
+    
+    // Force sync models with database (this will drop and recreate tables)
+    await sequelize.sync({ force: true });
+    console.log('Database synchronized successfully (tables recreated).');
     
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);

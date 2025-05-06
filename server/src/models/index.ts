@@ -1,9 +1,29 @@
-import { User } from './User';
+import { sequelize } from '../config/database';
 
-// Export all models for easy import elsewhere
-export {
-  User
+import { User } from './User';
+import { OTP } from './OTP';
+
+const models = {
+  User,
+  OTP,
 };
 
-// Define model associations here if needed
-// Example: User.hasMany(Task, { foreignKey: 'userId' });
+const setupAssociations = () => {
+  User.hasMany(OTP, { 
+    foreignKey: 'userId', 
+    as: 'otps',
+    onDelete: 'CASCADE' 
+  });
+  
+  OTP.belongsTo(User, { 
+    foreignKey: 'userId', 
+    as: 'user' 
+  });
+};
+
+export {
+  User,
+  OTP
+};
+
+export default setupAssociations;
