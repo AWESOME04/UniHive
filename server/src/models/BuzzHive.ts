@@ -63,4 +63,11 @@ export class BuzzHive extends Model {
     allowNull: true
   })
   promotionalImage!: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  })
+  isItem13!: boolean;  // Indicates if food is available at the event (Ghana's "Item 13")
 }

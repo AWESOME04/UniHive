@@ -1039,6 +1039,12 @@
                   "disabled": true
                 },
                 {
+                  "key": "isItem13",
+                  "value": "true",
+                  "disabled": true,
+                  "description": "Filter events with food (Ghana's Item 13)"
+                },
+                {
                   "key": "limit",
                   "value": "10"
                 },
@@ -1073,7 +1079,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Tech Career Workshop\",\n  \"description\": \"Join us for a workshop on preparing for tech interviews with industry professionals\",\n  \"eventDate\": \"2023-11-15T18:00:00.000Z\",\n  \"location\": \"Computer Science Building, Room 101\",\n  \"organizer\": \"Computer Science Club\",\n  \"eventType\": \"workshop\",\n  \"admission\": \"free\",\n  \"capacity\": 50,\n  \"registrationLink\": \"https://forms.example.com/register\",\n  \"promotionalImage\": \"https://example.com/event-image.jpg\"\n}"
+              "raw": "{\n  \"title\": \"Tech Career Workshop\",\n  \"description\": \"Join us for a workshop on preparing for tech interviews with industry professionals\",\n  \"eventDate\": \"2023-11-15T18:00:00.000Z\",\n  \"location\": \"Computer Science Building, Room 101\",\n  \"organizer\": \"Computer Science Club\",\n  \"eventType\": \"workshop\",\n  \"admission\": \"free\",\n  \"capacity\": 50,\n  \"registrationLink\": \"https://forms.example.com/register\",\n  \"promotionalImage\": \"https://example.com/event-image.jpg\",\n  \"isItem13\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/buzz",
@@ -1110,7 +1116,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Tech Career Workshop - FOOD PROVIDED\",\n  \"capacity\": 75,\n  \"location\": \"Student Center, Grand Hall\"\n}"
+              "raw": "{\n  \"title\": \"Tech Career Workshop - FOOD PROVIDED\",\n  \"capacity\": 75,\n  \"location\": \"Student Center, Grand Hall\",\n  \"isItem13\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/buzz/:id",
