@@ -2,6 +2,16 @@ import { Sequelize } from 'sequelize-typescript';
 import dotenv from 'dotenv';
 import { User } from '../models/User';
 import { OTP } from '../models/OTP';
+import { Hive } from '../models/Hive';
+import { HiveType } from '../models/HiveType';
+import { EssentialsHive } from '../models/EssentialsHive';
+import { AcademiaHive } from '../models/AcademiaHive';
+import { LogisticsHive } from '../models/LogisticsHive';
+import { BuzzHive } from '../models/BuzzHive';
+import { ArchiveHive } from '../models/ArchiveHive';
+import { SideHustleHive } from '../models/SideHustleHive';
+import { HiveApplication } from '../models/HiveApplication';
+import { HiveReview } from '../models/HiveReview';
 
 dotenv.config();
 
@@ -44,6 +54,19 @@ const sequelize = connectionString
   ? new Sequelize(connectionString, sequelizeConfig)
   : new Sequelize(sequelizeConfig);
 
-sequelize.addModels([User, OTP]);
+sequelize.addModels([
+  User, 
+  OTP, 
+  Hive, 
+  HiveType, 
+  EssentialsHive, 
+  AcademiaHive, 
+  LogisticsHive, 
+  BuzzHive, 
+  ArchiveHive, 
+  SideHustleHive, 
+  HiveApplication, 
+  HiveReview
+]);
 
 export { sequelize };
