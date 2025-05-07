@@ -239,6 +239,7 @@ Coming soon...
 
 ## 🙏 Acknowledgments
 
+- The [WeWire Team](https://www.wewire.com) for their support and feedback
 - All the open source libraries that made this project possible
 - Our mentors and advisors for their guidance
 
