@@ -10,6 +10,7 @@ import archiveRoutes from './archive.routes';
 import sideHustleRoutes from './sidehustle.routes';
 import applicationRoutes from './application.routes';
 import reviewRoutes from './review.routes';
+import paymentRoutes from './payment.routes';
 
 const router = express.Router();
 
@@ -41,5 +42,8 @@ router.use('/sidehustle', sideHustleRoutes);
 
 router.use('/hives', applicationRoutes);
 router.use('/hives', reviewRoutes);
+
+// Payment routes
+router.use('/payments', paymentRoutes);
 
 export default router;
