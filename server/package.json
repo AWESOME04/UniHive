@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/server.js",
+    "test": "jest",
+    "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "db:setup": "ts-node src/config/dbSetup.ts",
     "db:reset": "ts-node src/config/dbReset.ts",
-    "db:seed": "ts-node src/config/seedHiveTypes.ts"
+    "db:seed": "ts-node src/config/seedHiveTypes.ts",
+    "serve": "node dist/server.js",
+    "db:init": "ts-node src/scripts/initDb.ts",
+    "db:test": "ts-node src/config/testConnection.ts"
   },
   "keywords": [],
   "author": "",
