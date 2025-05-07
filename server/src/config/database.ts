@@ -12,10 +12,14 @@ import { ArchiveHive } from '../models/ArchiveHive';
 import { SideHustleHive } from '../models/SideHustleHive';
 import { HiveApplication } from '../models/HiveApplication';
 import { HiveReview } from '../models/HiveReview';
+import { PasswordReset } from '../models/PasswordReset';
 
 dotenv.config();
 
 const connectionString = process.env.DATABASE_URL;
+
+const frontendUrl = process.env.FRONTEND_URL || 'https://unihive.vercel.app';
+console.log(`Frontend URL configured as: ${frontendUrl}`);
 
 let sequelizeConfig: any;
 
@@ -66,7 +70,8 @@ sequelize.addModels([
   ArchiveHive, 
   SideHustleHive, 
   HiveApplication, 
-  HiveReview
+  HiveReview,
+  PasswordReset
 ]);
 
 export { sequelize };

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { User, OTP } from '../models';
-import { hashPassword, verifyPassword, generateToken, generateOTP } from '../utils/authUtils';
-import { sendOTPEmail } from '../services/emailService';
+import { User, OTP, PasswordReset } from '../models';
+import { hashPassword, verifyPassword, generateToken, generateOTP, generatePasswordResetToken, verifyPasswordResetToken } from '../utils/authUtils';
+import { sendOTPEmail, sendPasswordResetEmail } from '../services/emailService';
 import { Op } from 'sequelize';
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -293,6 +293,158 @@ export const getCurrentUser = async (req: Request, res: Response, next: NextFunc
     res.status(500).json({
       status: 'error',
       message: 'An error occurred while fetching user data.'
+    });
+  }
+};
+
+// Forgot Password - request password reset
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Email is required'
+      });
+      return;
+    }
+
+    // Find user by email
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      // For security reasons, we still return success even if the email doesn't exist
+      res.status(200).json({
+        status: 'success',
+        message: 'If your email exists in our system, you will receive a password reset link shortly.'
+      });
+      return;
+    }
+
+    // Delete any existing reset tokens for the user
+    await PasswordReset.destroy({
+      where: { userId: user.id }
+    });
+
+    // Generate reset token
+    const token = generatePasswordResetToken(user.id);
+    
+    // Set token expiry (1 hour)
+    const expiryTime = new Date();
+    expiryTime.setHours(expiryTime.getHours() + 1);
+
+    // Save token to database
+    await PasswordReset.create({
+      userId: user.id,
+      token,
+      expiresAt: expiryTime
+    });
+
+    // Send password reset email
+    const emailSent = await sendPasswordResetEmail(email, user.name, token);
+
+    if (!emailSent) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Failed to send password reset email.'
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'If your email exists in our system, you will receive a password reset link shortly.'
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while processing your request.'
+    });
+  }
+};
+
+// Reset Password - complete password reset
+export const resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { email, token, password } = req.body;
+
+    if (!email || !token || !password) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Email, token, and password are required'
+      });
+      return;
+    }
+
+    // Find user by email
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Invalid or expired reset link'
+      });
+      return;
+    }
+
+    try {
+      // Verify the reset token
+      const decoded = verifyPasswordResetToken(token);
+      
+      // Check if the token is for password reset and matches user ID
+      if (decoded.purpose !== 'password-reset' || decoded.id !== user.id) {
+        res.status(400).json({
+          status: 'error',
+          message: 'Invalid reset token'
+        });
+        return;
+      }
+      
+      // Find valid token in database
+      const resetRecord = await PasswordReset.findOne({
+        where: {
+          userId: user.id,
+          token,
+          expiresAt: {
+            [Op.gt]: new Date() // Hasn't expired
+          }
+        }
+      });
+
+      if (!resetRecord) {
+        res.status(400).json({
+          status: 'error',
+          message: 'Invalid or expired reset link'
+        });
+        return;
+      }
+
+      // Hash new password
+      const hashedPassword = await hashPassword(password);
+      
+      // Update user's password
+      await user.update({ password: hashedPassword });
+      
+      // Delete the used token
+      await resetRecord.destroy();
+      
+      res.status(200).json({
+        status: 'success',
+        message: 'Password has been reset successfully. Please log in with your new password.'
+      });
+    } catch (error) {
+      // Token verification failed
+      res.status(400).json({
+        status: 'error',
+        message: 'Invalid or expired reset link'
+      });
+      return;
+    }
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while resetting your password.'
     });
   }
 };

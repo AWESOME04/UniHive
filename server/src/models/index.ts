@@ -12,6 +12,7 @@ import { ArchiveHive } from './ArchiveHive';
 import { SideHustleHive } from './SideHustleHive';
 import { HiveApplication } from './HiveApplication';
 import { HiveReview } from './HiveReview';
+import { PasswordReset } from './PasswordReset';
 
 const models = {
   User,
@@ -25,7 +26,8 @@ const models = {
   ArchiveHive,
   SideHustleHive,
   HiveApplication,
-  HiveReview
+  HiveReview,
+  PasswordReset
 };
 
 const setupAssociations = () => {
@@ -171,7 +173,18 @@ const setupAssociations = () => {
   
   HiveReview.belongsTo(User, { 
     foreignKey: 'reviewedId', 
-    as: 'reviewedUser'  // Changed from 'reviewed' to 'reviewedUser'
+    as: 'reviewedUser'
+  });
+
+  // Password Reset associations
+  User.hasMany(PasswordReset, {
+    foreignKey: 'userId',
+    as: 'passwordResets',
+    onDelete: 'CASCADE'
+  });
+
+  PasswordReset.belongsTo(User, {
+    foreignKey: 'userId'
   });
 };
 
@@ -187,7 +200,8 @@ export {
   ArchiveHive,
   SideHustleHive,
   HiveApplication,
-  HiveReview
+  HiveReview,
+  PasswordReset
 };
 
 export default setupAssociations;

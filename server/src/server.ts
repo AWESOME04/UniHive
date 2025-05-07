@@ -10,11 +10,29 @@ import setupAssociations from './models/index';
 dotenv.config();
 
 const app: Express = express();
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT || '10000', 10);
+
+// Define allowed origins
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://unihive.vercel.app'
+];
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,11 +67,12 @@ const startServer = async () => {
     setupAssociations();
     console.log('Model associations initialized successfully.');
     
-    await sequelize.sync({ alter: true });
-    console.log('Database synchronized successfully (tables updated if needed).');
+    await sequelize.sync({ force: false, alter: false });
+    console.log('Database synchronized successfully.');
     
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
+      console.log(`Server bound to 0.0.0.0:${PORT}`);
     });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
