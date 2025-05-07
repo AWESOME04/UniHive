@@ -140,7 +140,7 @@ unihive/
 ## 📚 API Documentation
 
 For detailed API documentation, please visit our Postman collection:
-[UniHive API Documentation](https://documenter.getpostman.com/view/28591712/2sB2j7d9Rc)
+[UniHive API Documentation](https://documenter.getpostman.com/view/28591712/2sB2j7epgT)
 
 ### Main Endpoints
 
