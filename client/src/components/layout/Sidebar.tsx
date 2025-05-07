@@ -12,12 +12,19 @@ import {
   PlusCircle,
   Briefcase,
   GraduationCap,
-  Bell
+  Bell,
+  X
 } from 'lucide-react';
 import { useAppSelector } from '../../store';
 import { RootState } from '../../store';
 
-function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  isMobile?: boolean;
+  onClose?: () => void;
+}
+
+function Sidebar({ isOpen = true, isMobile = false, onClose }: SidebarProps) {
   const location = useLocation();
   const { user } = useAppSelector((state: RootState) => state.auth);
   
@@ -46,9 +53,30 @@ function Sidebar() {
     { name: 'Help Center', path: '/help', icon: <CircleHelp size={20} /> },
   ];
 
+  // Early return when closed and on mobile
+  if (isMobile && !isOpen) {
+    return null;
+  }
+
   return (
-    <aside className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-md py-6 hidden md:block overflow-y-auto z-40">
+    <aside className={`fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white shadow-md py-6 overflow-y-auto z-40 transition-all duration-300
+      ${isMobile ? 'block' : 'hidden md:block'}
+      ${isMobile && isOpen ? 'translate-x-0' : isMobile ? '-translate-x-full' : ''}
+    `}>
+      {isMobile && (
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          aria-label="Close sidebar"
+        >
+          <X size={18} />
+        </button>
+      )}
       <div className="px-6 mb-6">
+        <Link to="/" className="flex items-center">
+          <img src="/unihive-no-text.svg" alt="UniHive Logo" className="h-8 w-8 mr-2" />
+          <span className="text-xl font-bold"><span className="text-primary">Uni</span><span className="text-secondary">Hive</span></span>
+        </Link>
         {user && (
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-full bg-light-orange flex items-center justify-center">

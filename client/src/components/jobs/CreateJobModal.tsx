@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, Plus, Calendar, MapPin, Briefcase, DollarSign, GraduationCap, Tag } from 'lucide-react';
 import { useAppDispatch } from '../../store';
 import { createJob } from '../../store/slices/jobsSlice';
 import { toast } from 'react-toastify';
-import { formatCurrency } from '../../utils/formatUtils';
 
 interface CreateJobModalProps {
   isOpen: boolean;
@@ -180,13 +179,6 @@ function CreateJobModal({ isOpen, onClose }: CreateJobModalProps) {
     } finally {
       setLoading(false);
     }
-  };
-  
-  const formatSalaryPreview = () => {
-    if (formData.salaryType === 'range' && formData.minSalary && formData.maxSalary) {
-      return formatCurrency(formData.minSalary) + ' - ' + formatCurrency(formData.maxSalary);
-    }
-    return formData.salary ? formatCurrency(formData.salary) : 'Negotiable';
   };
   
   if (!isOpen) return null;

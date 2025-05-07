@@ -112,9 +112,15 @@ function OTPVerification() {
       // Call server API to resend OTP
       const response = await authService.resendOTP(email);
       toast.info(response.message || 'New OTP sent to your email');
+      
+      // Log success for debugging
+      console.log('OTP resend successful:', response);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to resend OTP';
       toast.error(errorMessage);
+      
+      // Log error for debugging
+      console.error('OTP resend error:', err);
     }
     
     // Restart countdown
@@ -139,6 +145,7 @@ function OTPVerification() {
     }
     
     setLoading(true);
+    console.log('Verifying OTP for email:', email);
     
     try {
       // Call server API to verify OTP
@@ -147,16 +154,33 @@ function OTPVerification() {
         otp: otpValue
       });
       
+      // Log success for debugging
+      console.log('OTP verification successful:', response);
+      
       setVerificationComplete(true);
       
       // Wait for animation to complete before redirecting
       setTimeout(() => {
         toast.success(response.message || 'Email verified successfully!');
-        navigate('/login');
+        // Get credentials from location state
+        const { email: userEmail, password } = location.state || {};
+        
+        console.log('Preparing for auto-login with credentials available:', !!userEmail && !!password);
+        
+        // If we have credentials, attempt to log in automatically
+        if (userEmail && password) {
+          // Navigate to login with credentials for auto-login
+          navigate('/login', { state: { email: userEmail, password, autoLogin: true } });
+        } else {
+          navigate('/login');
+        }
       }, 2000);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Verification failed. Please try again.';
       toast.error(errorMessage);
+      
+      // Log error for debugging
+      console.error('OTP verification error:', err);
     } finally {
       setLoading(false);
     }
