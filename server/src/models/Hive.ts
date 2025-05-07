@@ -68,5 +68,5 @@ export class Hive extends Model {
     allowNull: true
   })
   deadline!: Date;
-    postedByUser: any;
+    postedByUser!: User;
 }
