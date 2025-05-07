@@ -210,6 +210,15 @@ For detailed API documentation, please visit our Postman collection:
 | GET        | `/api/hives/:hiveId/reviews`             | Get reviews for a specific hive      |
 | GET        | `/api/users/:userId/reviews`             | Get reviews for a specific user      |
 
+#### Payments
+
+| **Method** | **Endpoint**                   | **Description**                      |
+|------------|--------------------------------|--------------------------------------|
+| POST       | `/api/payments/initialize/:hiveId` | Initialize payment for a hive        |
+| GET        | `/api/payments/verify`         | Verify a payment transaction         |
+| GET        | `/api/payments/history`        | Get user's payment history           |
+| POST       | `/api/payments/webhook`        | Paystack webhook handler (internal)  |
+
 ## 📱 Screenshots
 
 Coming soon...

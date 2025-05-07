@@ -13,6 +13,7 @@ import { SideHustleHive } from './SideHustleHive';
 import { HiveApplication } from './HiveApplication';
 import { HiveReview } from './HiveReview';
 import { PasswordReset } from './PasswordReset';
+import { Transaction } from './Transaction';
 
 const models = {
   User,
@@ -27,7 +28,8 @@ const models = {
   SideHustleHive,
   HiveApplication,
   HiveReview,
-  PasswordReset
+  PasswordReset,
+  Transaction
 };
 
 const setupAssociations = () => {
@@ -186,6 +188,37 @@ const setupAssociations = () => {
   PasswordReset.belongsTo(User, {
     foreignKey: 'userId'
   });
+
+  User.hasMany(Transaction, { 
+    foreignKey: 'buyerId', 
+    as: 'userPurchases' 
+  });
+  
+  User.hasMany(Transaction, { 
+    foreignKey: 'sellerId', 
+    as: 'userSales' 
+  });
+  
+  Hive.hasMany(Transaction, { 
+    foreignKey: 'hiveId', 
+    as: 'hiveTransactions'
+  });
+  
+  Transaction.belongsTo(User, { 
+    foreignKey: 'buyerId', 
+    as: 'buyer'
+  });
+  
+  Transaction.belongsTo(User, { 
+    foreignKey: 'sellerId', 
+    as: 'seller',
+    constraints: false
+  });
+  
+  Transaction.belongsTo(Hive, { 
+    foreignKey: 'hiveId',
+    as: 'transactionHive'
+  });
 };
 
 export {
@@ -201,7 +234,8 @@ export {
   SideHustleHive,
   HiveApplication,
   HiveReview,
-  PasswordReset
+  PasswordReset,
+  Transaction
 };
 
 export default setupAssociations;

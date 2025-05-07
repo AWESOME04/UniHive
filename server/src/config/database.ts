@@ -13,6 +13,7 @@ import { SideHustleHive } from '../models/SideHustleHive';
 import { HiveApplication } from '../models/HiveApplication';
 import { HiveReview } from '../models/HiveReview';
 import { PasswordReset } from '../models/PasswordReset';
+import { Transaction } from '../models/Transaction';
 
 dotenv.config();
 
@@ -71,7 +72,8 @@ sequelize.addModels([
   SideHustleHive, 
   HiveApplication, 
   HiveReview,
-  PasswordReset
+  PasswordReset,
+  Transaction
 ]);
 
 export { sequelize };

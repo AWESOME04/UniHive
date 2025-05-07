@@ -1751,6 +1751,103 @@
           }
         }
       ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Initialize Payment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/initialize/:hiveId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "initialize",
+                ":hiveId"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID to pay for"
+                }
+              ]
+            },
+            "description": "Initialize a payment for a hive"
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/verify?reference=:reference",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "verify"
+              ],
+              "query": [
+                {
+                  "key": "reference",
+                  "value": ":reference",
+                  "description": "Payment reference from Paystack"
+                }
+              ]
+            },
+            "description": "Verify a payment transaction"
+          }
+        },
+        {
+          "name": "Get Payment History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "history"
+              ]
+            },
+            "description": "Get payment history for the current user"
+          }
+        }
+      ]
     }
   ],
   "variable": [
