@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 // Generate hashed password
 export const hashPassword = async (password: string): Promise<string> => {
@@ -31,4 +32,21 @@ export const verifyToken = (token: string): any => {
 export const generateOTP = (): string => {
   // Generate a 6-digit OTP
   return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Generate a reset token for password reset
+export const generateResetToken = (): string => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
+// Generate a reset token with expiry (for use in reset password link)
+export const generatePasswordResetToken = (userId: string): string => {
+  const secret = process.env.JWT_SECRET || 'your_jwt_secret_here';
+  return jwt.sign({ id: userId, purpose: 'password-reset' }, secret, { expiresIn: '1h' });
+};
+
+// Verify password reset token
+export const verifyPasswordResetToken = (token: string): any => {
+  const secret = process.env.JWT_SECRET || 'your_jwt_secret_here';
+  return jwt.verify(token, secret);
 };
