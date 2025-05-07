@@ -12,6 +12,7 @@ import { ArchiveHive } from '../models/ArchiveHive';
 import { SideHustleHive } from '../models/SideHustleHive';
 import { HiveApplication } from '../models/HiveApplication';
 import { HiveReview } from '../models/HiveReview';
+import { PasswordReset } from '../models/PasswordReset';
 
 dotenv.config();
 
@@ -69,7 +70,8 @@ sequelize.addModels([
   ArchiveHive, 
   SideHustleHive, 
   HiveApplication, 
-  HiveReview
+  HiveReview,
+  PasswordReset
 ]);
 
 export { sequelize };
