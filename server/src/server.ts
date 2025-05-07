@@ -10,7 +10,7 @@ import setupAssociations from './models/index';
 dotenv.config();
 
 const app: Express = express();
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT || '5000', 10);
 
 // Define allowed origins
 const allowedOrigins = [
@@ -70,8 +70,10 @@ const startServer = async () => {
     await sequelize.sync({ alter: true });
     console.log('Database synchronized successfully (tables updated if needed).');
     
-    app.listen(PORT, () => {
+    // Listen on all network interfaces (0.0.0.0) instead of just localhost
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
+      console.log(`Server bound to 0.0.0.0:${PORT}`);
     });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
