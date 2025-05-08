@@ -1,10 +1,7 @@
 import { Bell, Menu, User, Search, MessageSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store';
-import { logout } from '../../store/slices/authSlice';
-import { RootState } from '../../store';
-import authService from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
 interface NavbarProps {
@@ -17,12 +14,11 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, user: storeUser } = useAppSelector((state: RootState) => state.auth);
+  const { user: authUser, isAuthenticated, logout } = useAuth();
   
-  // Use prop user if provided, otherwise use the one from store
-  const user = propUser || storeUser;
+  // Use prop user if provided, otherwise use the one from auth context
+  const user = propUser || authUser;
 
   // Handle scroll effect
   useEffect(() => {
@@ -61,11 +57,8 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   }, [location]);
 
   const handleLogout = () => {
-    // Call auth service to clear token
-    authService.logout();
-    
-    // Update Redux state
-    dispatch(logout());
+    // Call logout function from AuthContext
+    logout();
     
     // Show success message
     toast.success('Logged out successfully');
@@ -174,7 +167,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                         <img
                           className="h-8 w-8 rounded-full"
                           src={user.avatarUrl}
-                          alt={user.username || "User profile"}
+                          alt={user.name || "User profile"}
                         />
                       ) : (
                         <div className="h-8 w-8 rounded-full bg-secondary text-white flex items-center justify-center">

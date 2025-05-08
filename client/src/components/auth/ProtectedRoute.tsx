@@ -1,67 +1,29 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import authService from '../../services/authService';
-import { useAppDispatch } from '../../store';
-import { setCredentials } from '../../store/slices/authSlice';
+import { ReactNode } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-/**
- * A wrapper component that protects routes from unauthenticated access
- * Redirects to login if user is not authenticated
- */
-const ProtectedRoute = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Check if token exists
-        if (authService.isAuthenticated()) {
-          // Verify token by fetching current user
-          const response = await authService.getCurrentUser();
-          
-          // Update Redux store with user data
-          dispatch(
-            setCredentials({
-              user: response.data.user,
-              token: localStorage.getItem('token') || '',
-            })
-          );
-          
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        // If token is invalid, clear it
-        authService.logout();
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [dispatch]);
-
-  // Show loading state while checking authentication
+  
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
-
-  // If not authenticated, redirect to login page
+  
   if (!isAuthenticated) {
+    // Redirect to login but remember where they were trying to go
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-
-  // If authenticated, render the child routes
-  return <Outlet />;
+  
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

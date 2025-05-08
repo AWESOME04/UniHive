@@ -2,7 +2,6 @@ import { MapPin, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import api from '../../utils/apiUtils';
 
 // Define the university type
 interface University {
@@ -14,8 +13,8 @@ interface University {
   description?: string;
 }
 
-// Fallback data in case API fails
-const fallbackUniversities: University[] = [
+// Data for universities
+const universities: University[] = [
   { 
     id: 'uog', 
     name: 'University of Ghana', 
@@ -60,7 +59,7 @@ const fallbackUniversities: University[] = [
     id: 'ashesi', 
     name: 'Ashesi University', 
     location: 'Berekuso', 
-    image: 'ash.png', 
+    image: '/ash.png', 
     students: '1,200+',
     description: 'Innovative private university known for its focus on ethical leadership and entrepreneurship.'
   },
@@ -68,7 +67,7 @@ const fallbackUniversities: University[] = [
     id: 'upsa', 
     name: 'University of Professional Studies', 
     location: 'Accra', 
-    image: 'upsa.png', 
+    image: '/upsa.png', 
     students: '11,500+',
     description: 'Specializing in accountancy, management, and other professional programs.'
   },
@@ -76,7 +75,7 @@ const fallbackUniversities: University[] = [
     id: 'uew', 
     name: 'University of Education', 
     location: 'Winneba', 
-    image: 'uew.png', 
+    image: '/uew.png', 
     students: '18,000+',
     description: "Ghana's leading institution for teacher education and educational research."
   }
@@ -88,49 +87,26 @@ interface UniversityDirectoryProps {
 }
 
 const UniversityDirectory = ({ limit, showViewAll = true }: UniversityDirectoryProps) => {
-  const [universities, setUniversities] = useState<University[]>(fallbackUniversities);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
-  // Add a specific state for animation completion
   const [animationComplete, setAnimationComplete] = useState(true);
 
   useEffect(() => {
-    const fetchUniversities = async () => {
-      try {
-        const response = await api.get('/v1/universities');
-        if (response.data && Array.isArray(response.data.data)) {
-          const mappedUniversities = response.data.data.map((uni: any) => ({
-            id: uni.id || uni._id,
-            name: uni.name,
-            location: uni.location || 'Ghana',
-            image: uni.logo || `/universityofghana.png`,
-            students: uni.studentCount ? `${uni.studentCount}+` : 'Many',
-            description: uni.description || 'A leading university in Ghana'
-          }));
-          setUniversities(mappedUniversities.length > 0 ? mappedUniversities : fallbackUniversities);
-        }
-      } catch (error) {
-        console.error('Error fetching universities:', error);
-        // Use fallback data if API fails
-        setUniversities(fallbackUniversities);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUniversities();
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
-  // When changing showAll state, reset animation completion
   useEffect(() => {
     setAnimationComplete(false);
-    // Set a timeout to ensure visibility update happens after animation
     const timer = setTimeout(() => {
       setAnimationComplete(true);
     }, 50);
     return () => clearTimeout(timer);
   }, [showAll]);
 
-  // If limit is provided and not showing all, only show that many universities
   const displayedUniversities = (limit && !showAll) ? universities.slice(0, limit) : universities;
 
   if (loading) {
@@ -198,7 +174,7 @@ const UniversityDirectory = ({ limit, showViewAll = true }: UniversityDirectoryP
                 }}
                 whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)" }}
                 transition={{ type: "spring", stiffness: 400 }}
-                className="flex" // Added to ensure proper rendering
+                className="flex"
               >
                 <Link 
                   to={`/universities/${university.id}`}
