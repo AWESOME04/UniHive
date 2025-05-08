@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, ReactNode, memo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
 import ScrollRestoration from '../ui/ScrollRestoration';
 import Footer from './Footer';
 

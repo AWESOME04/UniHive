@@ -24,6 +24,12 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+interface ResetPasswordData {
+  email: string;
+  token: string;
+  newPassword: string;
+}
+
 // Authentication service without Redux
 export const authService = {
   // Register a new user
@@ -62,21 +68,22 @@ export const authService = {
   },
 
   // Verify OTP
-  verifyOTP: async (verificationData: { email: string; otp: string }) => {
+  verifyOTP: async (email: string, otp: string) => {
     try {
-      console.log('Verifying OTP for email:', verificationData.email);
+      console.log('Verifying OTP for email:', email);
       
+      const verificationData = { email, otp };
       const response = await apiClient.post('/auth/verify-otp', verificationData);
       
       console.log('OTP verification response:', response.data);
       
       // If API returned a token, store it
-      if (response.data && response.data.token) {
-        localStorage.setItem(TOKEN_KEY, response.data.token);
+      if (response.data && response.data.data && response.data.data.token) {
+        localStorage.setItem(TOKEN_KEY, response.data.data.token);
         
         // If user data is available, store it
-        if (response.data.user) {
-          localStorage.setItem(USER_KEY, JSON.stringify(response.data.user));
+        if (response.data.data.user) {
+          localStorage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
         }
       }
       
@@ -107,28 +114,33 @@ export const authService = {
   // Login user
   login: async (credentials: { email: string; password: string }) => {
     try {
-      console.log('Sending login request for:', credentials.email);
+      console.log('Sending login request to:', `${API_URL}/auth/login`);
+      console.log('With credentials:', { email: credentials.email, passwordProvided: !!credentials.password });
       
       const response = await apiClient.post('/auth/login', credentials);
       
-      console.log('Login response:', response.data);
+      console.log('Login API response:', response.data);
       
-      // Store token in localStorage
-      if (response.data && response.data.token) {
-        localStorage.setItem(TOKEN_KEY, response.data.token);
+      // Store token in localStorage if available in the expected format
+      if (response.data && response.data.data && response.data.data.token) {
+        localStorage.setItem(TOKEN_KEY, response.data.data.token);
         
-        // If user data is available, store it
-        if (response.data.user) {
-          localStorage.setItem(USER_KEY, JSON.stringify(response.data.user));
+        // Store user data if available
+        if (response.data.data.user) {
+          localStorage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
         }
+        
+        return response.data;
+      } else {
+        console.error('Login response does not contain token or is in unexpected format:', response.data);
+        throw new Error('Unexpected response format from server');
       }
-      
-      return response.data;
     } catch (error) {
       console.error('Login error:', error);
       
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data?.message || 'Login failed');
+        const errorMessage = error.response.data?.message || 'Login failed';
+        throw new Error(errorMessage);
       }
       throw new Error('Network error during login');
     }
@@ -172,6 +184,26 @@ export const authService = {
     } catch (e) {
       console.error('Error updating user data:', e);
       return false;
+    }
+  },
+
+  // Reset Password
+  resetPassword: async (data: ResetPasswordData) => {
+    try {
+      console.log('Resetting password for email:', data.email);
+      
+      const response = await apiClient.post('/auth/reset-password', data);
+      
+      console.log('Password reset response:', response.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Password reset error:', error);
+      
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data?.message || 'Failed to reset password');
+      }
+      throw new Error('Network error during password reset');
     }
   }
 };

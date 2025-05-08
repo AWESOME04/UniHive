@@ -155,11 +155,10 @@ function Register() {
       // Store credentials for passing to OTP verification
       const credentials = {
         email,
-        fullName: values.fullName,
         password: values.password,
       };
       
-      console.log('Navigating to OTP verification with credentials available:', !!credentials);
+      console.log('Navigating to OTP verification with email:', email);
       
       // Navigate to OTP verification with email and credentials
       navigate("/otp-verification", {

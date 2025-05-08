@@ -11,7 +11,6 @@ import {
   Search, 
   PlusCircle,
   Briefcase,
-  GraduationCap,
   Bell,
   X
 } from 'lucide-react';
@@ -164,25 +163,6 @@ function Sidebar({ isOpen = true, isMobile = false, onClose }: SidebarProps) {
           ))}
         </ul>
       </nav>
-
-      <div className="px-6 mt-8">
-        <div className="bg-light-orange/30 p-4 rounded-xl">
-          <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center text-white mb-3">
-            <GraduationCap size={20} />
-          </div>
-          <h3 className="font-medium mb-1">Earn while you learn</h3>
-          <p className="text-sm text-gray-600 mb-3">Post your first task and start earning today!</p>
-          <Link 
-            to="/add-job" 
-            className="text-secondary text-sm font-medium hover:underline flex items-center"
-          >
-            Get Started
-            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-      </div>
     </aside>
   );
 }

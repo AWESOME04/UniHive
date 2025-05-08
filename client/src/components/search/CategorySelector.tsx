@@ -1,4 +1,4 @@
-import { Activity, BookOpen, Briefcase, Code, DollarSign, HeartPulse, Monitor, Utensils } from 'lucide-react';
+import { BookOpen, Code, DollarSign, HeartPulse, Monitor, Utensils } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setCategoryFilter } from '../../store/slices/tasksSlice';
 

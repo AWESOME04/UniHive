@@ -1,4 +1,4 @@
-import { Bell, Menu, User, Search, MessageSquare } from 'lucide-react';
+import { Menu, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -109,48 +109,11 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
               >
                 Contact
               </Link>
-              {isAuthenticated && (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className={`${
-                      location.pathname === '/dashboard'
-                        ? 'border-secondary text-gray-900'
-                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                    } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/search"
-                    className={`${
-                      location.pathname === '/search'
-                        ? 'border-secondary text-gray-900'
-                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                    } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                  >
-                    Find Jobs
-                  </Link>
-                </>
-              )}
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {isAuthenticated ? (
               <>
-                <Link to="/search" className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
-                  <span className="sr-only">Search</span>
-                  <Search className="h-6 w-6" />
-                </Link>
-                <Link to="/messages" className="p-1 ml-3 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
-                  <span className="sr-only">Messages</span>
-                  <MessageSquare className="h-6 w-6" />
-                </Link>
-                <Link to="/notifications" className="p-1 ml-3 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
-                  <span className="sr-only">Notifications</span>
-                  <Bell className="h-6 w-6" />
-                </Link>
-
                 {/* Profile dropdown */}
                 <div className="ml-3 relative" id="profile-menu">
                   <div>
@@ -185,18 +148,11 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                       aria-labelledby="user-menu-button"
                     >
                       <Link
-                        to="/profile"
+                        to="/dashboard"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
-                        Your Profile
-                      </Link>
-                      <Link
-                        to="/saved-jobs"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                      >
-                        Saved Jobs
+                        Dashboard
                       </Link>
                       <Link
                         to="/settings"

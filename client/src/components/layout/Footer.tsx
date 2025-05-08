@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Instagram, Twitter, Facebook, Mail, MapPin, ExternalLink } from 'lucide-react';
+import { Github, Instagram, Twitter, Facebook, Mail, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const year = new Date().getFullYear();

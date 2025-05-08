@@ -1,30 +1,6 @@
 import axios from 'axios';
 import api from '../utils/apiUtils';
 
-// Define Message interface
-interface Message {
-  id: string;
-  conversationId: string;
-  senderId: string;
-  content: string;
-  attachments?: string[];
-  readBy: string[];
-  createdAt: string;
-}
-
-// Define Conversation interface
-interface Conversation {
-  id: string;
-  participants: string[];
-  lastMessage?: Message;
-  unreadCount: number;
-  createdAt: string;
-  updatedAt: string;
-  isGroupChat: boolean;
-  groupName?: string;
-  groupAvatar?: string;
-}
-
 // Messaging service
 export const messagingService = {
   // Get all conversations for the current user
