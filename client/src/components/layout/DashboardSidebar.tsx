@@ -70,7 +70,7 @@ const DashboardSidebar = ({
       section: 'Main',
       items: [
         { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
-        { name: 'Tasks', path: '/dashboard/tasks', icon: <ListTodo size={20} /> },
+        { name: 'Hives', path: '/dashboard/hives', icon: <ListTodo size={20} /> },
         { name: 'Jobs', path: '/dashboard/jobs', icon: <Briefcase size={20} /> },
         { name: 'Analytics', path: '/dashboard/analytics', icon: <BarChart3 size={20} /> },
       ]

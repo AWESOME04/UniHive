@@ -1,19 +1,6 @@
 import axios from 'axios';
 import api from '../utils/apiUtils';
 
-// Define SearchResult interface
-interface SearchResult {
-  type: 'job' | 'task' | 'university' | 'user' | 'event' | 'news';
-  id: string;
-  title: string;
-  description?: string;
-  imageUrl?: string;
-  tags?: string[];
-  createdAt?: string;
-  url?: string;
-  metadata?: Record<string, any>;
-}
-
 // Search service
 export const searchService = {
   // Global search across all entities

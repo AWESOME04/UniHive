@@ -1,22 +1,6 @@
 import axios from 'axios';
 import api from '../utils/apiUtils';
 
-// Define FileUpload interface
-interface FileUpload {
-  id: string;
-  fileName: string;
-  fileSize: number;
-  fileType: string;
-  url: string;
-  thumbnailUrl?: string;
-  uploadedBy: string;
-  uploadedAt: string;
-  expiresAt?: string;
-  isPublic: boolean;
-  category?: string;
-  metadata?: Record<string, any>;
-}
-
 // Upload service
 export const uploadService = {
   // Upload a single file

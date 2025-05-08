@@ -24,6 +24,12 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+interface ResetPasswordData {
+  email: string;
+  token: string;
+  newPassword: string;
+}
+
 // Authentication service without Redux
 export const authService = {
   // Register a new user
@@ -178,6 +184,26 @@ export const authService = {
     } catch (e) {
       console.error('Error updating user data:', e);
       return false;
+    }
+  },
+
+  // Reset Password
+  resetPassword: async (data: ResetPasswordData) => {
+    try {
+      console.log('Resetting password for email:', data.email);
+      
+      const response = await apiClient.post('/auth/reset-password', data);
+      
+      console.log('Password reset response:', response.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Password reset error:', error);
+      
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data?.message || 'Failed to reset password');
+      }
+      throw new Error('Network error during password reset');
     }
   }
 };

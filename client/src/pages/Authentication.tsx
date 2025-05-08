@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Check, ChevronDown } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Check, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 // Ghana University data with domains

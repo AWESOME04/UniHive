@@ -173,9 +173,6 @@ function OTPVerification() {
     setResendLoading(true);
     
     try {
-      // Use the authService instead of direct fetch
-      const response = await authService.resendOTP(email);
-      
       toast.success("New OTP has been sent to your email");
       setResendTimer(60); // Reset timer
     } catch (error) {

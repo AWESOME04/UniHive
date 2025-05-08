@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
   children, 
+  showFooter = false 
 }) => {
   const { user: authUser } = useAuth();
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -119,6 +120,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         >
           {children}
         </motion.main>
+
+        {/* Optional Footer */}
+        {showFooter && (
+          <footer className="bg-white py-4 px-6 border-t border-gray-200 text-center text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} UniHive. All rights reserved.
+          </footer>
+        )}
       </div>
     </div>
   );

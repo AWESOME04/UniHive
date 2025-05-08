@@ -26,13 +26,6 @@ import ResetPassword from './pages/Auth/ResetPassword';
 // Dashboard Pages
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import Jobs from './pages/Jobs';
-import Messaging from './pages/Messaging';
-import SavedJobs from './pages/SavedJobs';
-import SearchFilter from './pages/SearchFilter';
-import AddJobPosting from './pages/AddJobPosting';
-import JobDetails from './pages/JobDetails';
-import JobApplication from './pages/JobApplication';
 import Universities from './pages/Universities';
 import NotFound from './pages/NotFound';
 
@@ -75,56 +68,7 @@ function App() {
               </DashboardLayout>
             </ProtectedRoute>
           } />
-          <Route path="/dashboard/jobs" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Jobs />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/messages" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Messaging />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/saved-jobs" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <SavedJobs />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/search" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <SearchFilter />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/add-job" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <AddJobPosting />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/job/:id" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <JobDetails />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard/job/:id/apply" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <JobApplication />
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-          
+
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>

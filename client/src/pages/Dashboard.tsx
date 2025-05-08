@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Clock,
   DollarSign,
@@ -11,76 +11,13 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import userService from "../services/userService";
-
-interface TaskActivityItem {
-  month: string;
-  completed: number;
-  applied: number;
-}
-
-interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  university?: string;
-  profileImage?: string | null;
-  bio?: string | null;
-  rating?: number;
-  isVerified?: boolean;
-  createdAt?: string;
-}
 
 // Dashboard component
 const Dashboard: React.FC = () => {
-  const { user: authUser } = useAuth();
+  const { user } = useAuth();
   const [timeRange, setTimeRange] = useState("week");
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const [, setIsMobile] = useState(window.innerWidth < 1024);
-
-  // Listen for window resize to handle responsive behavior
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Fetch user profile data
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true);
-        
-        const response = await userService.getCurrentUserProfile();
-        
-        if (response.status === 'success' && response.data) {
-          setUserProfile(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
-
-  // Combine user data from auth context and profile API
-  const user = userProfile || authUser || {
-    name: "Student",
-    email: "student@university.edu.gh",
-    university: "University of Ghana"
-  };
 
   // Stats data
   const stats = [
@@ -121,7 +58,7 @@ const Dashboard: React.FC = () => {
   ];
 
   // Task activity data
-  const taskActivity: TaskActivityItem[] = [
+  const taskActivity = [
     { month: "Jan", completed: 4, applied: 6 },
     { month: "Feb", completed: 5, applied: 8 },
     { month: "Mar", completed: 7, applied: 10 },
@@ -208,18 +145,6 @@ const Dashboard: React.FC = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div 
-          className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        ></motion.div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <motion.div
@@ -230,7 +155,7 @@ const Dashboard: React.FC = () => {
         {/* Welcome Section */}
         <motion.div variants={itemVariants} className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back, {user.name}
+            Welcome back, {user?.name || "Student"}
           </h1>
           <p className="text-gray-600 mt-1">
             Here's what's happening with your tasks and earnings
@@ -276,7 +201,9 @@ const Dashboard: React.FC = () => {
           ))}
         </motion.div>
 
+        {/* Activity & Recommendations Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Activity Chart */}
           <motion.div 
             className="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden"
             variants={itemVariants}
@@ -346,50 +273,48 @@ const Dashboard: React.FC = () => {
               </div>
               
               <div className="space-y-4">
-                <AnimatePresence>
-                  {[
-                    {
-                      id: 1,
-                      title: "Web Development Task",
-                      deadline: "Tomorrow, 5:00 PM",
-                      status: "in-progress",
-                      priority: "high" as "high" | "medium" | "low",
-                    },
-                    {
-                      id: 2,
-                      title: "Content Writing Assignment",
-                      deadline: "May 10, 5:00 PM",
-                      status: "in-progress",
-                      priority: "medium" as "high" | "medium" | "low",
-                    },
-                    {
-                      id: 3,
-                      title: "Data Entry Project",
-                      deadline: "May 15, 5:00 PM",
-                      status: "in-progress",
-                      priority: "low" as "high" | "medium" | "low",
-                    },
-                  ].map((deadline) => (
-                    <motion.div 
-                      key={deadline.id}
-                      className="bg-gray-50 rounded-lg p-3 relative overflow-hidden"
-                      whileHover={{ x: 5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                      layout
-                    >
-                      <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                        deadline.priority === "high" ? "bg-red-500" : 
-                        deadline.priority === "medium" ? "bg-yellow-500" : 
-                        "bg-green-500"
-                      }`}></div>
-                      <h3 className="font-medium text-gray-800 mb-1">{deadline.title}</h3>
-                      <div className="flex items-center text-xs text-gray-500">
-                        <Clock size={12} className="mr-1" />
-                        <span>{deadline.deadline}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                {[
+                  {
+                    id: 1,
+                    title: "Web Development Task",
+                    deadline: "Tomorrow, 5:00 PM",
+                    status: "in-progress",
+                    priority: "high" as "high" | "medium" | "low",
+                  },
+                  {
+                    id: 2,
+                    title: "Content Writing Assignment",
+                    deadline: "May 10, 5:00 PM",
+                    status: "in-progress",
+                    priority: "medium" as "high" | "medium" | "low",
+                  },
+                  {
+                    id: 3,
+                    title: "Data Entry Project",
+                    deadline: "May 15, 5:00 PM",
+                    status: "in-progress",
+                    priority: "low" as "high" | "medium" | "low",
+                  },
+                ].map((deadline) => (
+                  <motion.div 
+                    key={deadline.id}
+                    className="bg-gray-50 rounded-lg p-3 relative overflow-hidden"
+                    whileHover={{ x: 5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    layout
+                  >
+                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${
+                      deadline.priority === "high" ? "bg-red-500" : 
+                      deadline.priority === "medium" ? "bg-yellow-500" : 
+                      "bg-green-500"
+                    }`}></div>
+                    <h3 className="font-medium text-gray-800 mb-1">{deadline.title}</h3>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Clock size={12} className="mr-1" />
+                      <span>{deadline.deadline}</span>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </motion.div>
