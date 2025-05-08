@@ -148,6 +148,1704 @@
             },
             "description": "Get current authenticated user's information"
           }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@university.edu\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "description": "Request a password reset link"
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@university.edu\",\n  \"token\": \"reset-token-from-email\",\n  \"password\": \"newPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "description": "Reset password using token from email"
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Get current authenticated user's information"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"bio\": \"I am a computer science student passionate about software development.\",\n  \"university\": \"University of Ghana\",\n  \"profileImage\": \"https://example.com/profile.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
+            },
+            "description": "Update current user's profile information"
+          }
+        },
+        {
+          "name": "Get User Profile by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Get public profile of any user by their ID"
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newSecurePassword456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "password"
+              ]
+            },
+            "description": "Change user's password"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hives",
+      "item": [
+        {
+          "name": "Get Hive Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "types"
+              ]
+            },
+            "description": "Get all available hive types"
+          }
+        },
+        {
+          "name": "Get All Hives",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "Filter by hive type ID",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "open",
+                  "description": "Filter by status: open, assigned, completed, cancelled",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "100",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "keyword",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all hives with filtering options"
+          }
+        },
+        {
+          "name": "Get Hive by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Get details of a specific hive by ID"
+          }
+        },
+        {
+          "name": "Get My Posted Hives",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/my/posted",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "my",
+                "posted"
+              ]
+            },
+            "description": "Get hives posted by the current user"
+          }
+        },
+        {
+          "name": "Get My Assigned Hives",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/my/assigned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "my",
+                "assigned"
+              ]
+            },
+            "description": "Get hives assigned to the current user"
+          }
+        },
+        {
+          "name": "Delete Hive",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Delete a hive (only by poster)"
+          }
+        },
+        {
+          "name": "Update Hive Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Update the status of a hive"
+          }
+        },
+        {
+          "name": "Assign Hive",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignedToId\": \"user-uuid-here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:id/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":id",
+                "assign"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Assign a hive to a user (only by poster)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Essentials",
+      "item": [
+        {
+          "name": "Get All Essentials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/essentials?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "essentials"
+              ],
+              "query": [
+                {
+                  "key": "condition",
+                  "value": "good",
+                  "disabled": true
+                },
+                {
+                  "key": "itemCategory",
+                  "value": "electronics",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "100",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "keyword",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all essentials listings with filtering options"
+          }
+        },
+        {
+          "name": "Create Essentials Listing",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Rice Cooker for Sale\",\n  \"description\": \"Barely used 1.8L rice cooker in excellent condition\",\n  \"price\": 25.99,\n  \"condition\": \"like-new\",\n  \"brand\": \"Panasonic\",\n  \"purchaseDate\": \"2023-06-15\",\n  \"itemCategory\": \"electronics\",\n  \"photos\": [\"https://example.com/photo1.jpg\", \"https://example.com/photo2.jpg\"],\n  \"pickupLocation\": \"Student Center, Building B\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/essentials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "essentials"
+              ]
+            },
+            "description": "Create a new essentials listing"
+          }
+        },
+        {
+          "name": "Update Essentials Listing",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Rice Cooker for Sale - PRICE REDUCED\",\n  \"description\": \"Barely used 1.8L rice cooker in excellent condition\",\n  \"price\": 19.99,\n  \"condition\": \"like-new\",\n  \"pickupLocation\": \"Student Center, Building B, Room 204\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/essentials/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "essentials",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Essentials Hive ID"
+                }
+              ]
+            },
+            "description": "Update an existing essentials listing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academia",
+      "item": [
+        {
+          "name": "Get All Academia Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/academia?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "academia"
+              ],
+              "query": [
+                {
+                  "key": "subject",
+                  "value": "Mathematics",
+                  "disabled": true
+                },
+                {
+                  "key": "academicLevel",
+                  "value": "undergraduate",
+                  "disabled": true
+                },
+                {
+                  "key": "sessionFormat",
+                  "value": "one-on-one",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "100",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "calculus",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all academia posts with filtering options"
+          }
+        },
+        {
+          "name": "Create Academia Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Calculus I Tutoring\",\n  \"description\": \"Tutoring for Calculus I students. I got an A in this course and can help you understand derivatives and integrals.\",\n  \"price\": 30,\n  \"subject\": \"Mathematics\",\n  \"courseCode\": \"MATH101\",\n  \"academicLevel\": \"undergraduate\",\n  \"sessionFormat\": \"one-on-one\",\n  \"tutorQualifications\": \"A grade in Calculus I, currently a senior math major\",\n  \"duration\": 60,\n  \"learningGoals\": \"Master derivatives, integrals, and their applications\",\n  \"location\": \"University Library, Study Room 3 or online via Zoom\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/academia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "academia"
+              ]
+            },
+            "description": "Create a new academia post"
+          }
+        },
+        {
+          "name": "Update Academia Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Calculus I Tutoring - Special Rate\",\n  \"description\": \"Tutoring for Calculus I students. I got an A in this course and can help you understand derivatives and integrals.\",\n  \"price\": 25,\n  \"duration\": 90,\n  \"location\": \"Online via Zoom only\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/academia/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "academia",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Academia Hive ID"
+                }
+              ]
+            },
+            "description": "Update an existing academia post"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logistics",
+      "item": [
+        {
+          "name": "Get All Logistics Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/logistics?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "logistics"
+              ],
+              "query": [
+                {
+                  "key": "isUrgent",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "isRecurring",
+                  "value": "false",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "50",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "delivery",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all logistics posts with filtering options"
+          }
+        },
+        {
+          "name": "Create Logistics Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Food Delivery from Campus Cafeteria\",\n  \"description\": \"Need someone to pick up my lunch order from the cafeteria and deliver to my dorm\",\n  \"price\": 10,\n  \"pickupLocation\": \"Campus Cafeteria, North Wing\",\n  \"dropoffLocation\": \"Highland Residence Hall, Room 304\",\n  \"itemSizeWeight\": \"Small lunch package\",\n  \"isUrgent\": true,\n  \"specialInstructions\": \"Order will be under the name 'John'. Please make sure it includes utensils.\",\n  \"isRecurring\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/logistics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "logistics"
+              ]
+            },
+            "description": "Create a new logistics post"
+          }
+        },
+        {
+          "name": "Update Logistics Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Food Delivery from Campus Cafeteria - URGENT\",\n  \"price\": 15,\n  \"specialInstructions\": \"Order will be under 'John'. Please text me when you're on your way: 555-1234.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/logistics/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "logistics",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Logistics Hive ID"
+                }
+              ]
+            },
+            "description": "Update an existing logistics post"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buzz",
+      "item": [
+        {
+          "name": "Get All Buzz Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/buzz?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buzz"
+              ],
+              "query": [
+                {
+                  "key": "eventType",
+                  "value": "party",
+                  "disabled": true
+                },
+                {
+                  "key": "admission",
+                  "value": "free",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "workshop",
+                  "disabled": true
+                },
+                {
+                  "key": "isItem13",
+                  "value": "true",
+                  "disabled": true,
+                  "description": "Filter events with food (Ghana's Item 13)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all buzz posts with filtering options"
+          }
+        },
+        {
+          "name": "Create Buzz Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tech Career Workshop\",\n  \"description\": \"Join us for a workshop on preparing for tech interviews with industry professionals\",\n  \"eventDate\": \"2023-11-15T18:00:00.000Z\",\n  \"location\": \"Computer Science Building, Room 101\",\n  \"organizer\": \"Computer Science Club\",\n  \"eventType\": \"workshop\",\n  \"admission\": \"free\",\n  \"capacity\": 50,\n  \"registrationLink\": \"https://forms.example.com/register\",\n  \"promotionalImage\": \"https://example.com/event-image.jpg\",\n  \"isItem13\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/buzz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buzz"
+              ]
+            },
+            "description": "Create a new buzz post"
+          }
+        },
+        {
+          "name": "Update Buzz Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tech Career Workshop - FOOD PROVIDED\",\n  \"capacity\": 75,\n  \"location\": \"Student Center, Grand Hall\",\n  \"isItem13\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/buzz/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buzz",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Buzz Hive ID"
+                }
+              ]
+            },
+            "description": "Update an existing buzz post"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Archive",
+      "item": [
+        {
+          "name": "Get All Archive Resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/archive?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "archive"
+              ],
+              "query": [
+                {
+                  "key": "courseCode",
+                  "value": "CS301",
+                  "disabled": true
+                },
+                {
+                  "key": "resourceType",
+                  "value": "notes",
+                  "disabled": true
+                },
+                {
+                  "key": "professor",
+                  "value": "Johnson",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "algorithms",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all archive resources with filtering options"
+          }
+        },
+        {
+          "name": "Create Archive Resource",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Data Structures & Algorithms Notes\",\n  \"description\": \"Complete lecture notes for CS301 covering all topics for the final exam\",\n  \"courseCode\": \"CS301\",\n  \"resourceType\": \"notes\",\n  \"professor\": \"Dr. Johnson\",\n  \"semester\": \"Fall\",\n  \"year\": \"2023\",\n  \"fileFormat\": \"PDF\",\n  \"fileUrl\": \"https://example.com/notes-file.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/archive",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "archive"
+              ]
+            },
+            "description": "Create a new archive resource"
+          }
+        },
+        {
+          "name": "Update Archive Resource",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Data Structures & Algorithms Complete Study Guide\",\n  \"description\": \"Complete lecture notes with practice problems and solutions for CS301\",\n  \"fileUrl\": \"https://example.com/updated-notes-file.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/archive/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "archive",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Archive Hive ID"
+                }
+              ]
+            },
+            "description": "Update an existing archive resource"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SideHustle",
+      "item": [
+        {
+          "name": "Get All Side Hustles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sidehustle?limit=10&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sidehustle"
+              ],
+              "query": [
+                {
+                  "key": "skillCategory",
+                  "value": "design",
+                  "disabled": true
+                },
+                {
+                  "key": "workLocation",
+                  "value": "remote",
+                  "disabled": true
+                },
+                {
+                  "key": "experienceLevel",
+                  "value": "beginner",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "100",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "design",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all side hustle listings with filtering options"
+          }
+        },
+        {
+          "name": "Create Side Hustle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Logo Designer Needed\",\n  \"description\": \"Looking for someone to design a logo for my student club\",\n  \"price\": 50,\n  \"skillCategory\": \"design\",\n  \"estimatedHours\": 5,\n  \"workLocation\": \"remote\",\n  \"compensationType\": \"fixed\",\n  \"applicationDeadline\": \"2023-11-30\",\n  \"experienceLevel\": \"intermediate\",\n  \"openPositions\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sidehustle",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sidehustle"
+              ]
+            },
+            "description": "Create a new side hustle listing"
+          }
+        },
+        {
+          "name": "Update Side Hustle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Urgent: Logo Designer Needed\",\n  \"description\": \"Looking for someone to design a logo for my student club. Quick turnaround needed!\",\n  \"price\": 75,\n  \"applicationDeadline\": \"2023-11-20\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sidehustle/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sidehustle",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Side Hustle ID"
+                }
+              ]
+            },
+            "description": "Update an existing side hustle listing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "Apply to Hive",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"I'm interested in this task and have relevant experience. I can complete it within the timeframe requested.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:hiveId/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":hiveId",
+                "applications"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Apply to a hive"
+          }
+        },
+        {
+          "name": "Get Applications for Hive",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:hiveId/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":hiveId",
+                "applications"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Get all applications for a specific hive (only for poster)"
+          }
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:hiveId/applications/:applicationId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":hiveId",
+                "applications",
+                ":applicationId"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID"
+                },
+                {
+                  "key": "applicationId",
+                  "value": "",
+                  "description": "Application ID"
+                }
+              ]
+            },
+            "description": "Update application status (accept/reject)"
+          }
+        },
+        {
+          "name": "Get My Applications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/applications/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "applications",
+                "me"
+              ]
+            },
+            "description": "Get all applications submitted by current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reviewedId\": \"user-uuid-here\",\n  \"rating\": 5,\n  \"comment\": \"Excellent work, very professional and completed the task ahead of schedule.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:hiveId/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":hiveId",
+                "reviews"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Create a review for a completed hive"
+          }
+        },
+        {
+          "name": "Get Reviews for Hive",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/:hiveId/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                ":hiveId",
+                "reviews"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID"
+                }
+              ]
+            },
+            "description": "Get all reviews for a specific hive"
+          }
+        },
+        {
+          "name": "Get Reviews for User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:userId/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":userId",
+                "reviews"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Get all reviews for a specific user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Initialize Payment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/initialize/:hiveId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "initialize",
+                ":hiveId"
+              ],
+              "variable": [
+                {
+                  "key": "hiveId",
+                  "value": "",
+                  "description": "Hive ID to pay for"
+                }
+              ]
+            },
+            "description": "Initialize a payment for a hive"
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/verify?reference=:reference",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "verify"
+              ],
+              "query": [
+                {
+                  "key": "reference",
+                  "value": ":reference",
+                  "description": "Payment reference from Paystack"
+                }
+              ]
+            },
+            "description": "Verify a payment transaction"
+          }
+        },
+        {
+          "name": "Get Payment History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "history"
+              ]
+            },
+            "description": "Get payment history for the current user"
+          }
         }
       ]
     }
