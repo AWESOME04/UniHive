@@ -2,15 +2,20 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import authService from '../services/authService';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Define user type
+// Define user type with all possible fields from API
 interface User {
   id: string;
   name: string;
   email: string;
   university?: string;
+  profileImage?: string | null;
   avatarUrl?: string;
+  bio?: string | null;
+  rating?: number;
+  isVerified?: boolean;
   role?: string;
-  [key: string]: any; // Allow for additional properties
+  createdAt?: string;
+  [key: string]: any;
 }
 
 // Define auth context state
@@ -71,23 +76,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await authService.login({ email, password });
       
-      // If the login was successful and returned user data
-      if (response && (response.user || response.userData)) {
-        const userData = response.user || response.userData;
-        setUser(userData);
+      console.log("Auth context login response:", response);
+      
+      // Check for the expected response format - this ensures we adapt to the API structure
+      if (response && response.data) {
+        if (response.data.user) {
+          setUser(response.data.user);
+        } else if (response.data.userData) {
+          setUser(response.data.userData);
+        } else {
+          // Minimal user construct if no detailed user data
+          setUser({
+            id: response.data.userId || 'unknown',
+            name: email.split('@')[0],
+            email
+          });
+        }
       } else {
-        // If no user data was returned but we have a token,
-        // construct minimal user object from email
-        setUser({
-          id: response.userId || 'unknown',
-          name: email.split('@')[0],
-          email
-        });
+        console.error("Unexpected login response format:", response);
       }
       
       return response;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error in context:', error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -112,19 +123,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const verifyOTP = async (email: string, otp: string) => {
     setIsLoading(true);
     try {
-      const response = await authService.verifyOTP({ email, otp });
+      const response = await authService.verifyOTP(email, otp);
       
       // If verification successful and returned user data
-      if (response && (response.user || response.userData)) {
-        const userData = response.user || response.userData;
-        setUser(userData);
-      } else if (response && response.token) {
-        // Construct minimal user object if only token provided
-        setUser({
-          id: response.userId || 'unknown',
-          name: email.split('@')[0],
-          email
-        });
+      if (response && response.data) {
+        if (response.data.user) {
+          setUser(response.data.user);
+        } else if (response.data.userData) {
+          setUser(response.data.userData);
+        } else if (response.data.userId) {
+          // Construct minimal user object if only userId provided
+          setUser({
+            id: response.data.userId,
+            name: email.split('@')[0],
+            email
+          });
+        }
       }
       
       return response;

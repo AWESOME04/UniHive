@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   ListTodo, 
-  Briefcase, 
   MessageSquare, 
   UserRound, 
   Bookmark, 
@@ -12,13 +11,10 @@ import {
   Settings, 
   CircleHelp,
   Users,
-  LogOut,
   X,
-  BarChart3,
   Wallet,
-  GraduationCap
 } from 'lucide-react';
-import { useAppSelector } from '../../store';
+import { useAuth } from '../../context/AuthContext';
 
 interface DashboardSidebarProps {
   isOpen: boolean;
@@ -28,7 +24,7 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar = ({ isOpen, isMobile, onClose }: DashboardSidebarProps) => {
   const location = useLocation();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAuth();
   const sidebarRef = useRef<HTMLDivElement>(null);
   
   // Close sidebar when clicking outside on mobile
@@ -61,28 +57,26 @@ const DashboardSidebar = ({ isOpen, isMobile, onClose }: DashboardSidebarProps) 
       section: 'Main',
       items: [
         { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
-        { name: 'Tasks', path: '/tasks', icon: <ListTodo size={20} /> },
-        { name: 'Jobs', path: '/jobs', icon: <Briefcase size={20} /> },
-        { name: 'Analytics', path: '/analytics', icon: <BarChart3 size={20} /> },
-        { name: 'Messages', path: '/messaging', icon: <MessageSquare size={20} />, badge: 2 }
+        { name: 'Tasks', path: '/dashboard/tasks', icon: <ListTodo size={20} /> },
+        { name: 'Messages', path: '/dashboard/messages', icon: <MessageSquare size={20} />, badge: 2 }
       ]
     },
     {
       section: 'Account',
       items: [
-        { name: 'Profile', path: '/profile', icon: <UserRound size={20} /> },
-        { name: 'Saved', path: '/saved-jobs', icon: <Bookmark size={20} /> },
-        { name: 'Post Task', path: '/add-job', icon: <PlusCircle size={20} /> },
-        { name: 'Earnings', path: '/earnings', icon: <Wallet size={20} /> },
-        { name: 'Notifications', path: '/notifications', icon: <Bell size={20} />, badge: 3 }
+        { name: 'Profile', path: '/dashboard/profile', icon: <UserRound size={20} /> },
+        { name: 'Saved', path: '/dashboard/saved-jobs', icon: <Bookmark size={20} /> },
+        { name: 'Post Task', path: '/dashboard/add-job', icon: <PlusCircle size={20} /> },
+        { name: 'Earnings', path: '/dashboard/earnings', icon: <Wallet size={20} /> },
+        { name: 'Notifications', path: '/dashboard/notifications', icon: <Bell size={20} />, badge: 3 }
       ]
     },
     {
       section: 'Support',
       items: [
-        { name: 'Community', path: '/users', icon: <Users size={20} /> },
-        { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
-        { name: 'Help Center', path: '/help', icon: <CircleHelp size={20} /> }
+        { name: 'Community', path: '/dashboard/users', icon: <Users size={20} /> },
+        { name: 'Settings', path: '/dashboard/settings', icon: <Settings size={20} /> },
+        { name: 'Help Center', path: '/dashboard/help', icon: <CircleHelp size={20} /> }
       ]
     }
   ];
@@ -134,7 +128,8 @@ const DashboardSidebar = ({ isOpen, isMobile, onClose }: DashboardSidebarProps) 
                 <UserRound size={20} className="text-secondary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">{user.username}</p>
+                {/* Use proper name property */}
+                <p className="font-medium text-sm truncate">{user.name || "User"}</p>
                 <p className="text-xs text-gray-500 truncate">{user.email || 'student@example.com'}</p>
               </div>
             </div>
@@ -178,26 +173,6 @@ const DashboardSidebar = ({ isOpen, isMobile, onClose }: DashboardSidebarProps) 
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* Promo card */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-          <div className="bg-gradient-to-br from-secondary/10 to-accent-purple/10 p-4 rounded-xl">
-            <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center text-white mb-2">
-              <GraduationCap size={18} />
-            </div>
-            <h3 className="font-medium text-sm mb-1">Earn while you learn</h3>
-            <p className="text-xs text-gray-600 mb-2">Post your first task and start earning today!</p>
-            <Link 
-              to="/add-job" 
-              className="text-secondary text-xs font-medium hover:underline flex items-center"
-            >
-              Get Started
-              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
         </div>
       </div>
     </>

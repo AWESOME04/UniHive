@@ -290,7 +290,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <img src="/central.jpeg" alt="Central University" className="h-6 w-6 object-contain mr-2" />
+                        <img src="/central.png" alt="Central University" className="h-6 w-6 object-contain mr-2" />
                         <span className="text-xs font-medium">Central</span>
                       </motion.div>
                     </div>

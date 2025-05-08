@@ -17,7 +17,7 @@ const loginSchema = Yup.object().shape({
     )
     .required("Required"),
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
+    .min(5, "Password must be at least 5 characters")
     .required("Required"),
   rememberMe: Yup.boolean(),
 });
@@ -116,10 +116,19 @@ function Login() {
     setStatus(null);
     
     try {
+      // Use the auth context login method that connects to the actual API
+      const response = await login(values.email, values.password);
+      
+      console.log("Login successful:", response);
       
       toast.success("Login successful!");
-
-      navigate("/dashboard");
+      
+      // Add a small delay to allow the toast to show
+      setTimeout(() => {
+        // Navigate to dashboard after successful login
+        navigate("/dashboard");
+      }, 1000);
+      
     } catch (err) {
       const errorMessage =
         err instanceof Error
