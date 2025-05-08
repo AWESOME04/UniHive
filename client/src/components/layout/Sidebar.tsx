@@ -11,7 +11,6 @@ import {
   Search, 
   PlusCircle,
   Briefcase,
-  GraduationCap,
   Bell,
   X
 } from 'lucide-react';

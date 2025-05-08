@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { 
-  Award, Camera, Edit, GraduationCap, Mail, MapPin, Shield, 
+  Camera, Edit, GraduationCap, Mail, MapPin, Shield, 
   User, Check, Star, Calendar
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -34,11 +34,11 @@ interface FallbackProfile {
 
 function Profile() {
   const { user: authUser } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
+  const [, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [, setCursorPosition] = useState({ x: 0, y: 0 });
 
   // Fetch user profile data
   useEffect(() => {
