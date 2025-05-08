@@ -29,6 +29,15 @@ import Profile from './pages/Profile';
 import Universities from './pages/Universities';
 import NotFound from './pages/NotFound';
 
+// Hives Pages
+import Hives from './pages/Hives';
+import Essentials from './pages/hives/Essentials';
+import Academia from './pages/hives/Academia';
+import Logistics from './pages/hives/Logistics';
+import Buzz from './pages/hives/Buzz';
+import ArchivePage from './pages/hives/Archive';
+import SideHustle from './pages/hives/SideHustle';
+
 // ProtectedRoute
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -65,6 +74,99 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <Profile />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          
+          {/* Hives Routes */}
+          <Route path="/dashboard/hives" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Hives />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/essentials" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Essentials />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/essentials/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Essentials />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/academia" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Academia />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/academia/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Academia />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/logistics" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Logistics />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/logistics/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Logistics />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/buzz" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Buzz />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/buzz/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Buzz />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/archive" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ArchivePage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/archive/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ArchivePage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/sidehustle" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <SideHustle />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/hives/sidehustle/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <SideHustle />
               </DashboardLayout>
             </ProtectedRoute>
           } />
