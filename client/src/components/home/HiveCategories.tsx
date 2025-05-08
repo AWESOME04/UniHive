@@ -14,6 +14,16 @@ import {
 } from "lucide-react";
 import hivesService, { Hive, HiveType } from "../../services/hivesService";
 
+import designSvg from '../../assets/design.svg';
+import riceSvg from '../../assets/rice.svg';
+import webDevSvg from '../../assets/web-dev.svg';
+import calculusSvg from '../../assets/calculus.svg';
+import lectureSvg from '../../assets/lecture.svg';
+import photoSvg from '../../assets/photo.svg';
+import logisticsSvg from '../../assets/logistics.svg';
+import eventsSvg from '../../assets/events.svg';
+import taskSvg from '../../assets/task.svg';
+
 interface HiveCategoriesProps {
   isAuthenticated: boolean;
 }
@@ -53,38 +63,38 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     }
   };
 
-  // Get SVG image path based on task title or type
+  // Get SVG image based on task title or type
   const getTaskImage = (title: string, hiveType: string) => {
     if (title.toLowerCase().includes('logo') || title.toLowerCase().includes('design')) {
-      return "/src/assets/design.svg";
+      return designSvg;
     } else if (title.toLowerCase().includes('rice cooker')) {
-      return "/src/assets/rice.svg";
+      return riceSvg;
     } else if (title.toLowerCase().includes('tech') || title.toLowerCase().includes('website')) {
-      return "/src/assets/web-dev.svg";
+      return webDevSvg;
     } else if (title.toLowerCase().includes('calculus') || title.toLowerCase().includes('math')) {
-      return "/src/assets/calculus.svg";
+      return calculusSvg;
     } else if (title.toLowerCase().includes('lecture') || title.toLowerCase().includes('study')) {
-      return "/src/assets/lecture.svg";
+      return lectureSvg;
     } else if (title.toLowerCase().includes('photo')) {
-      return "/src/assets/photo.svg";
+      return photoSvg;
     }
     
     // Default based on hive type
     switch (hiveType) {
       case 'Essentials':
-        return "/src/assets/rice.svg";
+        return riceSvg;
       case 'Academia':
-        return "/src/assets/calculus.svg";
+        return calculusSvg;
       case 'Logistics':
-        return "/src/assets/logistics.svg";
+        return logisticsSvg;
       case 'Buzz':
-        return "/src/assets/events.svg";
+        return eventsSvg;
       case 'Archive':
-        return "/src/assets/lecture.svg";
+        return lectureSvg;
       case 'SideHustle':
-        return "/src/assets/design.svg";
+        return designSvg;
       default:
-        return "/src/assets/task.svg";
+        return taskSvg;
     }
   };
 

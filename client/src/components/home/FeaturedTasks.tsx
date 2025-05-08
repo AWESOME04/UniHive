@@ -2,54 +2,61 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Zap, ChevronRight } from "lucide-react";
 
+import photoSvg from '../../assets/photo.svg';
+import designSvg from '../../assets/design.svg';
+import riceSvg from '../../assets/rice.svg';
+import webDevSvg from '../../assets/web-dev.svg';
+import calculusSvg from '../../assets/calculus.svg';
+import lectureSvg from '../../assets/lecture.svg';
+
 interface FeaturedTasksProps {
   isAuthenticated: boolean;
   isScrolled: boolean;
 }
 
 const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
-  // Featured tasks data - using SVG icons
+  // Featured tasks data - using imported SVG assets
   const featuredTasks = [
     {
       title: "Photography",
       description: "Wedding photographer needed",
       price: "₵250",
-      icon: <img src="/src/assets/photo.svg" alt="Photography" className="w-8 h-8" />,
+      icon: <img src={photoSvg} alt="Photography" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Design",
       description: "Create a high converting landing page",
       price: "₵100",
-      icon: <img src="/src/assets/design.svg" alt="Design" className="w-8 h-8" />,
+      icon: <img src={designSvg} alt="Design" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Rice Cooker",
       description: "Slightly used rice cooker in good condition",
       price: "₵40",
-      icon: <img src="/src/assets/rice.svg" alt="Rice Cooker" className="w-8 h-8" />,
+      icon: <img src={riceSvg} alt="Rice Cooker" className="w-8 h-8" />,
       hive: "Essentials",
     },
     {
       title: "Web Development",
       description: "Build a responsive website",
       price: "₵500",
-      icon: <img src="/src/assets/web-dev.svg" alt="Web Development" className="w-8 h-8" />,
+      icon: <img src={webDevSvg} alt="Web Development" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Calculus Tutor",
       description: "Need help with Calculus II assignments",
       price: "₵80",
-      icon: <img src="/src/assets/calculus.svg" alt="Calculus" className="w-8 h-8" />,
+      icon: <img src={calculusSvg} alt="Calculus" className="w-8 h-8" />,
       hive: "Academia",
     },
     {
       title: "Lecture Notes",
       description: "Complete Engineering Physics notes available",
       price: "₵30",
-      icon: <img src="/src/assets/lecture.svg" alt="Lecture Notes" className="w-8 h-8" />,
+      icon: <img src={lectureSvg} alt="Lecture Notes" className="w-8 h-8" />,
       hive: "Archive",
     },
   ];
