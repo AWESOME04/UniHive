@@ -9,8 +9,6 @@ import {
   User, 
   Settings, 
   HelpCircle,
-  Sun,
-  Moon,
   X,
   Check,
   Clock,
@@ -28,7 +26,6 @@ const DashboardNavbar = ({ user, onMenuClick }: DashboardNavbarProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [recentSearches] = useState(['web development', 'data entry', 'content writing']);
   

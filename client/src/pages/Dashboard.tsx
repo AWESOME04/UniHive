@@ -182,6 +182,38 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const renderTaskActivityChart = () => {
+    const maxValue = Math.max(
+      ...taskActivity.map((item) => Math.max(item.completed, item.applied))
+    );
+
+    return (
+      <div className="h-64 flex items-end space-x-2 px-2">
+        {taskActivity.map((item, index) => (
+          <div key={index} className="flex-1 flex flex-col items-center">
+            <div className="w-full flex space-x-1 h-48 items-end">
+              <motion.div
+                className="w-1/2 bg-secondary rounded-t-sm"
+                style={{ height: `${(item.completed / maxValue) * 160}px` }}
+                initial={{ height: 0 }}
+                animate={{ height: `${(item.completed / maxValue) * 160}px` }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              />
+              <motion.div
+                className="w-1/2 bg-blue-400 rounded-t-sm"
+                style={{ height: `${(item.applied / maxValue) * 160}px` }}
+                initial={{ height: 0 }}
+                animate={{ height: `${(item.applied / maxValue) * 160}px` }}
+                transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+              />
+            </div>
+            <div className="text-xs text-gray-500 mt-2">{item.month}</div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -298,10 +330,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   
                   <div className="h-64 relative">
-                    {/* Chart would go here */}
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                      <p>Activity chart visualization</p>
-                    </div>
+                    {renderTaskActivityChart()}
                   </div>
                   
                   <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
