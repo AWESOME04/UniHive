@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import logoImg from '../../assets/logo.svg'
 
 interface DashboardSidebarProps {
   isOpen: boolean;
@@ -136,18 +137,25 @@ const DashboardSidebar = ({
               animate="visible"
               variants={fadeInVariants}
             >
-              <div className="h-8 w-8 bg-secondary rounded-md flex items-center justify-center text-white font-bold text-lg">
-                UH
-              </div>
-              <span className="font-bold text-lg">
-                <span className="text-primary">Uni</span>
-                <span className="text-secondary">Hive</span>
-              </span>
+              <Link to='/'>
+                <img src={logoImg} alt="UniHive Logo" className="h-16 w-16" />
+              </Link>
+              
+              <Link to='/'>
+                <span className="font-bold text-lg">
+                  <span className="text-primary">Uni</span>
+                  <span className="text-secondary">Hive</span>
+                </span>
+              </Link>
+              
             </motion.div>
           ) : (
-            <div className="h-8 w-8 bg-secondary rounded-md flex items-center justify-center text-white font-bold text-lg mx-auto">
-              UH
-            </div>
+            <>
+              <Link to='/'>
+                <img src={logoImg} alt="UniHive Logo" className="h-16 w-16" />
+              </Link>
+            </>
+            
           )}
           
           {isMobile && (

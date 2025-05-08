@@ -32,11 +32,11 @@ const ghanaPaymentMethods: PaymentMethod[] = [
     textColor: 'text-blue-600',
   },
   {
-    id: 'zeepay',
-    name: 'Zeepay',
-    shortCode: 'ZP',
-    color: 'bg-green-100',
-    textColor: 'text-green-600',
+    id: 'wewire',
+    name: 'We Wire',
+    shortCode: 'WW',
+    color: 'bg-orange-100',
+    textColor: 'text-orange-600',
   }
 ];
 
