@@ -1,24 +1,61 @@
 import axios from 'axios';
-import api from '../utils/apiUtils';
 
-// Token storage key - use Vite environment variable or default
-const TOKEN_KEY = import.meta.env?.VITE_TOKEN_KEY || 'unihive_token';
+// Base API URL - from environment or default to the production URL
+const API_URL = import.meta.env?.VITE_API_URL || 'https://unihive-hmoi.onrender.com/api';
 
-// Authentication service
+// Token storage key
+const TOKEN_KEY = 'unihive_token';
+const USER_KEY = 'unihive_user';
+
+// Create a custom axios instance for API calls
+const apiClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add token to requests if available
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Authentication service without Redux
 export const authService = {
   // Register a new user
   register: async (userData: {
-    name: string;
+    fullName: string;
     email: string;
     password: string;
     university: string;
   }) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      console.log('Sending registration request with data:', { 
+        name: userData.fullName,
+        email: userData.email,
+        password: '********', // Don't log actual password
+        university: userData.university
+      });
+      
+      const response = await apiClient.post('/auth/register', {
+        name: userData.fullName, // API expects 'name', not 'fullName'
+        email: userData.email,
+        password: userData.password,
+        university: userData.university,
+      });
+      
+      console.log('Registration API response:', response.data);
+      
       return response.data;
     } catch (error) {
+      console.error('Registration error:', error);
+      
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Registration failed');
+        throw new Error(error.response.data?.message || 'Registration failed');
       }
       throw new Error('Network error during registration');
     }
@@ -27,11 +64,28 @@ export const authService = {
   // Verify OTP
   verifyOTP: async (verificationData: { email: string; otp: string }) => {
     try {
-      const response = await api.post('/auth/verify-otp', verificationData);
+      console.log('Verifying OTP for email:', verificationData.email);
+      
+      const response = await apiClient.post('/auth/verify-otp', verificationData);
+      
+      console.log('OTP verification response:', response.data);
+      
+      // If API returned a token, store it
+      if (response.data && response.data.token) {
+        localStorage.setItem(TOKEN_KEY, response.data.token);
+        
+        // If user data is available, store it
+        if (response.data.user) {
+          localStorage.setItem(USER_KEY, JSON.stringify(response.data.user));
+        }
+      }
+      
       return response.data;
     } catch (error) {
+      console.error('OTP verification error:', error);
+      
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'OTP verification failed');
+        throw new Error(error.response.data?.message || 'OTP verification failed');
       }
       throw new Error('Network error during OTP verification');
     }
@@ -40,11 +94,11 @@ export const authService = {
   // Resend OTP
   resendOTP: async (email: string) => {
     try {
-      const response = await api.post('/auth/resend-otp', { email });
+      const response = await apiClient.post('/auth/resend-otp', { email });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to resend OTP');
+        throw new Error(error.response.data?.message || 'Failed to resend OTP');
       }
       throw new Error('Network error while resending OTP');
     }
@@ -53,17 +107,28 @@ export const authService = {
   // Login user
   login: async (credentials: { email: string; password: string }) => {
     try {
-      const response = await api.post('/auth/login', credentials);
+      console.log('Sending login request for:', credentials.email);
+      
+      const response = await apiClient.post('/auth/login', credentials);
+      
+      console.log('Login response:', response.data);
       
       // Store token in localStorage
-      if (response.data.data.token) {
-        localStorage.setItem(TOKEN_KEY, response.data.data.token);
+      if (response.data && response.data.token) {
+        localStorage.setItem(TOKEN_KEY, response.data.token);
+        
+        // If user data is available, store it
+        if (response.data.user) {
+          localStorage.setItem(USER_KEY, JSON.stringify(response.data.user));
+        }
       }
       
       return response.data;
     } catch (error) {
+      console.error('Login error:', error);
+      
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Login failed');
+        throw new Error(error.response.data?.message || 'Login failed');
       }
       throw new Error('Network error during login');
     }
@@ -72,24 +137,42 @@ export const authService = {
   // Logout user
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    return true;
   },
 
-  // Get current user
-  getCurrentUser: async () => {
+  // Get the current authenticated user
+  getCurrentUser: () => {
     try {
-      const response = await api.get('/auth/me');
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to get user data');
-      }
-      throw new Error('Network error while fetching user data');
+      const userJSON = localStorage.getItem(USER_KEY);
+      if (!userJSON) return null;
+      
+      return JSON.parse(userJSON);
+    } catch (e) {
+      console.error('Error parsing user data:', e);
+      return null;
     }
+  },
+
+  // Get the authentication token
+  getToken: () => {
+    return localStorage.getItem(TOKEN_KEY);
   },
 
   // Check if user is authenticated
   isAuthenticated: () => {
     return !!localStorage.getItem(TOKEN_KEY);
+  },
+
+  // Update user information
+  updateUserInfo: (userData: any) => {
+    try {
+      localStorage.setItem(USER_KEY, JSON.stringify(userData));
+      return true;
+    } catch (e) {
+      console.error('Error updating user data:', e);
+      return false;
+    }
   }
 };
 

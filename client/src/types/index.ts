@@ -17,7 +17,6 @@ export interface Task {
   assignedTo?: string;
   tags: string[];
   points: number;
-  price?: number | string;
   difficulty?: 'easy' | 'medium' | 'hard';
   estimatedHours?: number;
   location?: string;

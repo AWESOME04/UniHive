@@ -20,6 +20,9 @@ export default {
       boxShadow: {
         'xl-soft': '0 15px 30px -5px rgba(0, 0, 0, 0.05), 0 10px 15px -5px rgba(0, 0, 0, 0.05)',
       },
+      screens: {
+        'xs': '480px',
+      }
     },
   },
   plugins: [],

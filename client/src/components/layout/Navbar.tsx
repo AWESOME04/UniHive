@@ -1,19 +1,40 @@
-import { Bell, Menu, User, X, Search, MessageSquare, Briefcase } from 'lucide-react';
+import { Bell, Menu, User, Search, MessageSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store';
-import { logout } from '../../store/slices/authSlice';
-import { RootState } from '../../store';
-import authService from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
-const Navbar = () => {
+interface NavbarProps {
+  user?: any;
+  onMenuClick?: () => void;
+}
+
+const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
+  const { user: authUser, isAuthenticated, logout } = useAuth();
+  
+  // Use prop user if provided, otherwise use the one from auth context
+  const user = propUser || authUser;
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -36,11 +57,8 @@ const Navbar = () => {
   }, [location]);
 
   const handleLogout = () => {
-    // Call auth service to clear token
-    authService.logout();
-    
-    // Update Redux state
-    dispatch(logout());
+    // Call logout function from AuthContext
+    logout();
     
     // Show success message
     toast.success('Logged out successfully');
@@ -50,12 +68,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <nav className={`bg-white border-b border-gray-100 fixed top-0 w-full z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link to="/" className="flex items-center">
+                <img src="/unihive-no-text.svg" alt="UniHive Logo" className="h-10 w-10 mr-2" />
                 <span className="text-2xl font-bold text-primary">Uni<span className="text-secondary">Hive</span></span>
               </Link>
             </div>
@@ -69,6 +88,26 @@ const Navbar = () => {
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Home
+              </Link>
+              <Link
+                to="/about"
+                className={`${
+                  location.pathname === '/about'
+                    ? 'border-secondary text-gray-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+              >
+                About Us
+              </Link>
+              <Link
+                to="/contact"
+                className={`${
+                  location.pathname === '/contact'
+                    ? 'border-secondary text-gray-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+              >
+                Contact
               </Link>
               {isAuthenticated && (
                 <>
@@ -128,7 +167,7 @@ const Navbar = () => {
                         <img
                           className="h-8 w-8 rounded-full"
                           src={user.avatarUrl}
-                          alt={user.username || "User profile"}
+                          alt={user.name || "User profile"}
                         />
                       ) : (
                         <div className="h-8 w-8 rounded-full bg-secondary text-white flex items-center justify-center">
@@ -187,100 +226,171 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-secondary text-white hover:bg-opacity-90 px-4 py-2 rounded-md text-sm font-medium"
+                  className="bg-secondary hover:bg-opacity-90 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300"
                 >
                   Sign up
                 </Link>
               </div>
             )}
           </div>
-          <div className="flex items-center md:hidden">
+          <div className="-mr-2 flex items-center sm:hidden">
+            {/* Menu toggle for mobile */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
-              aria-expanded="false"
+              className="mr-2 lg:hidden"
+              onClick={onMenuClick || (() => setIsMenuOpen(!isMenuOpen))}
+              aria-label="Toggle Menu"
             >
-              <span className="sr-only">Open main menu</span>
-              {isMenuOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
-              )}
+              <Menu size={24} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu, show/hide based on menu state */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-16 inset-x-0 z-50 bg-white shadow-lg rounded-b-lg border-t border-gray-100 transition-all duration-300 ease-in-out">
-          <div className="px-4 pt-2 pb-3 space-y-1">
+        <div className="sm:hidden" id="mobile-menu">
+          <div className="pt-2 pb-3 space-y-1">
             <Link
               to="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
+              className={`${
+                location.pathname === '/'
+                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
             >
               Home
             </Link>
             <Link
-              to="/jobs"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
+              to="/about"
+              className={`${
+                location.pathname === '/about'
+                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
             >
-              Jobs
+              About Us
             </Link>
             <Link
-              to="/universities"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
+              to="/contact"
+              className={`${
+                location.pathname === '/contact'
+                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
             >
-              Universities
+              Contact
             </Link>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 <Link
+                  to="/dashboard"
+                  className={`${
+                    location.pathname === '/dashboard'
+                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/search"
+                  className={`${
+                    location.pathname === '/search'
+                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+                >
+                  Find Jobs
+                </Link>
+                <Link
                   to="/messages"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(false)}
+                  className={`${
+                    location.pathname === '/messages'
+                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
                 >
                   Messages
                 </Link>
                 <Link
-                  to="/profile"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(false)}
+                  to="/notifications"
+                  className={`${
+                    location.pathname === '/notifications'
+                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
                 >
-                  Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-white hover:bg-primary-dark px-3 py-2 rounded-md"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Register
+                  Notifications
                 </Link>
               </>
             )}
           </div>
+          {isAuthenticated ? (
+            <div className="pt-4 pb-3 border-t border-gray-200">
+              <div className="flex items-center px-4">
+                <div className="flex-shrink-0">
+                  {user?.avatarUrl ? (
+                    <img
+                      className="h-10 w-10 rounded-full"
+                      src={user.avatarUrl}
+                      alt={user.username || "User profile"}
+                    />
+                  ) : (
+                    <div className="h-10 w-10 rounded-full bg-secondary text-white flex items-center justify-center">
+                      <User size={20} />
+                    </div>
+                  )}
+                </div>
+                <div className="ml-3">
+                  <div className="text-base font-medium text-gray-800">{user?.username || "User"}</div>
+                  <div className="text-sm font-medium text-gray-500">{user?.email || ""}</div>
+                </div>
+              </div>
+              <div className="mt-3 space-y-1">
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                >
+                  Your Profile
+                </Link>
+                <Link
+                  to="/saved-jobs"
+                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                >
+                  Saved Jobs
+                </Link>
+                <Link
+                  to="/settings"
+                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                >
+                  Settings
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="pt-4 pb-3 border-t border-gray-200">
+              <div className="flex flex-col space-y-2 px-4">
+                <Link
+                  to="/login"
+                  className="block text-center px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/register"
+                  className="block text-center px-4 py-2 text-base font-medium bg-secondary text-white hover:bg-opacity-90 rounded-md"
+                >
+                  Sign up
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </nav>

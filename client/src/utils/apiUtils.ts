@@ -1,49 +1,54 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 
-// API Base URL - default to localhost if not specified in env
-const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000/api';
-
-// Token storage key - get from env or use default
+const API_URL = 'https://unihive-hmoi.onrender.com';
 const TOKEN_KEY = import.meta.env?.VITE_TOKEN_KEY || 'unihive_token';
 
-// Create axios instance with default config
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 15000,
 });
 
-// Request interceptor for adding auth token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token && config.headers) {
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log(`Request to ${config.url} with auth token`);
+    } else {
+      console.log(`Request to ${config.url} without auth token`);
     }
     return config;
   },
   (error: AxiosError) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor for handling common errors
 api.interceptors.response.use(
   (response: AxiosResponse) => {
+    console.log(`Response from ${response.config.url} successful:`, {
+      status: response.status,
+      hasData: !!response.data
+    });
     return response;
   },
   (error: AxiosError) => {
-    // Handle unauthorized errors (401)
-    if (error.response?.status === 401) {
-      // Clear token and redirect to login if needed
+    console.error('API Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+
+    if (error.response && error.response.status === 401) {
+      console.warn('Authentication token expired or invalid, redirecting to login');
       localStorage.removeItem(TOKEN_KEY);
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      window.location.href = '/login';
     }
-    
     return Promise.reject(error);
   }
 );

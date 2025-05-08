@@ -1,5 +1,7 @@
 import { MapPin, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Define the university type
 interface University {
@@ -11,13 +13,13 @@ interface University {
   description?: string;
 }
 
-// Sample data for Ghanaian universities
-const ghanaUniversities: University[] = [
+// Data for universities
+const universities: University[] = [
   { 
     id: 'uog', 
     name: 'University of Ghana', 
     location: 'Legon, Accra', 
-    image: 'https://seeklogo.com/images/U/university-of-ghana-logo-9C322A1398-seeklogo.com.png', 
+    image: '/universityofghana.png', 
     students: '38,000+',
     description: 'The oldest and largest university in Ghana, offering a wide range of programs across various disciplines.'
   },
@@ -25,7 +27,7 @@ const ghanaUniversities: University[] = [
     id: 'knust', 
     name: 'Kwame Nkrumah University', 
     location: 'Kumasi', 
-    image: 'https://seeklogo.com/images/K/knust-logo-5287B0F4B6-seeklogo.com.png', 
+    image: '/knust.png', 
     students: '42,000+',
     description: 'Known for its strong focus on science and technology education, research and entrepreneurship.'
   },
@@ -33,7 +35,7 @@ const ghanaUniversities: University[] = [
     id: 'ucc', 
     name: 'University of Cape Coast', 
     location: 'Cape Coast', 
-    image: 'https://brandfetch.com/_next/image?url=https%3A%2F%2Fasset.brandfetch.io%2FidFdo8_l4R%2FidtZYC20Rb.jpeg&w=1920&q=75', 
+    image: '/ucc.png', 
     students: '21,000+',
     description: 'Renowned for its education programs and beautiful coastal campus setting.'
   },
@@ -41,17 +43,41 @@ const ghanaUniversities: University[] = [
     id: 'central', 
     name: 'Central University', 
     location: 'Accra', 
-    image: 'https://central.edu.gh/wp-content/uploads/2022/04/CU-Logo-1.png', 
-    students: '15,000+',
+    image: '/central.png', 
+    students: '8,000+',
     description: 'A private Christian university offering diverse programs with a focus on ethical leadership and character development.'
+  },
+  { 
+    id: 'gimpa', 
+    name: 'Ghana Institute of Management', 
+    location: 'Accra', 
+    image: '/gimpa.png', 
+    students: '15,000+',
+    description: 'A leading institution for management and public administration education in Ghana.'
   },
   { 
     id: 'ashesi', 
     name: 'Ashesi University', 
     location: 'Berekuso', 
-    image: 'https://brandfetch.com/_next/image?url=https%3A%2F%2Fasset.brandfetch.io%2FidZlmZsj3U%2Fid_fU20mQN.png&w=1920&q=75', 
-    students: '8,000+',
-    description: 'A private university focused on cultivating ethical entrepreneurial leaders in Africa through innovative teaching methods.'
+    image: '/ash.png', 
+    students: '1,200+',
+    description: 'Innovative private university known for its focus on ethical leadership and entrepreneurship.'
+  },
+  { 
+    id: 'upsa', 
+    name: 'University of Professional Studies', 
+    location: 'Accra', 
+    image: '/upsa.png', 
+    students: '11,500+',
+    description: 'Specializing in accountancy, management, and other professional programs.'
+  },
+  { 
+    id: 'uew', 
+    name: 'University of Education', 
+    location: 'Winneba', 
+    image: '/uew.png', 
+    students: '18,000+',
+    description: "Ghana's leading institution for teacher education and educational research."
   }
 ];
 
@@ -61,65 +87,158 @@ interface UniversityDirectoryProps {
 }
 
 const UniversityDirectory = ({ limit, showViewAll = true }: UniversityDirectoryProps) => {
-  // If limit is provided, only show that many universities
-  const displayedUniversities = limit ? ghanaUniversities.slice(0, limit) : ghanaUniversities;
+  const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    setAnimationComplete(false);
+    const timer = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [showAll]);
+
+  const displayedUniversities = (limit && !showAll) ? universities.slice(0, limit) : universities;
+
+  if (loading) {
+    return <div className="py-8 text-center">Loading universities...</div>;
+  }
 
   return (
-    <div className="py-10 sm:py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
-      <div className="container mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-3 sm:mb-4">Top Universities in Ghana</h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-2">
-            Join students from Ghana's leading universities who are already using UniHive to find opportunities.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-          {displayedUniversities.map((university) => (
-            <div 
-              key={university.id} 
-              className="bg-white rounded-xl shadow-sm overflow-hidden transform transition-all duration-300 hover:shadow-md hover:translate-y-[-5px]"
+    <div className="py-8 sm:py-12 md:py-16">
+      <div className="container mx-auto px-4">
+        <motion.div 
+          className="flex justify-between items-center mb-6 sm:mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Universities in Ghana</h2>
+          {showViewAll && limit && universities.length > limit && !showAll && (
+            <motion.button 
+              onClick={() => setShowAll(true)}
+              className="text-primary hover:text-secondary text-sm font-medium transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <div className="p-4 sm:p-6">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 flex items-center justify-center bg-white rounded-full p-2 shadow-sm">
-                  <img src={university.image} alt={university.name} className="w-full h-full object-contain" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-center text-primary mb-2 line-clamp-1">{university.name}</h3>
-                <div className="flex items-center justify-center text-gray-500 mb-2 sm:mb-3">
-                  <MapPin size={14} className="mr-1 text-secondary flex-shrink-0" />
-                  <span className="text-xs sm:text-sm truncate">{university.location}</span>
-                </div>
-                <div className="flex items-center justify-center text-gray-500">
-                  <Users size={14} className="mr-1 text-secondary flex-shrink-0" />
-                  <span className="text-xs sm:text-sm">{university.students} Students</span>
-                </div>
-                {university.description && (
-                  <p className="mt-3 text-xs sm:text-sm text-gray-600 text-center line-clamp-2">
-                    {university.description}
-                  </p>
-                )}
-                <div className="mt-4 pt-3 border-t border-gray-100 text-center">
-                  <Link 
-                    to={`/universities/${university.id}`} 
-                    className="text-secondary text-xs sm:text-sm font-medium hover:underline inline-flex items-center"
-                  >
-                    View Programs <MapPin size={14} className="ml-1" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              View All
+            </motion.button>
+          )}
+          {showAll && (
+            <motion.button 
+              onClick={() => setShowAll(false)}
+              className="text-primary hover:text-secondary text-sm font-medium transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              Show Less
+            </motion.button>
+          )}
+        </motion.div>
 
-        {showViewAll && limit && ghanaUniversities.length > limit && (
-          <div className="text-center mt-8 sm:mt-10">
-            <Link 
-              to="/universities" 
-              className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 bg-white border border-secondary text-secondary rounded-lg hover:bg-secondary hover:text-white transition-colors text-sm sm:text-base"
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={showAll ? "expanded" : "collapsed"}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.05
+                }
+              }
+            }}
+            initial="hidden"
+            animate="visible"
+            exit={{ opacity: 0 }}
+          >
+            {displayedUniversities.map((university) => (
+              <motion.div
+                key={university.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)" }}
+                transition={{ type: "spring", stiffness: 400 }}
+                className="flex"
+              >
+                <Link 
+                  to={`/universities/${university.id}`}
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full w-full"
+                >
+                  <div className="h-20 w-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    <img 
+                      src={university.image} 
+                      alt={university.name} 
+                      className="w-auto h-16 object-contain"
+                    />
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h3 className="font-bold text-gray-800 mb-1 text-sm">{university.name}</h3>
+                    <div className="flex items-center text-gray-500 text-xs mb-2">
+                      <MapPin size={12} className="mr-1" />
+                      <span>{university.location}</span>
+                    </div>
+                    <div className="flex items-center text-gray-500 text-xs mt-auto">
+                      <Users size={12} className="mr-1" />
+                      <span>{university.students} students</span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        {showViewAll && limit && universities.length > limit && !showAll && (
+          <motion.div 
+            className="text-center mt-6 sm:mt-8 md:mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <motion.button 
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-white border border-secondary text-secondary rounded-lg hover:bg-secondary hover:text-white transition-colors text-sm sm:text-base"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               View All Universities
-            </Link>
-          </div>
+            </motion.button>
+          </motion.div>
+        )}
+        
+        {showAll && animationComplete && (
+          <motion.div 
+            className="text-center mt-6 sm:mt-8 md:mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <motion.button 
+              onClick={() => setShowAll(false)}
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-white border border-secondary text-secondary rounded-lg hover:bg-secondary hover:text-white transition-colors text-sm sm:text-base"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Show Less
+            </motion.button>
+          </motion.div>
         )}
       </div>
     </div>
