@@ -66,62 +66,62 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     },
   ];
 
-  // Featured tasks with more details
+  // Featured tasks with more details - using SVG icons
   const featuredTasks = [
     {
       title: "Photography",
       description: "Wedding photographer needed",
       price: "₵250",
-      icon: "📸",
+      icon: <img src="/src/assets/photo.svg" alt="Photography" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Design",
       description: "Create a high converting landing page",
       price: "₵100",
-      icon: "🎨",
+      icon: <img src="/src/assets/design.svg" alt="Design" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Rice Cooker",
       description: "Slightly used rice cooker in good condition",
       price: "₵40",
-      icon: "🍚",
+      icon: <img src="/src/assets/rice.svg" alt="Rice Cooker" className="w-8 h-8" />,
       hive: "Essentials",
     },
     {
       title: "Web Development",
       description: "Build a responsive website",
       price: "₵500",
-      icon: "🖥️",
+      icon: <img src="/src/assets/web-dev.svg" alt="Web Development" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Calculus Tutor",
       description: "Need help with Calculus II assignments",
       price: "₵80",
-      icon: "📊",
+      icon: <img src="/src/assets/calculus.svg" alt="Calculus" className="w-8 h-8" />,
       hive: "Academia",
     },
     {
       title: "Lecture Notes",
       description: "Complete Engineering Physics notes available",
       price: "₵30",
-      icon: "📝",
+      icon: <img src="/src/assets/lecture.svg" alt="Lecture Notes" className="w-8 h-8" />,
       hive: "Archive",
     },
     {
       title: "Campus Event",
       description: "Seeking DJ for upcoming student mixer",
       price: "₵200",
-      icon: "🎵",
+      icon: <Radio size={24} className="text-secondary" />,
       hive: "Buzz",
     },
     {
       title: "Package Pickup",
       description: "Need someone to pick up package from post office",
       price: "₵20",
-      icon: "📦",
+      icon: <Truck size={24} className="text-secondary" />,
       hive: "Logistics",
     },
   ];

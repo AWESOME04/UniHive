@@ -7,7 +7,7 @@ const testimonials = [
     university: "University of Ghana, 3rd Year",
     text: "Through UniHive, I found a graphic design gig that pays for my weekend expenses. The platform is so easy to use and has connected me with long-term clients.",
     rating: 5,
-    avatar: "/assets/testimonials/student1.jpg"
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg"
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const testimonials = [
     university: "KNUST, 2nd Year",
     text: "I sold my old textbooks and calculator on UniHive and made enough to buy new ones for this semester. It's great to have a marketplace just for students!",
     rating: 5,
-    avatar: "/assets/testimonials/student2.jpg"
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg"
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ const testimonials = [
     university: "Central University, 4th Year",
     text: "As an international student, UniHive helped me find tutoring opportunities and connect with local students. I now earn while helping others with their studies.",
     rating: 5,
-    avatar: "/assets/testimonials/student3.jpg"
+    avatar: "https://randomuser.me/api/portraits/men/76.jpg"
   }
 ];
 
@@ -93,7 +93,13 @@ const TestimonialsSection = () => {
                 "{testimonial.text}"
               </p>
               <div className="flex items-center">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-200 mr-2 sm:mr-3"></div>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2 sm:mr-3 overflow-hidden">
+                  <img 
+                    src={testimonial.avatar} 
+                    alt={testimonial.name} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-semibold">
                     {testimonial.name}

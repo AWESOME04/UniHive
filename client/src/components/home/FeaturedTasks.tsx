@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Zap, ChevronRight } from "lucide-react";
@@ -8,48 +9,48 @@ interface FeaturedTasksProps {
 }
 
 const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
-  // Featured tasks data
+  // Featured tasks data - using SVG icons
   const featuredTasks = [
     {
       title: "Photography",
       description: "Wedding photographer needed",
       price: "₵250",
-      icon: "📸",
+      icon: <img src="/src/assets/photo.svg" alt="Photography" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Design",
       description: "Create a high converting landing page",
       price: "₵100",
-      icon: "🎨",
+      icon: <img src="/src/assets/design.svg" alt="Design" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Rice Cooker",
       description: "Slightly used rice cooker in good condition",
       price: "₵40",
-      icon: "🍚",
+      icon: <img src="/src/assets/rice.svg" alt="Rice Cooker" className="w-8 h-8" />,
       hive: "Essentials",
     },
     {
       title: "Web Development",
       description: "Build a responsive website",
       price: "₵500",
-      icon: "🖥️",
+      icon: <img src="/src/assets/web-dev.svg" alt="Web Development" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Calculus Tutor",
       description: "Need help with Calculus II assignments",
       price: "₵80",
-      icon: "📊",
+      icon: <img src="/src/assets/calculus.svg" alt="Calculus" className="w-8 h-8" />,
       hive: "Academia",
     },
     {
       title: "Lecture Notes",
       description: "Complete Engineering Physics notes available",
       price: "₵30",
-      icon: "📝",
+      icon: <img src="/src/assets/lecture.svg" alt="Lecture Notes" className="w-8 h-8" />,
       hive: "Archive",
     },
   ];
@@ -120,7 +121,7 @@ const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
             >
               <div className="flex justify-between items-start mb-3 sm:mb-5">
                 <motion.div 
-                  className="text-2xl sm:text-3xl"
+                  className="flex items-center justify-center"
                   whileHover={{ scale: 1.2 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >

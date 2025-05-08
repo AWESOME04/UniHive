@@ -233,7 +233,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-secondary text-white hover:bg-opacity-90 px-4 py-2 rounded-md text-sm font-medium"
+                  className="bg-secondary hover:bg-opacity-90 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300"
                 >
                   Sign up
                 </Link>
