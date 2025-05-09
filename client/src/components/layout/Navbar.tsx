@@ -236,50 +236,6 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
             >
               Contact
             </Link>
-            {isAuthenticated && (
-              <>
-                <Link
-                  to="/dashboard"
-                  className={`${
-                    location.pathname === '/dashboard'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/search"
-                  className={`${
-                    location.pathname === '/search'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Find Jobs
-                </Link>
-                <Link
-                  to="/messages"
-                  className={`${
-                    location.pathname === '/messages'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Messages
-                </Link>
-                <Link
-                  to="/notifications"
-                  className={`${
-                    location.pathname === '/notifications'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Notifications
-                </Link>
-              </>
-            )}
           </div>
           {isAuthenticated ? (
             <div className="pt-4 pb-3 border-t border-gray-200">
@@ -304,16 +260,10 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
               </div>
               <div className="mt-3 space-y-1">
                 <Link
-                  to="/profile"
+                  to="/dashboard"
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                 >
-                  Your Profile
-                </Link>
-                <Link
-                  to="/saved-jobs"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Saved Jobs
+                  Dashboard
                 </Link>
                 <Link
                   to="/settings"
