@@ -87,7 +87,6 @@ const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color, detailPag
     try {
       
       if (isCreating) {
-        // Create new hive
         switch (type) {
           case 'essentials':
             Response = await hiveService.createEssential(formData);
@@ -280,13 +279,13 @@ const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color, detailPag
             Filter
           </button>
           
-          <button 
+          {/* <button 
             onClick={handleCreate}
             className="flex items-center justify-center px-4 py-2 bg-secondary hover:bg-secondary-dark text-white rounded-lg transition-colors"
           >
             <Plus size={18} className="mr-2" />
             Create New
-          </button>
+          </button> */}
         </div>
       </div>
       

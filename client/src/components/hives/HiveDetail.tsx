@@ -49,9 +49,15 @@ const HiveDetail: React.FC<HiveDetailProps> = ({ hive, type, onClose, onSave }) 
         break;
       case 'buzz':
         typeFields = [
-          { name: 'title', label: 'Title', type: 'text', required: true },
-          { name: 'capacity', label: 'Capacity', type: 'number', required: true },
+          { name: 'title', label: 'Event Title', type: 'text', required: true },
+          { name: 'description', label: 'Event Description', type: 'textarea', required: true },
+          { name: 'eventDate', label: 'Event Date & Time', type: 'datetime-local', required: true },
           { name: 'location', label: 'Location', type: 'text', required: true },
+          { name: 'organizer', label: 'Organizer', type: 'text', required: true },
+          { name: 'eventType', label: 'Event Type', type: 'select', required: true },
+          { name: 'admission', label: 'Admission', type: 'select', required: true },
+          { name: 'capacity', label: 'Capacity', type: 'number', required: true },
+          { name: 'registrationLink', label: 'Registration Link', type: 'url', required: false },
           { name: 'isItem13', label: 'Need to be 13 or older?', type: 'checkbox' }
         ];
         break;
@@ -143,6 +149,21 @@ const HiveDetail: React.FC<HiveDetailProps> = ({ hive, type, onClose, onSave }) 
               <option key="good" value="good">Good</option>,
               <option key="fair" value="fair">Fair</option>,
               <option key="poor" value="poor">Poor</option>
+            ]}
+            {field.name === 'eventType' && [
+              <option key="workshop" value="workshop">Workshop</option>,
+              <option key="seminar" value="seminar">Seminar</option>,
+              <option key="conference" value="conference">Conference</option>,
+              <option key="party" value="party">Party</option>,
+              <option key="sports" value="sports">Sports</option>,
+              <option key="cultural" value="cultural">Cultural</option>,
+              <option key="academic" value="academic">Academic</option>,
+              <option key="other" value="other">Other</option>
+            ]}
+            {field.name === 'admission' && [
+              <option key="free" value="free">Free</option>,
+              <option key="paid" value="paid">Paid</option>,
+              <option key="donation" value="donation">Donation</option>
             ]}
           </select>
         );

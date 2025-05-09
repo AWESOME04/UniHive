@@ -66,7 +66,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       icon: <MessageSquare size={20} />,
     },
     {
-      name: 'Payments',
+      name: 'Transactions',
       href: '/dashboard/payments',
       icon: <DollarSign size={20} />
     }
