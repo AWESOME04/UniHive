@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import { ArrowLeft, AlertCircle, MapPin, Calendar, Package, Tag, ChevronRight, Heart, Share, Check } from 'lucide-react';
+import { ArrowLeft, AlertCircle, MapPin, Calendar, Package, Tag, ChevronRight, Heart, Share, Check, MessageSquare } from 'lucide-react';
 import { toast } from 'react-toastify';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -295,7 +295,6 @@ const EssentialDetail: React.FC = () => {
     title,
     description,
     price,
-    postedBy,
     createdAt,
   } = essential;
   
@@ -486,22 +485,28 @@ const EssentialDetail: React.FC = () => {
             
             {/* Seller info */}
             <div className="border-t border-gray-100 pt-4 mb-6">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3 overflow-hidden">
-                  {postedBy?.avatar ? (
-                    <img src={postedBy.avatar} alt={postedBy.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="font-medium text-gray-500">
-                      {postedBy?.name?.charAt(0).toUpperCase() || 'U'}
-                    </span>
-                  )}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center mr-3 overflow-hidden">
+                    {/* <span className="font-medium text-secondary">
+                      EA
+                    </span> */}
+                    <img src="/assets/images/evans.png" alt="Evans Image" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Evans Acheampong</p>
+                    <p className="text-xs text-gray-500">
+                      Posted {createdAt ? formatDate(createdAt) : 'recently'} • University of Ghana
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium">{postedBy?.name || 'Anonymous'}</p>
-                  <p className="text-xs text-gray-500">
-                    Posted {createdAt ? formatDate(createdAt) : 'recently'}
-                  </p>
-                </div>
+                <Link
+                  to="/dashboard/messages"
+                  className="inline-flex items-center px-4 py-2 bg-secondary/10 text-secondary rounded-lg text-sm font-medium hover:bg-secondary/20 transition-colors"
+                >
+                  <MessageSquare size={16} className="mr-2" />
+                  Message
+                </Link>
               </div>
             </div>
             
