@@ -11,8 +11,8 @@ import {
   Settings, 
   ChevronRight, 
   Columns,
-  X,
-  DollarSign
+  DollarSign,
+  HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Logo } from '../shared/Logo';
@@ -92,6 +92,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       icon: <Settings size={20} />
     },
     {
+      name: 'Help Center',
+      href: '/dashboard/help',
+      icon: <HelpCircle size={20} />
+    },
+    {
       name: 'Log Out',
       href: '/logout',
       icon: <LogOut size={20} />
@@ -136,32 +141,31 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             transition={{ duration: 0.3 }}
           >
             {/* Sidebar header */}
-            <div className={`px-4 py-5 flex items-center justify-between border-b border-gray-200 ${
-              isCollapsed ? 'justify-center' : ''
+            <div className={`px-4 py-5 flex items-center border-b border-gray-200 ${
+              isCollapsed ? 'justify-between' : 'justify-between'
             }`}>
-              {!isCollapsed ? (
+              {isCollapsed ? (
                 <>
                   <Logo />
-                  {isMobile && (
-                    <button 
-                      onClick={onClose}
-                      className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  <button
+                    onClick={toggleCollapsed}
+                    className="p-1 rounded-full hover:bg-gray-100"
+                  >
+                    <ChevronRight size={18} className="text-gray-400 transform rotate-180" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Logo />
+                  {!isMobile && (
+                    <button
+                      onClick={toggleCollapsed}
+                      className="p-1 rounded-full hover:bg-gray-100"
                     >
-                      <X size={24} />
+                      <ChevronRight size={18} className="text-gray-400" />
                     </button>
                   )}
                 </>
-              ) : (
-                <Logo />
-              )}
-
-              {!isMobile && !isCollapsed && (
-                <button
-                  onClick={toggleCollapsed}
-                  className="p-1 rounded-full hover:bg-gray-100"
-                >
-                  <ChevronRight size={18} className="text-gray-400" />
-                </button>
               )}
             </div>
             

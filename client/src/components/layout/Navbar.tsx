@@ -167,7 +167,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                         Dashboard
                       </Link>
                       <Link
-                        to="/settings"
+                        to="/dashboard/settings"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >

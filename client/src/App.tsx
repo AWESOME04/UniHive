@@ -42,6 +42,10 @@ import EssentialDetail from './pages/hives/EssentialDetail';
 import Payments from './pages/Payments';
 import Messages from './pages/Messages';
 
+// Import new pages
+import Settings from './pages/dashboard/Settings';
+import HelpCenter from './pages/dashboard/HelpCenter';
+
 // ProtectedRoute
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -186,6 +190,22 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <Messages />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+
+          {/* Add these new routes before the 404 route */}
+          <Route path="/dashboard/settings" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Settings />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/help" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <HelpCenter />
               </DashboardLayout>
             </ProtectedRoute>
           } />
