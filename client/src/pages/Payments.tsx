@@ -1,96 +1,79 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { DollarSign, Check, X, AlertCircle, Search, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import paymentService from '../services/paymentService';
-import LoadingSpinner from '../components/common/LoadingSpinner';
 
-interface Payment {
+// Create a separate interface for mock payments only
+interface MockPaymentDisplay {
   id: string;
+  itemTitle: string;
+  itemType: string;
   amount: number;
   status: string;
   reference: string;
-  hiveId: string;
-  hive: {
-    title: string;
-    hiveType?: {
-      name: string;
-    };
-  };
-  createdAt: string;
+  date: string;
+  itemId: string;
 }
 
+// Single source of mock data
+const DEMO_PAYMENTS: MockPaymentDisplay[] = [
+  {
+    id: 'demo-1',
+    itemTitle: 'Electric Stove for Sale',
+    itemType: 'Essential',
+    amount: 350.00,
+    status: 'success',
+    reference: 'UNIHIVE-DEMO-123456',
+    date: new Date().toISOString(),
+    itemId: 'stove-123'
+  },
+  {
+    id: 'demo-2',
+    itemTitle: 'HP Laptop (Used)',
+    itemType: 'Essential',
+    amount: 1200.00,
+    status: 'pending',
+    reference: 'UNIHIVE-DEMO-789012',
+    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    itemId: 'laptop-456'
+  }
+];
+
 const Payments: React.FC = () => {
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [payments] = useState<MockPaymentDisplay[]>(DEMO_PAYMENTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'failed'>('all');
-  
-  useEffect(() => {
-    const fetchPayments = async () => {
-      try {
-        setLoading(true);
-        const response = await paymentService.getPaymentHistory();
-        if (response && response.data) {
-          setPayments(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching payment history:', error);
-        setError('Failed to load payment history. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+
+  // Simple filter function based on mock data structure
+  let filteredPayments = payments.filter(payment => {
+    // Apply status filter
+    if (statusFilter === 'completed' && payment.status !== 'success') return false;
+    if (statusFilter === 'failed' && payment.status !== 'failed') return false;
     
-    fetchPayments();
-  }, []);
-  
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-  };
-  
-  const formatTime = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  };
-  
-  // Filter and sort payments
-  let filteredPayments = [...payments];
-  
-  // Apply status filter
-  if (statusFilter !== 'all') {
-    filteredPayments = filteredPayments.filter(payment => {
-      if (statusFilter === 'completed') return payment.status.toLowerCase() === 'success';
-      if (statusFilter === 'failed') return payment.status.toLowerCase() === 'failed';
-      return true;
-    });
-  }
-  
-  // Apply search filter
-  if (searchQuery) {
-    filteredPayments = filteredPayments.filter(payment => 
-      payment.hive.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      payment.reference.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }
-  
-  // Apply sorting
+    // Apply search filter
+    if (searchQuery) {
+      return payment.itemTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+             payment.reference.toLowerCase().includes(searchQuery.toLowerCase());
+    }
+    
+    return true;
+  });
+
+  // Simple sort function based on mock data structure
   filteredPayments.sort((a, b) => {
     if (sortBy === 'date') {
       return sortDirection === 'asc'
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        ? new Date(a.date).getTime() - new Date(b.date).getTime()
+        : new Date(b.date).getTime() - new Date(a.date).getTime();
     } else {
       return sortDirection === 'asc'
         ? a.amount - b.amount
         : b.amount - a.amount;
     }
   });
-  
+
   const toggleSort = (column: 'date' | 'amount') => {
     if (sortBy === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -98,22 +81,6 @@ const Payments: React.FC = () => {
       setSortBy(column);
       setSortDirection('desc');
     }
-  };
-  
-  const getStatusColor = (status: string) => {
-    const lowerStatus = status.toLowerCase();
-    if (lowerStatus === 'success') return 'bg-green-100 text-green-600';
-    if (lowerStatus === 'failed') return 'bg-red-100 text-red-600';
-    if (lowerStatus === 'pending') return 'bg-yellow-100 text-yellow-600';
-    return 'bg-gray-100 text-gray-600';
-  };
-  
-  const getStatusIcon = (status: string) => {
-    const lowerStatus = status.toLowerCase();
-    if (lowerStatus === 'success') return <Check size={14} />;
-    if (lowerStatus === 'failed') return <X size={14} />;
-    if (lowerStatus === 'pending') return <AlertCircle size={14} />;
-    return null;
   };
 
   return (
@@ -179,23 +146,7 @@ const Payments: React.FC = () => {
         </div>
       </motion.div>
       
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <LoadingSpinner />
-        </div>
-      ) : error ? (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <AlertCircle size={20} className="text-red-600" />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-700">Error</h3>
-              <div className="text-sm text-red-600 mt-1">{error}</div>
-            </div>
-          </div>
-        </div>
-      ) : filteredPayments.length === 0 ? (
+      {filteredPayments.length === 0 ? (
         <motion.div 
           className="bg-white rounded-xl shadow-sm p-8 text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -279,35 +230,44 @@ const Payments: React.FC = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredPayments.map((payment) => (
                     <motion.tr 
-                      key={payment.id} 
+                      key={payment.id}
                       className="hover:bg-gray-50"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Link to={`/dashboard/hives/${payment.hiveId}`} className="text-secondary hover:underline">
-                          {payment.hive.title}
+                        <Link 
+                          to={`/dashboard/hives/essentials/${payment.itemId}`} 
+                          className="text-secondary hover:underline"
+                        >
+                          {payment.itemTitle}
                         </Link>
                         <p className="text-xs text-gray-500">
-                          {payment.hive.hiveType?.name || "Essential"}
+                          {payment.itemType}
                         </p>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap font-medium">
                         GH₵ {payment.amount.toFixed(2)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(payment.status)}`}>
-                          {getStatusIcon(payment.status)}
-                          <span className="ml-1">{payment.status}</span>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          payment.status === 'success' ? 'bg-green-100 text-green-600' :
+                          payment.status === 'failed' ? 'bg-red-100 text-red-600' :
+                          'bg-yellow-100 text-yellow-600'
+                        }`}>
+                          {payment.status === 'success' && <Check size={14} className="mr-1" />}
+                          {payment.status === 'failed' && <X size={14} className="mr-1" />}
+                          {payment.status === 'pending' && <AlertCircle size={14} className="mr-1" />}
+                          {payment.status}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {payment.reference}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div>{formatDate(payment.createdAt)}</div>
-                        <div className="text-xs">{formatTime(payment.createdAt)}</div>
+                        <div>{new Date(payment.date).toLocaleDateString()}</div>
+                        <div className="text-xs">{new Date(payment.date).toLocaleTimeString()}</div>
                       </td>
                     </motion.tr>
                   ))}

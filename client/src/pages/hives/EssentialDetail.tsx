@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import { ArrowLeft, AlertCircle, MapPin, Calendar, Package, Tag, ChevronRight, Heart, Share } from 'lucide-react';
+import { ArrowLeft, AlertCircle, MapPin, Calendar, Package, Tag, ChevronRight, Heart, Share, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 
 import hiveService from '../../services/hiveService';
 import paymentService from '../../services/paymentService';
-import { Hive } from '../../types/hiveTypes';
+import { Hive, EssentialsDetails } from '../../types/hiveTypes';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const EssentialDetail: React.FC = () => {
@@ -21,6 +21,11 @@ const EssentialDetail: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
+  const [paymentStatus] = useState<'none' | 'initiated' | 'success' | 'failed'>('none');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [paymentReference, setPaymentReference] = useState<string | null>(null);
+  const [isCheckingPayment, setIsCheckingPayment] = useState(false);
+  const [paymentCheckTimer, setPaymentCheckTimer] = useState<NodeJS.Timeout | null>(null);
   
   useEffect(() => {
     const fetchEssential = async () => {
@@ -29,7 +34,7 @@ const EssentialDetail: React.FC = () => {
         
         const response = await hiveService.getEssentials();
         const allEssentials = response.data || [];
-        const foundEssential = allEssentials.find(item => item.id === id);
+        const foundEssential = allEssentials.find((item: any) => item.id === id);
         
         if (foundEssential) {
           console.log('Found essential:', foundEssential);
@@ -55,9 +60,18 @@ const EssentialDetail: React.FC = () => {
       if (!essential) return;
       
       setIsProcessingPayment(true);
+      
+      // REAL API CALL - Initialize payment with Paystack
       const response = await paymentService.initializePayment(essential.id);
 
       if (response && response.data && response.data.authorizationUrl) {
+        // Store payment reference for verification after redirect
+        if (response.data.reference) {
+          sessionStorage.setItem('payment_reference', response.data.reference);
+          sessionStorage.setItem('payment_hive_id', essential.id);
+        }
+
+        // Redirect to Paystack payment page
         window.location.href = response.data.authorizationUrl;
       } else {
         toast.error('Failed to initiate payment process');
@@ -69,7 +83,184 @@ const EssentialDetail: React.FC = () => {
       setIsProcessingPayment(false);
     }
   };
+
+  // Check for payment verification on component mount
+  useEffect(() => {
+    const verifyPendingPayment = async () => {
+      // Check if we have a reference from a redirect after payment
+      const urlParams = new URLSearchParams(window.location.search);
+      const reference = urlParams.get('reference') || sessionStorage.getItem('payment_reference');
+      
+      if (reference) {
+        try {
+          setLoading(true);
+          const verificationResult = await paymentService.verifyPayment(reference);
+          
+          if (verificationResult.status === 'success') {
+            toast.success('Payment was successful! Thank you for your purchase.');
+            
+            // Clear the stored reference
+            sessionStorage.removeItem('payment_reference');
+            sessionStorage.removeItem('payment_hive_id');
+            
+            // Redirect to payment history page after successful verification
+            navigate('/dashboard/payments');
+          } else {
+            toast.error('Payment verification failed. Please contact support.');
+          }
+        } catch (error) {
+          console.error('Payment verification error:', error);
+          toast.error('Failed to verify payment. Please contact support.');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    
+    verifyPendingPayment();
+  }, [navigate]);
+
+  // For demo, handle verification automatically
+  useEffect(() => {
+    // Check for payment reference in URL (from Paystack redirect)
+    const queryParams = new URLSearchParams(window.location.search);
+    const reference = queryParams.get('reference');
+    const storedReference = sessionStorage.getItem('payment_reference');
+    
+    // If we have a reference from Paystack, show verification message
+    if ((reference || storedReference) && !isVerifying && essential) {
+      const verifyPaymentTransaction = async (paymentReference: string) => {
+        setIsVerifying(true);
+        try {
+          // For demo, we'll use mock verification
+          const verificationResult = await paymentService.verifyPayment(paymentReference);
+          
+          if (verificationResult.status === 'success') {
+            toast.success('Payment successful! Thank you for your purchase.', {
+              autoClose: 5000,
+              position: 'top-center',
+            });
+            
+            // Clean URL by removing query parameters
+            if (reference) {
+              const url = new URL(window.location.href);
+              url.search = '';
+              window.history.replaceState({}, document.title, url.toString());
+            }
+            
+            // Redirect to payment history after a delay
+            setTimeout(() => {
+              navigate('/dashboard/payments');
+            }, 3000);
+          } else {
+            toast.error('Payment verification failed. Please contact support.');
+          }
+        } catch (error) {
+          console.error('Payment verification error:', error);
+          toast.error('Failed to verify payment. Please check your payment history.');
+        } finally {
+          sessionStorage.removeItem('payment_reference');
+          sessionStorage.removeItem('payment_hive_id');
+          setIsVerifying(false);
+        }
+      };
+      
+      // Use the reference from URL or session storage
+      const paymentReference = reference || storedReference!;
+      verifyPaymentTransaction(paymentReference);
+    }
+  }, [navigate, essential, isVerifying]);
   
+  // Payment verification cleanup
+  useEffect(() => {
+    return () => {
+      // Clear any payment check timers on component unmount
+      if (paymentCheckTimer) {
+        clearInterval(paymentCheckTimer);
+      }
+    };
+  }, [paymentCheckTimer]);
+
+  // Add function to manually check payment status
+  const checkPaymentStatus = async (reference: string) => {
+    try {
+      setIsCheckingPayment(true);
+      const result = await paymentService.verifyPayment(reference);
+      
+      if (result.status === 'success') {
+        // Payment was successful
+        toast.success('Payment successful! Thank you for your purchase.');
+        
+        // Clear any stored reference and timers
+        sessionStorage.removeItem('payment_reference');
+        sessionStorage.removeItem('payment_hive_id');
+        
+        if (paymentCheckTimer) {
+          clearInterval(paymentCheckTimer);
+          setPaymentCheckTimer(null);
+        }
+        
+        // Redirect to payment history after a delay
+        setTimeout(() => {
+          navigate('/dashboard/payments');
+        }, 3000);
+        
+        return true;
+      } else {
+        console.log('Payment not yet successful, status:', result.status);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      return false;
+    } finally {
+      setIsCheckingPayment(false);
+    }
+  };
+  
+  // Check for payment reference in URL or session storage
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const reference = queryParams.get('reference') || sessionStorage.getItem('payment_reference');
+    
+    if (reference) {
+      setPaymentReference(reference);
+      
+      // Initial check
+      checkPaymentStatus(reference).then(success => {
+        if (!success) {
+          // If payment verification didn't succeed on first try, set up periodic checks
+          const timer = setInterval(() => {
+            checkPaymentStatus(reference).then(success => {
+              if (success && paymentCheckTimer) {
+                clearInterval(paymentCheckTimer);
+                setPaymentCheckTimer(null);
+              }
+            });
+          }, 5000); // Check every 5 seconds
+          
+          setPaymentCheckTimer(timer);
+          
+          // Stop checking after 2 minutes (24 checks)
+          setTimeout(() => {
+            if (paymentCheckTimer) {
+              clearInterval(paymentCheckTimer);
+              setPaymentCheckTimer(null);
+              toast.warn('Payment verification timed out. If you completed the payment, please check your payment history.');
+            }
+          }, 2 * 60 * 1000);
+        }
+      });
+      
+      // Clean up URL
+      if (queryParams.get('reference')) {
+        const url = new URL(window.location.href);
+        url.search = '';
+        window.history.replaceState({}, document.title, url.toString());
+      }
+    }
+  }, [navigate]);
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -109,7 +300,7 @@ const EssentialDetail: React.FC = () => {
   } = essential;
   
   // Access the nested essentialsDetails object
-  const essentialsDetails = essential.essentialsDetails || {};
+  const essentialsDetails: EssentialsDetails = essential.essentialsDetails || {};
   const {
     condition = 'N/A',
     brand = 'N/A',
@@ -153,7 +344,7 @@ const EssentialDetail: React.FC = () => {
                 slidesPerView={1}
                 className="w-full aspect-square"
               >
-                {photos.map((photo, index) => (
+                {photos.map((photo: string, index: number) => (
                   <SwiperSlide key={index}>
                     <div className="w-full h-full flex items-center justify-center bg-gray-50">
                       <motion.img 
@@ -172,7 +363,7 @@ const EssentialDetail: React.FC = () => {
               {/* Thumbnail preview - optional */}
               {photos.length > 1 && (
                 <div className="flex mt-2 gap-2 px-2 pb-2">
-                  {photos.slice(0, 4).map((photo, index) => (
+                  {photos.slice(0, 4).map((photo: string, index: number) => (
                     <div 
                       key={`thumb-${index}`} 
                       className="w-16 h-16 rounded border border-gray-200 cursor-pointer hover:border-secondary transition-colors"
@@ -375,6 +566,45 @@ const EssentialDetail: React.FC = () => {
           </div>
         </motion.div>
       </div>
+      {paymentStatus === 'success' && (
+        <motion.div 
+          className="fixed top-4 right-4 z-50 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg shadow-lg"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 20 }}
+        >
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <Check className="h-5 w-5 text-green-500" />
+            </div>
+            <div className="ml-3">
+              <p className="font-medium">Payment Successful!</p>
+              <p className="text-sm">Redirecting to payment history...</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+      {/* Payment status indicator */}
+      {isCheckingPayment && (
+        <div className="fixed top-4 right-4 z-50 bg-white border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg shadow-lg">
+          <div className="flex items-center">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-600 mr-2"></div>
+            <p>Verifying your payment...</p>
+          </div>
+        </div>
+      )}
+      
+      {/* Manual verification button (if we have a reference but verification is taking time) */}
+      {paymentReference && !isCheckingPayment && paymentCheckTimer && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <button
+            onClick={() => checkPaymentStatus(paymentReference)}
+            className="bg-secondary text-white px-4 py-2 rounded-lg shadow-lg hover:bg-opacity-90 transition-colors"
+          >
+            Check Payment Status
+          </button>
+        </div>
+      )}
     </div>
   );
 };

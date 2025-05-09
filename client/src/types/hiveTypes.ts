@@ -1,5 +1,18 @@
 import { ReactNode } from 'react';
 
+// Define the EssentialsDetails interface
+export interface EssentialsDetails {
+  hiveId?: string;
+  condition?: string;
+  brand?: string;
+  purchaseDate?: string;
+  itemCategory?: string;
+  photos?: string[];
+  pickupLocation?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // Define the Hive interface
 export interface Hive {
   id: string;
@@ -22,6 +35,8 @@ export interface Hive {
     name: string;
     avatar?: string;
   };
+  // Add essentialsDetails as an optional property that can be of type EssentialsDetails or empty object
+  essentialsDetails?: EssentialsDetails;
 }
 
 // Define the HiveCategory interface
