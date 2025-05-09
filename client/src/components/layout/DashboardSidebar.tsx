@@ -11,7 +11,8 @@ import {
   Settings, 
   ChevronRight, 
   Columns,
-  X
+  X,
+  DollarSign
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Logo } from '../shared/Logo';
@@ -63,6 +64,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       name: 'Messages',
       href: '/dashboard/messages',
       icon: <MessageSquare size={20} />
+    },
+    {
+      name: 'Payments',
+      href: '/dashboard/payments',
+      icon: <DollarSign size={20} />
     }
   ];
 

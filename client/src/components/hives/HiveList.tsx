@@ -14,9 +14,10 @@ interface HiveListProps {
   type: HiveType;
   icon: React.ReactNode;
   color: string;
+  detailPageRoute?: string;
 }
 
-const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color }) => {
+const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color, detailPageRoute }) => {
   const [hives, setHives] = useState<any[]>([]);
   const [selectedHive, setSelectedHive] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -162,10 +163,16 @@ const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color }) => {
   const handleViewHive = (hive: any) => {
     setSelectedHive(hive);
     setIsCreating(false);
-    setIsModalOpen(true);
     
-    // Add ID to URL for bookmarking/sharing
-    navigate(`/dashboard/hives/${type}/${hive.id}`);
+    if (detailPageRoute && type === "essentials") {
+      // For essentials, navigate to the detail page instead of opening a modal
+      navigate(`${detailPageRoute}/${hive.id}`);
+    } else {
+      // For other hive types, open the modal
+      setIsModalOpen(true);
+      // Add ID to URL for bookmarking/sharing
+      navigate(`/dashboard/hives/${type}/${hive.id}`);
+    }
   };
 
   // Filter hives based on search query

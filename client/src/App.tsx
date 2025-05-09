@@ -37,6 +37,8 @@ import Logistics from './pages/hives/Logistics';
 import Buzz from './pages/hives/Buzz';
 import ArchivePage from './pages/hives/Archive';
 import SideHustle from './pages/hives/SideHustle';
+import EssentialDetail from './pages/hives/EssentialDetail';
+import Payments from './pages/Payments';
 
 // ProtectedRoute
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -96,7 +98,7 @@ function App() {
           <Route path="/dashboard/hives/essentials/:id" element={
             <ProtectedRoute>
               <DashboardLayout>
-                <Essentials />
+                <EssentialDetail />
               </DashboardLayout>
             </ProtectedRoute>
           } />
@@ -167,6 +169,13 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <SideHustle />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/payments" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Payments />
               </DashboardLayout>
             </ProtectedRoute>
           } />
