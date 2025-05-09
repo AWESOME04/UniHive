@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Send, Search, MoreVertical, Phone, Video, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// Mock data for demo
 const MOCK_CHAT = {
   user: {
     id: '1',
