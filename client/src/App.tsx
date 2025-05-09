@@ -11,6 +11,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 // Public Pages
 import Home from './pages/Home';
 import About from './pages/About';
+import Pricing from './pages/Pricing'
 import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
@@ -52,6 +53,7 @@ function App() {
           {/* Public Routes with HomeLayout */}
           <Route path="/" element={<HomeLayout><Home /></HomeLayout>} />
           <Route path="/about" element={<HomeLayout><About /></HomeLayout>} />
+          <Route path="/pricing" element={<HomeLayout><Pricing /></HomeLayout>} />
           <Route path="/contact" element={<HomeLayout><Contact /></HomeLayout>} />
           <Route path="/terms" element={<HomeLayout><Terms /></HomeLayout>} />
           <Route path="/privacy" element={<HomeLayout><Privacy /></HomeLayout>} />
