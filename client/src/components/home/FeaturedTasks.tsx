@@ -78,7 +78,7 @@ const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
 
   return (
     <motion.section
-      className={`py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white transition-all duration-700`}
+      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white overflow-hidden w-full transition-all duration-700"
       initial={{ opacity: 0, y: 20 }}
       animate={{ 
         opacity: 1, 
@@ -90,7 +90,7 @@ const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
         opacity: isScrolled ? 1 : 0.95
       }}
     >
-      <div className="container mx-auto px-0">
+      <div className="container mx-auto overflow-hidden px-0">
         <motion.div 
           className="text-center mb-6 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}

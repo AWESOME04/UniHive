@@ -176,13 +176,13 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
 
   return (
     <motion.section 
-      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10"
+      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10 overflow-hidden w-full"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto px-0">
+      <div className="container mx-auto overflow-hidden px-0">
         <motion.div 
           className="text-center mb-6 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
