@@ -7,9 +7,11 @@ import HiveDetail from './HiveDetail';
 import { useParams, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 
+type HiveType = "essentials" | "academia" | "logistics" | "buzz" | "archive" | "sidehustle";
+
 interface HiveListProps {
   title: string;
-  type: 'essentials' | 'academia' | 'logistics' | 'buzz' | 'archive' | 'sidehustle';
+  type: HiveType;
   icon: React.ReactNode;
   color: string;
 }
@@ -208,8 +210,36 @@ const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color }) => {
     }
   };
 
+  // Helper function to format price display safely
+  const formatPrice = (price: string | number | null | undefined): string => {
+    if (price === null || price === undefined) {
+      return 'Free';
+    }
+    
+    if (typeof price === 'number') {
+      return `₵${price.toFixed(2)}`;
+    }
+    
+    if (typeof price === 'string') {
+      // If it's a string, try to parse it as a number
+      if (price === '' || price === '0' || price === '0.00') {
+        return 'Free';
+      }
+      
+      const numPrice = parseFloat(price);
+      if (!isNaN(numPrice)) {
+        return `₵${numPrice.toFixed(2)}`;
+      }
+      
+      // If it's already formatted or can't be parsed, return as is
+      return price.startsWith('₵') ? price : `₵${price}`;
+    }
+    
+    return 'Free';
+  };
+
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-7xl mx-auto">
       {/* Header with search and filters */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div className="flex items-center">
@@ -278,7 +308,7 @@ const HiveList: React.FC<HiveListProps> = ({ title, type, icon, color }) => {
                 <h3 className="text-lg font-bold text-gray-900 mb-2">{hive.title}</h3>
                 
                 {hive.price !== undefined && (
-                  <div className="text-secondary font-bold mb-2">₵{hive.price.toFixed(2)}</div>
+                  <div className="text-secondary font-bold mb-2">{formatPrice(hive.price)}</div>
                 )}
                 
                 {hive.description && (

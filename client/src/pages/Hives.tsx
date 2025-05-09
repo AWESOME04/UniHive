@@ -1,76 +1,78 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Bookmark, BookOpen, Briefcase, Package, Archive, Calendar, ArrowRight, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Briefcase, Book, Truck, Bell, Archive, Layers, Search, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import HiveCard from '../components/hives/HiveCard';
+import { HiveCategory } from '../types/hiveTypes';
 
 const Hives: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const hiveTypes = [
+
+  // Define the hive categories with proper typing
+  const hiveCategories: HiveCategory[] = [
     {
       id: 'essentials',
       name: 'Essentials',
-      description: 'Buy, sell, or exchange items like textbooks, electronics, and furniture.',
-      icon: <Bookmark className="w-6 h-6" />,
-      color: 'bg-red-500',
-      count: 124,
-      path: '/dashboard/hives/essentials'
+      icon: <Briefcase className="w-6 h-6" />,
+      count: 125,
+      description: "Buy and sell essential items like textbooks, electronics, and furniture",
+      path: '/dashboard/hives/essentials',
+      color: 'bg-blue-500'
     },
     {
       id: 'academia',
       name: 'Academia',
-      description: 'Find tutors or offer tutoring services for various courses and subjects.',
-      icon: <BookOpen className="w-6 h-6" />,
-      color: 'bg-blue-500',
-      count: 98,
-      path: '/dashboard/hives/academia'
+      icon: <Book className="w-6 h-6" />,
+      count: 105,
+      description: "Find tutors or offer teaching services in various subjects",
+      path: '/dashboard/hives/academia',
+      color: 'bg-green-500'
     },
     {
       id: 'logistics',
       name: 'Logistics',
-      description: 'Request or offer delivery, pickup, and errand running services.',
-      icon: <Package className="w-6 h-6" />,
-      color: 'bg-green-500',
-      count: 87,
-      path: '/dashboard/hives/logistics'
+      icon: <Truck className="w-6 h-6" />,
+      count: 86,
+      description: "Request or offer delivery, pickups, and other logistical services",
+      path: '/dashboard/hives/logistics',
+      color: 'bg-yellow-500'
     },
     {
       id: 'buzz',
       name: 'Buzz',
-      description: 'Discover and share campus events, activities, and announcements.',
-      icon: <Calendar className="w-6 h-6" />,
-      color: 'bg-yellow-500',
-      count: 73,
-      path: '/dashboard/hives/buzz'
+      icon: <Bell className="w-6 h-6" />,
+      count: 112,
+      description: "Discover campus events, activities, and announcements",
+      path: '/dashboard/hives/buzz',
+      color: 'bg-red-500'
     },
     {
       id: 'archive',
       name: 'Archive',
-      description: 'Access shared academic resources, study materials, and notes.',
       icon: <Archive className="w-6 h-6" />,
-      color: 'bg-purple-500',
-      count: 65,
-      path: '/dashboard/hives/archive'
+      count: 94,
+      description: "Access and share study materials, notes, and academic resources",
+      path: '/dashboard/hives/archive',
+      color: 'bg-purple-500'
     },
     {
       id: 'sidehustle',
-      name: 'Side Hustle',
-      description: 'Find short-term gigs, part-time opportunities, and project work.',
-      icon: <Briefcase className="w-6 h-6" />,
-      color: 'bg-indigo-500',
-      count: 112,
-      path: '/dashboard/hives/sidehustle'
-    }
+      name: 'SideHustle',
+      icon: <Layers className="w-6 h-6" />,
+      count: 138,
+      description: "Find and offer gigs, part-time work, and freelance opportunities",
+      path: '/dashboard/hives/sidehustle',
+      color: 'bg-indigo-500'
+    },
   ];
 
   // Filter hives based on search query
   const filteredHives = searchQuery 
-    ? hiveTypes.filter(hive => 
+    ? hiveCategories.filter(hive => 
         hive.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         hive.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : hiveTypes;
+    : hiveCategories;
 
   // Animation variants
   const containerVariants = {
@@ -109,7 +111,7 @@ const Hives: React.FC = () => {
       </div>
 
       <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -119,11 +121,11 @@ const Hives: React.FC = () => {
             key={hive.id}
             id={hive.id}
             name={hive.name}
-            description={hive.description}
+            description={hive.description} // description is now required so it can't be undefined
             icon={hive.icon}
-            color={hive.color}
+            color={hive.color || 'bg-secondary'}
             count={hive.count}
-            path={hive.path}
+            path={hive.path || `/dashboard/hives/${hive.id}`}
           />
         ))}
       </motion.div>

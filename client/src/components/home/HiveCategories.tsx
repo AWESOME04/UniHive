@@ -23,17 +23,32 @@ import photoSvg from '../../assets/photo.svg';
 import logisticsSvg from '../../assets/logistics.svg';
 import eventsSvg from '../../assets/events.svg';
 import taskSvg from '../../assets/task.svg';
+import { HiveCategory } from "../../types/hiveTypes";
 
 interface HiveCategoriesProps {
   isAuthenticated: boolean;
 }
 
-interface HiveCategory {
+// Define interface for filtered tasks
+interface HiveTask {
   id: string;
-  name: string;
-  icon: JSX.Element;
-  count: number;
+  title: string;
   description: string;
+  price: string | number;
+  location?: string;
+  hiveType: {
+    id: string;
+    name: string;
+    icon: string;
+  };
+  // Add any other properties that might be used
+  createdAt?: string;
+  updatedAt?: string;
+  status?: string;
+  postedBy?: {
+    name: string;
+    avatar?: string;
+  };
 }
 
 const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
@@ -104,11 +119,10 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
       try {
         setLoading(true);
         const response = await hivesService.getHives();
-        
-        // Group hives by hive type to count them
+
         const hiveTypeMap = new Map<string, { type: HiveType; count: number }>();
         
-        response.data.forEach((hive) => {
+        response.data.forEach((hive: HiveTask) => {
           if (!hiveTypeMap.has(hive.hiveType.id)) {
             hiveTypeMap.set(hive.hiveType.id, { 
               type: hive.hiveType, 
@@ -128,7 +142,7 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
           name: type.name,
           icon: getIconComponent(type.icon),
           count,
-          description: type.description
+          description: type.description || `Explore ${type.name} hives` // Provide default value
         }));
         
         // Add "All" category
@@ -173,6 +187,27 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
   const filteredTasks = activeCategory === "All" 
     ? hiveTasks 
     : hiveTasks.filter(task => task.hiveType.name === activeCategory);
+
+  // Type-safe function to format price
+  const formatPrice = (price: string | number | undefined): string => {
+    if (price === undefined || price === null) {
+      return "Free";
+    }
+    
+    if (typeof price === "number") {
+      return `₵${price.toFixed(2)}`;
+    }
+    
+    if (typeof price === "string") {
+      const numPrice = parseFloat(price);
+      if (!isNaN(numPrice)) {
+        return `₵${numPrice.toFixed(2)}`;
+      }
+      return price.startsWith("₵") ? price : `₵${price}`;
+    }
+    
+    return "Free";
+  };
 
   return (
     <motion.section 
@@ -284,9 +319,9 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                   No tasks available in this category.
                 </div>
               ) : (
-                filteredTasks.map((task) => (
+                filteredTasks.map((hive: HiveTask) => (
                   <motion.div
-                    key={task.id}
+                    key={hive.id}
                     className="bg-white rounded-lg border border-gray-100 p-3 sm:p-4 hover:shadow-md transition-all duration-200 hover:border-secondary/20"
                     variants={itemVariants}
                     whileHover={{ scale: 1.03, y: -2 }}
@@ -299,25 +334,25 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                         transition={{ type: "spring", stiffness: 400 }}
                       >
                         <img 
-                          src={getTaskImage(task.title, task.hiveType.name)} 
-                          alt={task.title} 
+                          src={getTaskImage(hive.title, hive.hiveType.name)} 
+                          alt={hive.title} 
                           className="w-8 h-8"
                         />
                       </motion.div>
-                      <div className="bg-light-orange/80 text-secondary px-2 py-0.5 rounded-full text-xs font-medium">
-                        {task.price === "0.00" ? "Free" : `₵${parseFloat(task.price).toFixed(2)}`}
+                      <div className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
+                        {formatPrice(hive.price)}
                       </div>
                     </div>
                     <h3 className="text-sm sm:text-base font-bold mb-1 line-clamp-1">
-                      {task.title}
+                      {hive.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">
-                      {task.description}
+                      {hive.description}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <span className="bg-secondary/10 text-secondary text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">
-                        {task.hiveType.name}
+                        {hive.hiveType.name}
                       </span>
 
                       <motion.div
@@ -325,7 +360,7 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                         transition={{ type: "spring", stiffness: 400 }}
                       >
                         <Link
-                          to={isAuthenticated ? `/tasks/${task.id}` : "/login"}
+                          to={isAuthenticated ? `/tasks/${hive.id}` : "/login"}
                           className="text-secondary flex items-center text-xs hover:underline"
                         >
                           {isAuthenticated ? "View details" : "Login to view"}

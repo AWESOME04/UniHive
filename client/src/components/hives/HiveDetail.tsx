@@ -3,11 +3,13 @@ import { motion } from 'framer-motion';
 import { XCircle, Save, Loader, Info } from 'lucide-react';
 import { toast } from 'react-toastify';
 
+export type HiveType = "essentials" | "academia" | "logistics" | "buzz" | "archive" | "sidehustle";
+
 interface HiveDetailProps {
   hive: any;
-  type: 'essentials' | 'academia' | 'logistics' | 'buzz' | 'archive' | 'sidehustle';
+  type: HiveType;
   onClose: () => void;
-  onSave: (data: any) => Promise<void>;
+  onSave: (formData: any) => void;
 }
 
 const HiveDetail: React.FC<HiveDetailProps> = ({ hive, type, onClose, onSave }) => {
