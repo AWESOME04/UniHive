@@ -45,6 +45,8 @@ import Messages from './pages/Messages';
 // Import new pages
 import Settings from './pages/dashboard/Settings';
 import HelpCenter from './pages/dashboard/HelpCenter';
+import Favorites from './pages/dashboard/Favorites';
+import FindServices from './pages/dashboard/FindServices';
 
 // ProtectedRoute
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -206,6 +208,20 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <HelpCenter />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/favorites" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Favorites />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/services" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <FindServices />
               </DashboardLayout>
             </ProtectedRoute>
           } />

@@ -74,13 +74,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
   const secondaryNavigation: NavigationItem[] = [
     {
-      name: 'Saved Posts',
-      href: '/dashboard/saved-jobs',
+      name: 'Favorites',
+      href: '/dashboard/favorites',
       icon: <Bookmark size={20} />
     },
     {
-      name: 'Find Jobs',
-      href: '/dashboard/search',
+      name: 'Find Services',
+      href: '/dashboard/services',
       icon: <Search size={20} />
     }
   ];
