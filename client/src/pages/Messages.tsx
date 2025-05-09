@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Send, Search, MoreVertical, Phone, Video, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Mock data for demo
 const MOCK_CHAT = {
   user: {
     id: '1',
@@ -16,23 +15,23 @@ const MOCK_CHAT = {
     {
       id: '1',
       content: 'Hi there! I saw your Electric Stove listing. Is it still available?',
-      sender: 'Evans Acheampong',
+      sender: 'Me',
       timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-      isMe: false
+      isMe: true
     },
     {
       id: '2',
       content: 'Yes, it is! Are you interested in buying it?',
-      sender: 'Me',
+      sender: 'Evans Acheampong',
       timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-      isMe: true
+      isMe: false
     },
     {
       id: '3',
       content: 'Great! Could you tell me more about its condition and how long you\'ve had it?',
-      sender: 'Evans Acheampong',
+      sender: 'Me',
       timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-      isMe: false
+      isMe: true
     }
   ]
 };
@@ -98,7 +97,7 @@ const Messages = () => {
                   <p className="font-medium text-gray-900">{MOCK_CHAT.user.name}</p>
                   <span className="text-xs text-gray-500">2m ago</span>
                 </div>
-                <p className="text-sm text-gray-500 truncate">Could you tell me more about its condition...</p>
+                <p className="text-sm text-gray-500 truncate">Yes, it is! Are you interested in buying it?</p>
               </div>
             </div>
           </div>
