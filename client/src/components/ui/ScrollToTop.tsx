@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ChevronUp } from 'lucide-react';
-import { useScrollBehavior } from '../../hooks/useScrollBehavior';
+import { useLocation } from 'react-router-dom';
+import { scrollToTop, hasScrolledPast } from '../../utils/scrollManager';
 
 const ScrollToTop: React.FC = () => {
-  const { isScrolled, scrollToTop } = useScrollBehavior(300);
+  const [isVisible, setIsVisible] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const location = useLocation();
+  
+  // Check scroll position with throttling
+  const handleScroll = useCallback(() => {
+    setIsVisible(hasScrolledPast(300));
+  }, []);
   
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -17,18 +24,36 @@ const ScrollToTop: React.FC = () => {
   // Enhanced scroll to top with feedback
   const handleScrollToTop = () => {
     setIsScrolling(true);
-    scrollToTop();
+    
+    // Use the scroll manager to scroll to top
+    scrollToTop({ behavior: 'smooth' });
     
     // Reset scrolling state after animation completes
     setTimeout(() => {
       setIsScrolling(false);
-    }, 500);
+    }, 800);
   };
   
   // Manage focus trap when visible
+  // Reset scroll position when route changes
+  useEffect(() => {
+    setIsScrolling(false);
+  }, [location.pathname]);
+  
+  // Set up scroll event listener
+  useEffect(() => {
+    // Add throttled scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  // Handle keyboard navigation
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isScrolled) {
+      if (e.key === 'Escape' && isVisible) {
         const button = document.getElementById('scroll-to-top-button');
         button?.blur();
       }
@@ -36,7 +61,7 @@ const ScrollToTop: React.FC = () => {
     
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isScrolled]);
+  }, [isVisible]);
 
   return (
     <button
@@ -44,11 +69,11 @@ const ScrollToTop: React.FC = () => {
       onClick={handleScrollToTop}
       onKeyDown={handleKeyDown}
       aria-label="Scroll to top of page"
-      tabIndex={isScrolled ? 0 : -1}
+      tabIndex={isVisible ? 0 : -1}
       className={`fixed bottom-8 right-8 bg-secondary text-white p-3 rounded-full shadow-lg transition-all duration-300 z-50 
-        ${isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
+        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
         ${isScrolling ? 'animate-pulse' : ''}
-        hover:bg-dark-orange focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary`}
+        hover:bg-dark-orange hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary`}
     >
       <ChevronUp size={20} />
     </button>

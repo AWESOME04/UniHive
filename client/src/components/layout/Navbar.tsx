@@ -1,8 +1,8 @@
-import { Menu, User } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { toast } from 'react-toastify';
+import { Menu, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 interface NavbarProps {
   user?: any;
@@ -16,7 +16,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user: authUser, isAuthenticated, logout } = useAuth();
-  
+
   // Use prop user if provided, otherwise use the one from auth context
   const user = propUser || authUser;
 
@@ -30,24 +30,24 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const profileMenu = document.getElementById('profile-menu');
+      const profileMenu = document.getElementById("profile-menu");
       if (profileMenu && !profileMenu.contains(event.target as Node)) {
         setIsProfileOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -59,42 +59,62 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   const handleLogout = () => {
     // Call logout function from AuthContext
     logout();
-    
+
     // Show success message
-    toast.success('Logged out successfully');
-    
+    toast.success("Logged out successfully");
+
     // Redirect to home page
-    navigate('/');
+    navigate("/");
   };
 
   return (
-    <nav className={`bg-white border-b border-gray-100 fixed top-0 w-full z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : ''} overflow-x-hidden`}>
+    <nav
+      className={`bg-white border-b border-gray-100 fixed top-0 w-full z-50 transition-shadow duration-300 ${
+        isScrolled ? "shadow-md" : ""
+      } overflow-x-hidden`}
+    >
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 w-full">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link to="/" className="flex items-center">
-                <img src="/unihive-no-text.svg" alt="UniHive Logo" className="h-10 w-10 mr-2" />
-                <span className="text-2xl font-bold text-primary">Uni<span className="text-secondary">Hive</span></span>
+                <img
+                  src="/unihive-no-text.svg"
+                  alt="UniHive Logo"
+                  className="h-10 w-10 mr-2"
+                />
+                <span className="text-2xl font-bold text-primary">
+                  Uni<span className="text-secondary">Hive</span>
+                </span>
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
                 to="/"
                 className={`${
-                  location.pathname === '/'
-                    ? 'border-secondary text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  location.pathname === "/"
+                    ? "border-secondary text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Home
               </Link>
               <Link
+                to="/pricing"
+                className={`${
+                  location.pathname === "/pricing"
+                    ? "border-secondary text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+              >
+                Pricing
+              </Link>
+              <Link
                 to="/about"
                 className={`${
-                  location.pathname === '/about'
-                    ? 'border-secondary text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  location.pathname === "/about"
+                    ? "border-secondary text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 About Us
@@ -102,9 +122,9 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
               <Link
                 to="/contact"
                 className={`${
-                  location.pathname === '/contact'
-                    ? 'border-secondary text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  location.pathname === "/contact"
+                    ? "border-secondary text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Contact
@@ -154,6 +174,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                       >
                         Dashboard
                       </Link>
+
                       <Link
                         to="/settings"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -209,19 +230,29 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
             <Link
               to="/"
               className={`${
-                location.pathname === '/'
-                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                location.pathname === "/"
+                  ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                  : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
               } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
             >
               Home
             </Link>
             <Link
+              to="/pricing"
+              className={`${
+                location.pathname === "/pricing"
+                  ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                  : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+            >
+              Pricing
+            </Link>
+            <Link
               to="/about"
               className={`${
-                location.pathname === '/about'
-                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                location.pathname === "/about"
+                  ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                  : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
               } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
             >
               About Us
@@ -229,21 +260,22 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
             <Link
               to="/contact"
               className={`${
-                location.pathname === '/contact'
-                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                location.pathname === "/contact"
+                  ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                  : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
               } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
             >
               Contact
             </Link>
+
             {isAuthenticated && (
               <>
                 <Link
                   to="/dashboard"
                   className={`${
-                    location.pathname === '/dashboard'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                    location.pathname === "/dashboard"
+                      ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                      : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
                   } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
                 >
                   Dashboard
@@ -251,19 +283,19 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                 <Link
                   to="/search"
                   className={`${
-                    location.pathname === '/search'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                    location.pathname === "/search"
+                      ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                      : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
                   } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
                 >
-                  Find Jobs
+                  Find Hives
                 </Link>
                 <Link
                   to="/messages"
                   className={`${
-                    location.pathname === '/messages'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                    location.pathname === "/messages"
+                      ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                      : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
                   } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
                 >
                   Messages
@@ -271,9 +303,9 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                 <Link
                   to="/notifications"
                   className={`${
-                    location.pathname === '/notifications'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                    location.pathname === "/notifications"
+                      ? "bg-secondary bg-opacity-10 border-secondary text-secondary"
+                      : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
                   } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
                 >
                   Notifications
@@ -298,8 +330,12 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                   )}
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user?.username || "User"}</div>
-                  <div className="text-sm font-medium text-gray-500">{user?.email || ""}</div>
+                  <div className="text-base font-medium text-gray-800">
+                    {user?.username || "User"}
+                  </div>
+                  <div className="text-sm font-medium text-gray-500">
+                    {user?.email || ""}
+                  </div>
                 </div>
               </div>
               <div className="mt-3 space-y-1">
@@ -310,10 +346,10 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                   Your Profile
                 </Link>
                 <Link
-                  to="/saved-jobs"
+                  to="/saved-hives"
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                 >
-                  Saved Jobs
+                  Saved Hives
                 </Link>
                 <Link
                   to="/settings"

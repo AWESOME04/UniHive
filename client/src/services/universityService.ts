@@ -1,5 +1,5 @@
-import axios from 'axios';
-import api from '../utils/apiUtils';
+import axios from "axios";
+import api from "../utils/apiUtils";
 
 // Define University interface
 export interface University {
@@ -13,7 +13,7 @@ export interface University {
   description?: string;
   website?: string;
   establishedYear?: number;
-  type?: 'public' | 'private' | 'other';
+  type?: "public" | "private" | "other";
   totalStudents?: number;
   accreditation?: string[];
   faculties?: string[];
@@ -42,13 +42,15 @@ export const universityService = {
     type?: string;
   }) => {
     try {
-      const response = await api.get('/universities', { params });
+      const response = await api.get("/universities", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch universities');
+        throw new Error(
+          error.response.data.message || "Failed to fetch universities"
+        );
       }
-      throw new Error('Network error while fetching universities');
+      throw new Error("Network error while fetching universities");
     }
   },
 
@@ -59,9 +61,11 @@ export const universityService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university details');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university details"
+        );
       }
-      throw new Error('Network error while fetching university details');
+      throw new Error("Network error while fetching university details");
     }
   },
 
@@ -72,109 +76,151 @@ export const universityService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university details');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university details"
+        );
       }
-      throw new Error('Network error while fetching university details');
+      throw new Error("Network error while fetching university details");
     }
   },
 
-  // Get university jobs
-  getUniversityJobs: async (universityId: string, params: {
-    page?: number;
-    limit?: number;
-    status?: string;
-    category?: string;
-  }) => {
+  // Get university hives
+  getUniversityJobs: async (
+    universityId: string,
+    params: {
+      page?: number;
+      limit?: number;
+      status?: string;
+      category?: string;
+    }
+  ) => {
     try {
-      const response = await api.get(`/universities/${universityId}/jobs`, { params });
+      const response = await api.get(`/universities/${universityId}/hives`, {
+        params,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university jobs');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university hives"
+        );
       }
-      throw new Error('Network error while fetching university jobs');
+      throw new Error("Network error while fetching university hives");
     }
   },
 
   // Get university tasks
-  getUniversityTasks: async (universityId: string, params: {
-    page?: number;
-    limit?: number;
-    status?: string;
-    category?: string;
-  }) => {
+  getUniversityTasks: async (
+    universityId: string,
+    params: {
+      page?: number;
+      limit?: number;
+      status?: string;
+      category?: string;
+    }
+  ) => {
     try {
-      const response = await api.get(`/universities/${universityId}/tasks`, { params });
+      const response = await api.get(`/universities/${universityId}/tasks`, {
+        params,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university tasks');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university tasks"
+        );
       }
-      throw new Error('Network error while fetching university tasks');
+      throw new Error("Network error while fetching university tasks");
     }
   },
 
   // Get university events
-  getUniversityEvents: async (universityId: string, params: {
-    page?: number;
-    limit?: number;
-    upcoming?: boolean;
-  }) => {
+  getUniversityEvents: async (
+    universityId: string,
+    params: {
+      page?: number;
+      limit?: number;
+      upcoming?: boolean;
+    }
+  ) => {
     try {
-      const response = await api.get(`/universities/${universityId}/events`, { params });
+      const response = await api.get(`/universities/${universityId}/events`, {
+        params,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university events');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university events"
+        );
       }
-      throw new Error('Network error while fetching university events');
+      throw new Error("Network error while fetching university events");
     }
   },
 
   // Get university news
-  getUniversityNews: async (universityId: string, params: {
-    page?: number;
-    limit?: number;
-  }) => {
+  getUniversityNews: async (
+    universityId: string,
+    params: {
+      page?: number;
+      limit?: number;
+    }
+  ) => {
     try {
-      const response = await api.get(`/universities/${universityId}/news`, { params });
+      const response = await api.get(`/universities/${universityId}/news`, {
+        params,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university news');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university news"
+        );
       }
-      throw new Error('Network error while fetching university news');
+      throw new Error("Network error while fetching university news");
     }
   },
 
   // Get university departments/faculties
   getUniversityDepartments: async (universityId: string) => {
     try {
-      const response = await api.get(`/universities/${universityId}/departments`);
+      const response = await api.get(
+        `/universities/${universityId}/departments`
+      );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university departments');
+        throw new Error(
+          error.response.data.message ||
+            "Failed to fetch university departments"
+        );
       }
-      throw new Error('Network error while fetching university departments');
+      throw new Error("Network error while fetching university departments");
     }
   },
 
   // Get university programs/courses
-  getUniversityPrograms: async (universityId: string, params: {
-    page?: number;
-    limit?: number;
-    departmentId?: string;
-    level?: string;
-  }) => {
+  getUniversityPrograms: async (
+    universityId: string,
+    params: {
+      page?: number;
+      limit?: number;
+      departmentId?: string;
+      level?: string;
+    }
+  ) => {
     try {
-      const response = await api.get(`/universities/${universityId}/programs`, { params });
+      const response = await api.get(`/universities/${universityId}/programs`, {
+        params,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch university programs');
+        throw new Error(
+          error.response.data.message || "Failed to fetch university programs"
+        );
       }
-      throw new Error('Network error while fetching university programs');
+      throw new Error("Network error while fetching university programs");
     }
   },
 
@@ -185,9 +231,11 @@ export const universityService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to follow university');
+        throw new Error(
+          error.response.data.message || "Failed to follow university"
+        );
       }
-      throw new Error('Network error while following university');
+      throw new Error("Network error while following university");
     }
   },
 
@@ -198,24 +246,33 @@ export const universityService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to unfollow university');
+        throw new Error(
+          error.response.data.message || "Failed to unfollow university"
+        );
       }
-      throw new Error('Network error while unfollowing university');
+      throw new Error("Network error while unfollowing university");
     }
   },
 
   // Get user's followed universities
-  getFollowedUniversities: async (params: { page?: number; limit?: number }) => {
+  getFollowedUniversities: async (params: {
+    page?: number;
+    limit?: number;
+  }) => {
     try {
-      const response = await api.get('/users/me/followed-universities', { params });
+      const response = await api.get("/users/me/followed-universities", {
+        params,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch followed universities');
+        throw new Error(
+          error.response.data.message || "Failed to fetch followed universities"
+        );
       }
-      throw new Error('Network error while fetching followed universities');
+      throw new Error("Network error while fetching followed universities");
     }
-  }
+  },
 };
 
 export default universityService;

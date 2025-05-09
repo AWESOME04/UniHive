@@ -33,7 +33,7 @@ export interface Task {
   positionLevel?: "intern" | "junior" | "mid-level" | "senior" | "manager";
 }
 
-export interface Job {
+export interface Hive {
   id: string;
   title: string;
   company: string;

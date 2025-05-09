@@ -425,7 +425,7 @@ const Dashboard: React.FC = () => {
                     ))}
                   </div>
                   <Link
-                    to={`/dashboard/job/${task.id}`}
+                    to={`/dashboard/hive/${task.id}`}
                     className="mt-4 flex items-center justify-center py-2 px-4 bg-secondary/10 text-secondary text-sm font-medium rounded-lg hover:bg-secondary/20 transition-colors w-full"
                   >
                     View Details

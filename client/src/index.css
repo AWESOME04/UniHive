@@ -6,16 +6,30 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --cursor-x: 0px;
   --cursor-y: 0px;
+  scroll-behavior: smooth;
 }
 
 @layer base {
   html, body {
     @apply overflow-x-hidden max-w-[100vw];
     width: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 70px; /* Account for fixed header */
+    -webkit-overflow-scrolling: touch; /* Improve iOS scrolling */
+    overscroll-behavior-y: none; /* Prevent bounce effect causing issues */
   }
   body {
     @apply bg-background text-primary overflow-x-hidden relative;
     position: relative;
+    min-height: 100vh;
+    /* Prevent content shift during scrolling */
+    padding-left: calc(100vw - 100%);
+  }
+  
+  /* Fix for iOS devices */
+  .ios-device {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -38,6 +52,14 @@
   
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-in-out;
+    will-change: opacity; /* Optimize animation performance */
+  }
+  
+  /* Prevent layout shifts during scroll */
+  .scroll-content {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
   }
   
   @keyframes fadeIn {

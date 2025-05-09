@@ -1,15 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
-import authReducer from './slices/authSlice';
-import tasksReducer from './slices/tasksSlice';
-import jobsReducer from './slices/jobsSlice';
-import appReducer from './slices/appSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import authReducer from "./slices/authSlice";
+import tasksReducer from "./slices/tasksSlice";
+import jobsReducer from "./slices/jobsSlice";
+import appReducer from "./slices/appSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     tasks: tasksReducer,
-    jobs: jobsReducer,
+    hives: jobsReducer,
     app: appReducer,
   },
 });

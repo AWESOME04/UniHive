@@ -22,52 +22,55 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const childVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   const buttonVariants = {
     hover: { scale: 1.05, boxShadow: "0px 5px 15px rgba(0,0,0,0.1)" },
-    tap: { scale: 0.95 }
+    tap: { scale: 0.95 },
   };
 
   return (
-    <section className="relative pt-8 sm:pt-16 md:pt-20 pb-10 sm:pb-16 md:pb-24 px-3 sm:px-4 md:px-8 lg:px-12 overflow-hidden bg-gradient-to-br from-background via-white to-light-orange/20">
-      {/* Floating Elements with Framer Motion */}
-      <motion.div 
-        className="absolute top-20 left-1/4 w-12 h-12 bg-light-orange rounded-lg hidden lg:block" 
+    <section className="relative pt-8 sm:pt-16 md:pt-20 pb-10 sm:pb-16 md:pb-24 px-3 sm:px-4 md:px-8 lg:px-12 overflow-hidden bg-gradient-to-br from-background via-white to-light-orange/20 scroll-content">
+      {/* Floating Elements with Framer Motion - Optimized for scroll performance */}
+      <motion.div
+        className="absolute top-20 left-1/4 w-12 h-12 bg-light-orange rounded-lg hidden lg:block"
         initial={{ rotate: 0 }}
         animate={{ rotate: 12, y: [0, -15, 0] }}
         transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
+        style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
       />
-      <motion.div 
-        className="absolute bottom-40 right-1/4 w-8 h-8 bg-secondary opacity-50 rounded-full hidden lg:block" 
+      <motion.div
+        className="absolute bottom-40 right-1/4 w-8 h-8 bg-secondary opacity-50 rounded-full hidden lg:block"
         initial={{ scale: 0.9 }}
         animate={{ scale: 1.1, y: [0, -10, 0] }}
         transition={{ duration: 4, repeat: Infinity, repeatType: "reverse" }}
+        style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
       />
-      <motion.div 
-        className="absolute top-1/2 left-10 w-6 h-6 bg-accent-purple opacity-40 rounded-md hidden lg:block" 
+      <motion.div
+        className="absolute top-1/2 left-10 w-6 h-6 bg-accent-purple opacity-40 rounded-md hidden lg:block"
         initial={{ rotate: 0 }}
         animate={{ rotate: -12, y: [0, 15, 0] }}
         transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
+        style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
       />
 
-      <div className="container mx-auto relative z-10 px-0">
+      <div className="container mx-auto relative z-10 px-0" style={{ willChange: 'transform' }}>
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-16 items-center justify-between">
-          <motion.div 
+          <motion.div
             className="flex-1 max-w-full sm:max-w-xl lg:max-w-2xl w-full"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            <motion.div 
+            <motion.div
               className="inline-flex items-center mb-3 sm:mb-6 px-3 py-1.5 sm:py-2 bg-light-orange/20 rounded-full text-xs sm:text-sm"
               variants={childVariants}
             >
@@ -77,7 +80,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
               </span>
             </motion.div>
 
-            <motion.h1 
+            <motion.h1
               className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-6 leading-tight tracking-tight"
               variants={childVariants}
             >
@@ -86,7 +89,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
               Student
             </motion.h1>
 
-            <motion.p 
+            <motion.p
               className="text-sm xs:text-base sm:text-lg md:text-xl text-gray-700 mb-4 sm:mb-8 leading-relaxed"
               variants={childVariants}
             >
@@ -95,7 +98,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
               and academic schedule.
             </motion.p>
 
-            <motion.div 
+            <motion.div
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-10"
               variants={childVariants}
             >
@@ -122,11 +125,11 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                     whileTap="tap"
                   >
                     <Link
-                      to="/dashboard/add-job"
+                      to="/dashboard/add-hive"
                       className="btn-secondary flex items-center justify-center py-2.5 sm:py-3 md:py-4 px-5 sm:px-6 md:px-8 rounded-xl text-sm sm:text-base w-full"
                     >
                       <CirclePlus size={18} className="mr-2" />
-                      <span>Post a Job</span>
+                      <span>Post a Hive</span>
                     </Link>
                   </motion.div>
                 </>
@@ -164,7 +167,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
               )}
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="flex flex-wrap gap-2 sm:gap-3"
               variants={childVariants}
             >
@@ -174,7 +177,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
               </div>
               <div className="flex items-center text-gray-700 text-xs sm:text-sm">
                 <Briefcase size={14} className="text-secondary mr-1" />
-                <span>5,000+ Jobs</span>
+                <span>5,000+ Hives</span>
               </div>
               <div className="flex items-center text-gray-700 text-xs sm:text-sm">
                 <Lightbulb size={14} className="text-secondary mr-1" />
@@ -187,7 +190,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
             </motion.div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="flex-1 w-full mt-6 lg:mt-0"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -199,38 +202,38 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                 <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6">
                   Explore Top Hives
                 </h2>
-                
-                <motion.div 
+
+                <motion.div
                   className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4"
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
                 >
                   {[
-                    { 
-                      name: "Essentials", 
-                      icon: "🛒", 
-                      count: 125, 
-                      desc: "Used items like rice cookers, electric stoves, etc."
+                    {
+                      name: "Essentials",
+                      icon: "🛒",
+                      count: 125,
+                      desc: "Used items like rice cookers, electric stoves, etc.",
                     },
-                    { 
-                      name: "Academia", 
-                      icon: "📚", 
-                      count: 105, 
-                      desc: "Tutoring, mentoring, peer teaching, group studies"
+                    {
+                      name: "Academia",
+                      icon: "📚",
+                      count: 105,
+                      desc: "Tutoring, mentoring, peer teaching, group studies",
                     },
-                    { 
-                      name: "Logistics", 
-                      icon: "🚚", 
-                      count: 86, 
-                      desc: "Delivery requests, pick-ups, laundry runs, etc."
+                    {
+                      name: "Logistics",
+                      icon: "🚚",
+                      count: 86,
+                      desc: "Delivery requests, pick-ups, laundry runs, etc.",
                     },
-                    { 
-                      name: "SideHustle", 
-                      icon: "💼", 
-                      count: 112, 
-                      desc: "Side gigs, freelance tasks, part-time work"
-                    }
+                    {
+                      name: "SideHustle",
+                      icon: "💼",
+                      count: 112,
+                      desc: "Side gigs, freelance tasks, part-time work",
+                    },
                   ].map((category) => (
                     <motion.div
                       key={category.name}
@@ -256,7 +259,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                   ))}
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                   className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t"
                   variants={childVariants}
                 >
@@ -265,32 +268,50 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                   </h3>
                   <div className="flex flex-wrap gap-3 sm:gap-4">
                     <div className="flex items-center gap-3 sm:gap-4">
-                      <motion.div 
+                      <motion.div
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <img src="/universityofghana.png" alt="University of Ghana" className="h-6 w-6 object-contain mr-2" />
-                        <span className="text-xs font-medium">University of Ghana</span>
+                        <img
+                          src="/universityofghana.png"
+                          alt="University of Ghana"
+                          className="h-6 w-6 object-contain mr-2"
+                        />
+                        <span className="text-xs font-medium">
+                          University of Ghana
+                        </span>
                       </motion.div>
-                      <motion.div 
+                      <motion.div
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <img src="/kwame-nkrumah-university-of-scie.png" alt="KNUST" className="h-6 w-6 object-contain mr-2" />
+                        <img
+                          src="/kwame-nkrumah-university-of-scie.png"
+                          alt="KNUST"
+                          className="h-6 w-6 object-contain mr-2"
+                        />
                         <span className="text-xs font-medium">KNUST</span>
                       </motion.div>
-                      <motion.div 
+                      <motion.div
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <img src="/ucc.png" alt="UCC" className="h-6 w-6 object-contain mr-2" />
+                        <img
+                          src="/ucc.png"
+                          alt="UCC"
+                          className="h-6 w-6 object-contain mr-2"
+                        />
                         <span className="text-xs font-medium">UCC</span>
                       </motion.div>
-                      <motion.div 
+                      <motion.div
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <img src="/central.png" alt="Central University" className="h-6 w-6 object-contain mr-2" />
+                        <img
+                          src="/central.png"
+                          alt="Central University"
+                          className="h-6 w-6 object-contain mr-2"
+                        />
                         <span className="text-xs font-medium">Central</span>
                       </motion.div>
                     </div>

@@ -6,6 +6,7 @@ import FeaturedTasks from "../components/home/FeaturedTasks";
 import HiveCategories from "../components/home/HiveCategories";
 import CallToAction from "../components/home/CallToAction";
 import TestimonialsSection from "../components/home/TestimonialsSection";
+import PricingSection from "../components/home/PricingSection";
 import UniversityDirectory from "../components/universities/UniversityDirectory";
 import GhanaJobCategories from "../components/jobs/GhanaJobCategories";
 import GhanaPaymentMethods from "../components/payment/GhanaPaymentMethods";
@@ -120,6 +121,8 @@ function Home() {
       <CallToAction isAuthenticated={isAuthenticated} />
 
       <TestimonialsSection />
+
+      <PricingSection />
 
       <section className="py-6 sm:py-16 md:py-20 bg-light-orange/10 overflow-hidden">
         <motion.div

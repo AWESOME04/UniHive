@@ -65,8 +65,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       icon: <Bookmark size={20} />,
     },
     {
-      name: "Find Jobs",
-      href: "/dashboard/jobs",
+      name: "Find Hives",
+      href: "/dashboard/hives",
       icon: <Columns size={20} />,
     },
   ];

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import api from '../utils/apiUtils';
+import axios from "axios";
+import api from "../utils/apiUtils";
 
 // Search service
 export const searchService = {
@@ -11,17 +11,17 @@ export const searchService = {
     types?: string[]; // Filter by entity types
   }) => {
     try {
-      const response = await api.get('/search', { params });
+      const response = await api.get("/search", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Search failed');
+        throw new Error(error.response.data.message || "Search failed");
       }
-      throw new Error('Network error during search');
+      throw new Error("Network error during search");
     }
   },
 
-  // Search jobs
+  // Search hives
   searchJobs: async (params: {
     query: string;
     page?: number;
@@ -31,13 +31,13 @@ export const searchService = {
     category?: string;
   }) => {
     try {
-      const response = await api.get('/search/jobs', { params });
+      const response = await api.get("/search/hives", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Job search failed');
+        throw new Error(error.response.data.message || "Hive search failed");
       }
-      throw new Error('Network error during job search');
+      throw new Error("Network error during hive search");
     }
   },
 
@@ -51,13 +51,13 @@ export const searchService = {
     category?: string;
   }) => {
     try {
-      const response = await api.get('/search/tasks', { params });
+      const response = await api.get("/search/tasks", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Task search failed');
+        throw new Error(error.response.data.message || "Task search failed");
       }
-      throw new Error('Network error during task search');
+      throw new Error("Network error during task search");
     }
   },
 
@@ -69,13 +69,15 @@ export const searchService = {
     country?: string;
   }) => {
     try {
-      const response = await api.get('/search/universities', { params });
+      const response = await api.get("/search/universities", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'University search failed');
+        throw new Error(
+          error.response.data.message || "University search failed"
+        );
       }
-      throw new Error('Network error during university search');
+      throw new Error("Network error during university search");
     }
   },
 
@@ -87,13 +89,13 @@ export const searchService = {
     university?: string;
   }) => {
     try {
-      const response = await api.get('/search/users', { params });
+      const response = await api.get("/search/users", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'User search failed');
+        throw new Error(error.response.data.message || "User search failed");
       }
-      throw new Error('Network error during user search');
+      throw new Error("Network error during user search");
     }
   },
 
@@ -106,13 +108,13 @@ export const searchService = {
     upcoming?: boolean;
   }) => {
     try {
-      const response = await api.get('/search/events', { params });
+      const response = await api.get("/search/events", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Event search failed');
+        throw new Error(error.response.data.message || "Event search failed");
       }
-      throw new Error('Network error during event search');
+      throw new Error("Network error during event search");
     }
   },
 
@@ -124,13 +126,13 @@ export const searchService = {
     university?: string;
   }) => {
     try {
-      const response = await api.get('/search/news', { params });
+      const response = await api.get("/search/news", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'News search failed');
+        throw new Error(error.response.data.message || "News search failed");
       }
-      throw new Error('Network error during news search');
+      throw new Error("Network error during news search");
     }
   },
 
@@ -141,15 +143,17 @@ export const searchService = {
     types?: string[];
   }) => {
     try {
-      const response = await api.get('/search/suggestions', { params });
+      const response = await api.get("/search/suggestions", { params });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to get search suggestions');
+        throw new Error(
+          error.response.data.message || "Failed to get search suggestions"
+        );
       }
-      throw new Error('Network error while getting search suggestions');
+      throw new Error("Network error while getting search suggestions");
     }
-  }
+  },
 };
 
 export default searchService;

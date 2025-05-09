@@ -16,6 +16,7 @@ import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
+import Pricing from './pages/Pricing';
 
 // Auth Pages
 import Login from './pages/Login';
@@ -55,6 +56,7 @@ function App() {
           <Route path="/terms" element={<HomeLayout><Terms /></HomeLayout>} />
           <Route path="/privacy" element={<HomeLayout><Privacy /></HomeLayout>} />
           <Route path="/cookies" element={<HomeLayout><Cookies /></HomeLayout>} />
+          <Route path="/pricing" element={<HomeLayout><Pricing /></HomeLayout>} />
           <Route path="/universities" element={<HomeLayout><Universities /></HomeLayout>} />
           
           {/* Authentication Routes */}
