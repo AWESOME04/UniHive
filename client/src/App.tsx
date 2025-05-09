@@ -39,6 +39,7 @@ import ArchivePage from './pages/hives/Archive';
 import SideHustle from './pages/hives/SideHustle';
 import EssentialDetail from './pages/hives/EssentialDetail';
 import Payments from './pages/Payments';
+import Messages from './pages/Messages';
 
 // ProtectedRoute
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -176,6 +177,13 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <Payments />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/messages" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Messages />
               </DashboardLayout>
             </ProtectedRoute>
           } />
