@@ -9,6 +9,7 @@ import TestimonialsSection from "../components/home/TestimonialsSection";
 import UniversityDirectory from "../components/universities/UniversityDirectory";
 import GhanaJobCategories from "../components/jobs/GhanaJobCategories";
 import GhanaPaymentMethods from "../components/payment/GhanaPaymentMethods";
+import ScrollToTop from "../components/common/ScrollToTop";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -157,6 +158,9 @@ function Home() {
       </section>
       
       <div className="fixed inset-0 hexagon-pattern pointer-events-none opacity-40 z-0"></div>
+      
+      {/* Add Scroll To Top Button */}
+      <ScrollToTop />
       
       {/* Animation styles */}
       <style>{`
