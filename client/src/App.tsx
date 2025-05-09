@@ -191,7 +191,7 @@ function App() {
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ToastContainer position="bottom-center" />
+        <ToastContainer position="top-right" />
       </Router>
     </AuthProvider>
   );

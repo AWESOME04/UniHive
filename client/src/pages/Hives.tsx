@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Briefcase, Book, Truck, Bell, Archive, Layers, Search, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import HiveCard from '../components/hives/HiveCard';
 import { HiveCategory } from '../types/hiveTypes';
+import FeedbackModal from '../components/modals/FeedbackModal';
 
 const Hives: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   // Define the hive categories with proper typing
   const hiveCategories: HiveCategory[] = [
@@ -136,15 +137,20 @@ const Hives: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900">Don't see what you're looking for?</h3>
             <p className="text-gray-600 mt-1">Create a new opportunity or request in any hive category.</p>
           </div>
-          <Link
-            to="/dashboard/hives/create"
+          <button
+            onClick={() => setIsFeedbackModalOpen(true)}
             className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-secondary text-white rounded-lg hover:bg-opacity-90 transition-colors"
           >
             Create New
             <ArrowRight size={16} className="ml-2" />
-          </Link>
+          </button>
         </div>
       </div>
+
+      <FeedbackModal 
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+      />
     </div>
   );
 };
