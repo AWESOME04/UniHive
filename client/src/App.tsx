@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
+import ScrollRestoration from './components/ui/ScrollRestoration';
 import './index.css';
 
 // Layouts
@@ -45,6 +46,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollRestoration />
         <Routes>
           {/* Public Routes with HomeLayout */}
           <Route path="/" element={<HomeLayout><Home /></HomeLayout>} />

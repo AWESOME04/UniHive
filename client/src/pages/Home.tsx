@@ -14,9 +14,9 @@ function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isScrolled, setIsScrolled] = useState(false);
-  
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
@@ -62,18 +62,16 @@ function Home() {
   }, [handleMouseMove]);
 
   return (
-    <motion.div 
-      className="min-h-screen bg-background"
+    <motion.div
+      className="min-h-screen bg-background relative w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div 
-        className="pointer-events-none fixed inset-0 z-10 opacity-60 cursor-light hidden md:block"
-      />
-      
-      <motion.div 
-        className="absolute top-0 right-0 w-52 sm:w-72 h-52 sm:h-72 bg-secondary opacity-5 rounded-full mix-blend-multiply filter blur-xl"
+      <div className="pointer-events-none fixed inset-0 z-10 opacity-60 cursor-light hidden md:block overflow-hidden" />
+
+      <motion.div
+        className="absolute top-0 -right-10 w-40 sm:w-72 h-40 sm:h-72 bg-secondary opacity-5 rounded-full mix-blend-multiply filter blur-xl"
         animate={{
           scale: [1, 1.1, 1],
           x: [0, 10, 0],
@@ -81,11 +79,11 @@ function Home() {
         transition={{
           duration: 10,
           repeat: Infinity,
-          repeatType: "reverse"
+          repeatType: "reverse",
         }}
       />
-      <motion.div 
-        className="absolute bottom-0 left-10 w-60 sm:w-80 h-60 sm:h-80 bg-accent-purple opacity-5 rounded-full mix-blend-multiply filter blur-xl"
+      <motion.div
+        className="absolute bottom-0 -left-10 w-40 sm:w-80 h-40 sm:h-80 bg-accent-purple opacity-5 rounded-full mix-blend-multiply filter blur-xl"
         animate={{
           scale: [1, 1.2, 1],
           x: [0, -10, 0],
@@ -94,11 +92,11 @@ function Home() {
         transition={{
           duration: 12,
           repeat: Infinity,
-          repeatType: "reverse"
+          repeatType: "reverse",
         }}
       />
-      <motion.div 
-        className="absolute top-1/3 -right-20 w-72 sm:w-96 h-72 sm:h-96 bg-dark-orange opacity-5 rounded-full mix-blend-multiply filter blur-xl"
+      <motion.div
+        className="absolute top-1/3 -right-20 w-52 sm:w-96 h-52 sm:h-96 bg-dark-orange opacity-5 rounded-full mix-blend-multiply filter blur-xl"
         animate={{
           scale: [1, 1.15, 1],
           y: [0, 15, 0],
@@ -106,13 +104,16 @@ function Home() {
         transition={{
           duration: 15,
           repeat: Infinity,
-          repeatType: "reverse"
+          repeatType: "reverse",
         }}
       />
 
       <HeroSection isAuthenticated={isAuthenticated} />
 
-      <FeaturedTasks isAuthenticated={isAuthenticated} isScrolled={isScrolled} />
+      <FeaturedTasks
+        isAuthenticated={isAuthenticated}
+        isScrolled={isScrolled}
+      />
 
       <HiveCategories isAuthenticated={isAuthenticated} />
 
@@ -120,9 +121,9 @@ function Home() {
 
       <TestimonialsSection />
 
-      <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10">
-        <motion.div 
-          className="container mx-auto text-center px-0"
+      <section className="py-6 sm:py-16 md:py-20 bg-light-orange/10 overflow-hidden">
+        <motion.div
+          className="w-full max-w-7xl mx-auto text-center px-3 sm:px-4 md:px-8 lg:px-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
@@ -132,9 +133,9 @@ function Home() {
         </motion.div>
       </section>
 
-      <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white">
-        <motion.div 
-          className="container mx-auto text-center px-0"
+      <section className="py-6 sm:py-16 md:py-20 bg-white overflow-hidden">
+        <motion.div
+          className="w-full max-w-7xl mx-auto text-center px-3 sm:px-4 md:px-8 lg:px-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
@@ -144,9 +145,9 @@ function Home() {
         </motion.div>
       </section>
 
-      <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10">
-        <motion.div 
-          className="container mx-auto text-center px-0"
+      <section className="py-6 sm:py-16 md:py-20 bg-light-orange/10 overflow-hidden">
+        <motion.div
+          className="w-full max-w-7xl mx-auto text-center px-3 sm:px-4 md:px-8 lg:px-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
@@ -155,9 +156,9 @@ function Home() {
           <GhanaPaymentMethods showExample={true} />
         </motion.div>
       </section>
-      
+
       <div className="fixed inset-0 hexagon-pattern pointer-events-none opacity-40 z-0"></div>
-      
+
       {/* Animation styles */}
       <style>{`
         .hide-scrollbar {

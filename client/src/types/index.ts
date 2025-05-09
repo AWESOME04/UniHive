@@ -12,20 +12,25 @@ export interface Task {
   createdAt: string;
   updatedAt?: string;
   deadline?: string;
-  status: 'open' | 'in-progress' | 'completed';
+  status: "open" | "in-progress" | "completed";
   createdBy: string;
   assignedTo?: string;
   tags: string[];
   points: number;
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: "easy" | "medium" | "hard";
   estimatedHours?: number;
   location?: string;
   university?: string;
   category?: string;
   subcategory?: string;
-  workplaceType?: 'on-site' | 'remote' | 'hybrid';
-  experienceLevel?: 'no-experience' | 'entry-level' | '1-3-years' | '3-5-years' | '5-plus-years';
-  positionLevel?: 'intern' | 'junior' | 'mid-level' | 'senior' | 'manager';
+  workplaceType?: "on-site" | "remote" | "hybrid";
+  experienceLevel?:
+    | "no-experience"
+    | "entry-level"
+    | "1-3-years"
+    | "3-5-years"
+    | "5-plus-years";
+  positionLevel?: "intern" | "junior" | "mid-level" | "senior" | "manager";
 }
 
 export interface Job {
@@ -44,9 +49,14 @@ export interface Job {
   createdBy: string;
   tags?: string[];
   category?: string;
-  workplaceType?: 'on-site' | 'remote' | 'hybrid';
-  experienceLevel?: 'no-experience' | 'entry-level' | '1-3-years' | '3-5-years' | '5-plus-years';
-  positionLevel?: 'intern' | 'junior' | 'mid-level' | 'senior' | 'manager';
+  workplaceType?: "on-site" | "remote" | "hybrid";
+  experienceLevel?:
+    | "no-experience"
+    | "entry-level"
+    | "1-3-years"
+    | "3-5-years"
+    | "5-plus-years";
+  positionLevel?: "intern" | "junior" | "mid-level" | "senior" | "manager";
   applicationProcess?: string;
   requirements?: string[];
   responsibilities?: string[];

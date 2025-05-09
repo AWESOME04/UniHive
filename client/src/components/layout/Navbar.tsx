@@ -68,8 +68,8 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   };
 
   return (
-    <nav className={`bg-white border-b border-gray-100 fixed top-0 w-full z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className={`bg-white border-b border-gray-100 fixed top-0 w-full z-50 transition-shadow duration-300 ${isScrolled ? 'shadow-md' : ''} overflow-x-hidden`}>
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 w-full">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">

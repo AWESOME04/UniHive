@@ -9,8 +9,13 @@
 }
 
 @layer base {
+  html, body {
+    @apply overflow-x-hidden max-w-[100vw];
+    width: 100%;
+  }
   body {
-    @apply bg-background text-primary;
+    @apply bg-background text-primary overflow-x-hidden relative;
+    position: relative;
   }
   
   h1, h2, h3, h4, h5, h6 {
