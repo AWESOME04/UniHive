@@ -88,7 +88,7 @@ const Hives: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 px-14">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Hives</h1>
@@ -141,7 +141,7 @@ const Hives: React.FC = () => {
             onClick={() => setIsFeedbackModalOpen(true)}
             className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-secondary text-white rounded-lg hover:bg-opacity-90 transition-colors"
           >
-            Create New
+            Submit Feedback
             <ArrowRight size={16} className="ml-2" />
           </button>
         </div>

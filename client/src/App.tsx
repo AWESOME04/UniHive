@@ -188,7 +188,7 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* 404 Route */}
+          {/* 404 Route - Must be the last route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer position="top-right" />
