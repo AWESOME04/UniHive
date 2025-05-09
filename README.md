@@ -103,11 +103,11 @@ UniHive creates a secure and verified platform where university students can exc
    # Frontend setup (in another terminal)
    cd client
    npm install
-   npm start
+   npm run dev
    ```
 
 4. **Access the application**
-   - Open [http://localhost:3000](http://localhost:3000) in your browser
+   - Open [http://localhost:3000](http://localhost:5173) in your browser
 
 ## 📊 Project Structure
 

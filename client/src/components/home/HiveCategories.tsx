@@ -14,16 +14,41 @@ import {
 } from "lucide-react";
 import hivesService, { Hive, HiveType } from "../../services/hivesService";
 
+import designSvg from '../../assets/design.svg';
+import riceSvg from '../../assets/rice.svg';
+import webDevSvg from '../../assets/web-dev.svg';
+import calculusSvg from '../../assets/calculus.svg';
+import lectureSvg from '../../assets/lecture.svg';
+import photoSvg from '../../assets/photo.svg';
+import logisticsSvg from '../../assets/logistics.svg';
+import eventsSvg from '../../assets/events.svg';
+import taskSvg from '../../assets/task.svg';
+import { HiveCategory } from "../../types/hiveTypes";
+
 interface HiveCategoriesProps {
   isAuthenticated: boolean;
 }
 
-interface HiveCategory {
+// Define interface for filtered tasks
+interface HiveTask {
   id: string;
-  name: string;
-  icon: JSX.Element;
-  count: number;
+  title: string;
   description: string;
+  price: string | number;
+  location?: string;
+  hiveType: {
+    id: string;
+    name: string;
+    icon: string;
+  };
+  // Add any other properties that might be used
+  createdAt?: string;
+  updatedAt?: string;
+  status?: string;
+  postedBy?: {
+    name: string;
+    avatar?: string;
+  };
 }
 
 const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
@@ -53,38 +78,38 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     }
   };
 
-  // Get SVG image path based on task title or type
+  // Get SVG image based on task title or type
   const getTaskImage = (title: string, hiveType: string) => {
     if (title.toLowerCase().includes('logo') || title.toLowerCase().includes('design')) {
-      return "/src/assets/design.svg";
+      return designSvg;
     } else if (title.toLowerCase().includes('rice cooker')) {
-      return "/src/assets/rice.svg";
+      return riceSvg;
     } else if (title.toLowerCase().includes('tech') || title.toLowerCase().includes('website')) {
-      return "/src/assets/web-dev.svg";
+      return webDevSvg;
     } else if (title.toLowerCase().includes('calculus') || title.toLowerCase().includes('math')) {
-      return "/src/assets/calculus.svg";
+      return calculusSvg;
     } else if (title.toLowerCase().includes('lecture') || title.toLowerCase().includes('study')) {
-      return "/src/assets/lecture.svg";
+      return lectureSvg;
     } else if (title.toLowerCase().includes('photo')) {
-      return "/src/assets/photo.svg";
+      return photoSvg;
     }
     
     // Default based on hive type
     switch (hiveType) {
       case 'Essentials':
-        return "/src/assets/rice.svg";
+        return riceSvg;
       case 'Academia':
-        return "/src/assets/calculus.svg";
+        return calculusSvg;
       case 'Logistics':
-        return "/src/assets/logistics.svg";
+        return logisticsSvg;
       case 'Buzz':
-        return "/src/assets/events.svg";
+        return eventsSvg;
       case 'Archive':
-        return "/src/assets/lecture.svg";
+        return lectureSvg;
       case 'SideHustle':
-        return "/src/assets/design.svg";
+        return designSvg;
       default:
-        return "/src/assets/task.svg";
+        return taskSvg;
     }
   };
 
@@ -94,11 +119,10 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
       try {
         setLoading(true);
         const response = await hivesService.getHives();
-        
-        // Group hives by hive type to count them
+
         const hiveTypeMap = new Map<string, { type: HiveType; count: number }>();
         
-        response.data.forEach((hive) => {
+        response.data.forEach((hive: HiveTask) => {
           if (!hiveTypeMap.has(hive.hiveType.id)) {
             hiveTypeMap.set(hive.hiveType.id, { 
               type: hive.hiveType, 
@@ -118,7 +142,7 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
           name: type.name,
           icon: getIconComponent(type.icon),
           count,
-          description: type.description
+          description: type.description || `Explore ${type.name} hives` // Provide default value
         }));
         
         // Add "All" category
@@ -164,15 +188,36 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     ? hiveTasks 
     : hiveTasks.filter(task => task.hiveType.name === activeCategory);
 
+  // Type-safe function to format price
+  const formatPrice = (price: string | number | undefined): string => {
+    if (price === undefined || price === null) {
+      return "Free";
+    }
+    
+    if (typeof price === "number") {
+      return `₵${price.toFixed(2)}`;
+    }
+    
+    if (typeof price === "string") {
+      const numPrice = parseFloat(price);
+      if (!isNaN(numPrice)) {
+        return `₵${numPrice.toFixed(2)}`;
+      }
+      return price.startsWith("₵") ? price : `₵${price}`;
+    }
+    
+    return "Free";
+  };
+
   return (
     <motion.section 
-      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10"
+      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10 overflow-hidden w-full"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto px-0">
+      <div className="container mx-auto overflow-hidden px-0">
         <motion.div 
           className="text-center mb-6 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
@@ -274,9 +319,9 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                   No tasks available in this category.
                 </div>
               ) : (
-                filteredTasks.map((task) => (
+                filteredTasks.map((hive: HiveTask) => (
                   <motion.div
-                    key={task.id}
+                    key={hive.id}
                     className="bg-white rounded-lg border border-gray-100 p-3 sm:p-4 hover:shadow-md transition-all duration-200 hover:border-secondary/20"
                     variants={itemVariants}
                     whileHover={{ scale: 1.03, y: -2 }}
@@ -289,25 +334,25 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                         transition={{ type: "spring", stiffness: 400 }}
                       >
                         <img 
-                          src={getTaskImage(task.title, task.hiveType.name)} 
-                          alt={task.title} 
+                          src={getTaskImage(hive.title, hive.hiveType.name)} 
+                          alt={hive.title} 
                           className="w-8 h-8"
                         />
                       </motion.div>
-                      <div className="bg-light-orange/80 text-secondary px-2 py-0.5 rounded-full text-xs font-medium">
-                        {task.price === "0.00" ? "Free" : `₵${parseFloat(task.price).toFixed(2)}`}
+                      <div className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
+                        {formatPrice(hive.price)}
                       </div>
                     </div>
                     <h3 className="text-sm sm:text-base font-bold mb-1 line-clamp-1">
-                      {task.title}
+                      {hive.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">
-                      {task.description}
+                      {hive.description}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <span className="bg-secondary/10 text-secondary text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">
-                        {task.hiveType.name}
+                        {hive.hiveType.name}
                       </span>
 
                       <motion.div
@@ -315,7 +360,7 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                         transition={{ type: "spring", stiffness: 400 }}
                       >
                         <Link
-                          to={isAuthenticated ? `/tasks/${task.id}` : "/login"}
+                          to={isAuthenticated ? `/tasks/${hive.id}` : "/login"}
                           className="text-secondary flex items-center text-xs hover:underline"
                         >
                           {isAuthenticated ? "View details" : "Login to view"}

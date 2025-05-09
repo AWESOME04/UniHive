@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Mail, MapPin, Phone, Send } from 'lucide-react';
+import ScrollToTop from '../components/common/ScrollToTop';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -644,6 +645,9 @@ const Contact: React.FC = () => {
           </motion.div>
         </motion.div>
       </div>
+      
+      {/* Add Scroll To Top Button */}
+      <ScrollToTop />
     </div>
   );
 };

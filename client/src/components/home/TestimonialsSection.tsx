@@ -45,13 +45,13 @@ const TestimonialsSection = () => {
 
   return (
     <motion.section 
-      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white"
+      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white overflow-hidden w-full"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto px-0">
+      <div className="container mx-auto overflow-hidden">
         <motion.div 
           className="text-center mb-6 sm:mb-10"
           initial={{ opacity: 0, y: 20 }}
