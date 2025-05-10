@@ -14,40 +14,94 @@ interface University {
 }
 
 const universities: University[] = [
-  { id: "uog", name: "University of Ghana", emailDomain: "university.edu.gh" },
+  // Public Universities
+  { 
+    id: "ug",
+    name: "University of Ghana",
+    emailDomain: "st.ug.edu.gh"
+  },
   {
     id: "knust",
-    name: "Kwame Nkrumah University",
-    emailDomain: "knust.edu.gh",
+    name: "Kwame Nkrumah University of Science & Technology",
+    emailDomain: "st.knust.edu.gh"
   },
   {
     id: "ucc",
     name: "University of Cape Coast",
-    emailDomain: "ucc.edu.gh",
+    emailDomain: "ucc.edu.gh"
+  },
+  {
+    id: "upsa",
+    name: "University of Professional Studies, Accra",
+    emailDomain: "upsa.edu.gh"
   },
   {
     id: "gimpa",
-    name: "Ghana Institute of Management",
-    emailDomain: "gimpa.edu.gh",
+    name: "Ghana Institute of Management & Public Administration",
+    emailDomain: "gimpa.edu.gh"
   },
-  { id: "central", name: "Central University", emailDomain: "central.edu.gh" },
-  { id: "ashesi", name: "Ashesi University", emailDomain: "ashesi.edu.gh" },
   {
     id: "uew",
     name: "University of Education, Winneba",
-    emailDomain: "uew.edu.gh",
+    emailDomain: "uew.edu.gh"
   },
   {
     id: "uds",
     name: "University for Development Studies",
-    emailDomain: "uds.edu.gh",
+    emailDomain: "uds.edu.gh"
   },
   {
-    id: "upsa",
-    name: "University of Professional Studies",
-    emailDomain: "upsa.edu.gh",
+    id: "umat",
+    name: "University of Mines & Technology",
+    emailDomain: "umat.edu.gh"
   },
-  { id: "atu", name: "Accra Technical University", emailDomain: "atu.edu.gh" },
+  {
+    id: "uhas",
+    name: "University of Health & Allied Sciences",
+    emailDomain: "uhas.edu.gh"
+  },
+  {
+    id: "uenr",
+    name: "University of Energy & Natural Resources",
+    emailDomain: "uenr.edu.gh"
+  },
+  
+  // Private Universities
+  {
+    id: "ashesi",
+    name: "Ashesi University",
+    emailDomain: "ashesi.edu.gh"
+  },
+  {
+    id: "vvu",
+    name: "Valley View University",
+    emailDomain: "vvu.edu.gh"
+  },
+  {
+    id: "gctu",
+    name: "Ghana Communication Technology University",
+    emailDomain: "gctu.edu.gh"
+  },
+  {
+    id: "central",
+    name: "Central University",
+    emailDomain: "central.edu.gh"
+  },
+  {
+    id: "aucc",
+    name: "African University College of Communications",
+    emailDomain: "auc.edu.gh"
+  },
+  {
+    id: "regent",
+    name: "Regent University College of Science & Technology",
+    emailDomain: "regent.edu.gh"
+  },
+  {
+    id: "puc",
+    name: "Pentecost University",
+    emailDomain: "puc.edu.gh"
+  }
 ];
 
 const registerSchema = Yup.object().shape({
@@ -301,11 +355,20 @@ function Register() {
                         }
                       >
                         <option value="">Select your university</option>
-                        {universities.map((university) => (
-                          <option key={university.id} value={university.id}>
-                            {university.name}
-                          </option>
-                        ))}
+                        <optgroup label="Public Universities">
+                          {universities.slice(0, 10).map((university) => (
+                            <option key={university.id} value={university.id}>
+                              {university.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="Private Universities">
+                          {universities.slice(10).map((university) => (
+                            <option key={university.id} value={university.id}>
+                              {university.name}
+                            </option>
+                          ))}
+                        </optgroup>
                       </Field>
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <ChevronDown size={16} className="text-gray-500" />
