@@ -10,6 +10,7 @@ import authService from "../../services/authService";
 interface University {
   id: string;
   name: string;
+  displayName: string;
   emailDomain: string;
 }
 
@@ -18,51 +19,61 @@ const universities: University[] = [
   { 
     id: "ug",
     name: "University of Ghana",
+    displayName: "UG",
     emailDomain: "st.ug.edu.gh"
   },
   {
     id: "knust",
     name: "Kwame Nkrumah University of Science & Technology",
+    displayName: "KNUST",
     emailDomain: "st.knust.edu.gh"
   },
   {
     id: "ucc",
     name: "University of Cape Coast",
+    displayName: "UCC",
     emailDomain: "ucc.edu.gh"
   },
   {
     id: "upsa",
     name: "University of Professional Studies, Accra",
+    displayName: "UPSA",
     emailDomain: "upsa.edu.gh"
   },
   {
     id: "gimpa",
     name: "Ghana Institute of Management & Public Administration",
+    displayName: "GIMPA",
     emailDomain: "gimpa.edu.gh"
   },
   {
     id: "uew",
     name: "University of Education, Winneba",
+    displayName: "UEW",
     emailDomain: "uew.edu.gh"
   },
   {
     id: "uds",
     name: "University for Development Studies",
+    displayName: "UDS",
     emailDomain: "uds.edu.gh"
   },
   {
     id: "umat",
     name: "University of Mines & Technology",
+    displayName: "UMaT",
     emailDomain: "umat.edu.gh"
   },
   {
     id: "uhas",
     name: "University of Health & Allied Sciences",
+    displayName: "UHAS",
     emailDomain: "uhas.edu.gh"
   },
   {
     id: "uenr",
     name: "University of Energy & Natural Resources",
+    displayName: "UENR",
     emailDomain: "uenr.edu.gh"
   },
   
@@ -70,36 +81,43 @@ const universities: University[] = [
   {
     id: "ashesi",
     name: "Ashesi University",
+    displayName: "Ashesi",
     emailDomain: "ashesi.edu.gh"
   },
   {
     id: "vvu",
     name: "Valley View University",
+    displayName: "VVU",
     emailDomain: "vvu.edu.gh"
   },
   {
     id: "gctu",
     name: "Ghana Communication Technology University",
+    displayName: "GCTU",
     emailDomain: "gctu.edu.gh"
   },
   {
     id: "central",
     name: "Central University",
+    displayName: "Central",
     emailDomain: "central.edu.gh"
   },
   {
     id: "aucc",
     name: "African University College of Communications",
+    displayName: "AUCC",
     emailDomain: "auc.edu.gh"
   },
   {
     id: "regent",
     name: "Regent University College of Science & Technology",
+    displayName: "Regent",
     emailDomain: "regent.edu.gh"
   },
   {
     id: "puc",
     name: "Pentecost University",
+    displayName: "PUC",
     emailDomain: "puc.edu.gh"
   }
 ];
@@ -169,7 +187,7 @@ function Register() {
     const universityId = e.target.value;
     const university = universities.find((u) => u.id === universityId) || null;
     setSelectedUniversity(university);
-    setFieldValue("university", universityId);
+    setFieldValue("university", university?.name || '');
   };
 
   const handleSubmit = async (
@@ -357,15 +375,23 @@ function Register() {
                         <option value="">Select your university</option>
                         <optgroup label="Public Universities">
                           {universities.slice(0, 10).map((university) => (
-                            <option key={university.id} value={university.id}>
-                              {university.name}
+                            <option 
+                              key={university.id} 
+                              value={university.id}
+                              title={university.name} // Shows full name on hover
+                            >
+                              {university.displayName}
                             </option>
                           ))}
                         </optgroup>
                         <optgroup label="Private Universities">
                           {universities.slice(10).map((university) => (
-                            <option key={university.id} value={university.id}>
-                              {university.name}
+                            <option 
+                              key={university.id} 
+                              value={university.id}
+                              title={university.name} // Shows full name on hover
+                            >
+                              {university.displayName}
                             </option>
                           ))}
                         </optgroup>
