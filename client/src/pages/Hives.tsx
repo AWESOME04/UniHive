@@ -3,7 +3,7 @@ import { Briefcase, Book, Truck, Bell, Archive, Layers, Search, ArrowRight } fro
 import { motion } from 'framer-motion';
 import HiveCard from '../components/hives/HiveCard';
 import { HiveCategory } from '../types/hiveTypes';
-import FeedbackModal from '../components/modals/FeedbackModal';
+import FeedbackModal from '../components/shared/FeedbackModal';
 
 const Hives: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');

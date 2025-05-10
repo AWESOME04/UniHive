@@ -5,7 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Mail, CheckCircle, RefreshCcw } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { authService } from "../services";
+import { authService } from "../services/authService"
 
 function OTPVerification() {
   const location = useLocation();
@@ -136,14 +136,11 @@ function OTPVerification() {
       const response = await authService.verifyOTP(email, otpString);
       
       console.log("OTP verification successful:", response);
-      
-      // Show success animation
+
       setVerificationSuccess(true);
       toast.success("Email verified successfully!");
-      
-      // Delay to show success animation
+
       setTimeout(() => {
-        // Navigate to login with auto-login credentials
         navigate("/login", {
           state: {
             email,

@@ -95,7 +95,7 @@ const About = () => {
     },
     {
       name: "Evans Acheampong",
-      role: "Backend Developer",
+      role: "Fullstack Developer",
       image: "/assets/images/evans.png",
       university: "University of Ghana",
       github: "https://github.com/AWESOME04"

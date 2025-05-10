@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Base API URL - from environment or default to the production URL
 const API_URL = import.meta.env?.VITE_API_URL || 'https://unihive-hmoi.onrender.com/api';
 
 // Token storage key
@@ -40,15 +39,9 @@ export const authService = {
     university: string;
   }) => {
     try {
-      console.log('Sending registration request with data:', { 
-        name: userData.fullName,
-        email: userData.email,
-        password: '********', // Don't log actual password
-        university: userData.university
-      });
       
       const response = await apiClient.post('/auth/register', {
-        name: userData.fullName, // API expects 'name', not 'fullName'
+        name: userData.fullName,
         email: userData.email,
         password: userData.password,
         university: userData.university,
@@ -75,13 +68,9 @@ export const authService = {
       const verificationData = { email, otp };
       const response = await apiClient.post('/auth/verify-otp', verificationData);
       
-      console.log('OTP verification response:', response.data);
-      
-      // If API returned a token, store it
       if (response.data && response.data.data && response.data.data.token) {
         localStorage.setItem(TOKEN_KEY, response.data.data.token);
-        
-        // If user data is available, store it
+
         if (response.data.data.user) {
           localStorage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
         }
@@ -120,8 +109,7 @@ export const authService = {
       const response = await apiClient.post('/auth/login', credentials);
       
       console.log('Login API response:', response.data);
-      
-      // Store token in localStorage if available in the expected format
+
       if (response.data && response.data.data && response.data.data.token) {
         localStorage.setItem(TOKEN_KEY, response.data.data.token);
         
@@ -153,7 +141,6 @@ export const authService = {
     return true;
   },
 
-  // Get the current authenticated user
   getCurrentUser: () => {
     try {
       const userJSON = localStorage.getItem(USER_KEY);
@@ -166,17 +153,14 @@ export const authService = {
     }
   },
 
-  // Get the authentication token
   getToken: () => {
     return localStorage.getItem(TOKEN_KEY);
   },
 
-  // Check if user is authenticated
   isAuthenticated: () => {
     return !!localStorage.getItem(TOKEN_KEY);
   },
 
-  // Update user information
   updateUserInfo: (userData: any) => {
     try {
       localStorage.setItem(USER_KEY, JSON.stringify(userData));
@@ -187,7 +171,6 @@ export const authService = {
     }
   },
 
-  // Reset Password
   resetPassword: async (data: ResetPasswordData) => {
     try {
       console.log('Resetting password for email:', data.email);

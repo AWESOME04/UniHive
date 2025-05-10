@@ -17,8 +17,8 @@ const BuzzModal: React.FC<BuzzModalProps> = ({ isOpen, onClose, onSuccess }) => 
     eventDate: '',
     location: '',
     organizer: '',
-    eventType: 'workshop', // default value
-    admission: 'free', // default value
+    eventType: 'workshop',
+    admission: 'free',
     capacity: '',
     registrationLink: '',
     isItem13: false
@@ -44,8 +44,7 @@ const BuzzModal: React.FC<BuzzModalProps> = ({ isOpen, onClose, onSuccess }) => 
 
     try {
       const formPayload = new FormData();
-      
-      // Append all form data
+
       Object.entries(formData).forEach(([key, value]) => {
         formPayload.append(key, value.toString());
       });

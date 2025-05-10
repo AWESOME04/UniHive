@@ -17,12 +17,11 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { Logo } from '../shared/Logo';
 
-// Define interface for navigation items
 interface NavigationItem {
   name: string;
   href: string;
   icon: React.ReactNode;
-  path?: string; // Optional path property for backward compatibility
+  path?: string;
 }
 
 interface DashboardSidebarProps {
@@ -43,7 +42,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   const { pathname } = useLocation();
   const { logout, user } = useAuth();
 
-  // Define navigation items based on our interface
   const mainNavigation: NavigationItem[] = [
     {
       name: 'Dashboard',
@@ -106,7 +104,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   // Check if an item's href matches the current path
   const isActive = (path: string): boolean => {
     if (path === '/dashboard') {
-      // Only match exactly for the dashboard path to avoid it being always selected
       return pathname === path;
     }
     return pathname.startsWith(path);

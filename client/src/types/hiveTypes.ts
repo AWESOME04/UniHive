@@ -35,7 +35,6 @@ export interface Hive {
     name: string;
     avatar?: string;
   };
-  // Add essentialsDetails as an optional property that can be of type EssentialsDetails or empty object
   essentialsDetails?: EssentialsDetails;
 }
 

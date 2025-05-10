@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Search, MapPin, Users, Briefcase, GraduationCap, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Define the university type
 interface University {
   id: string;
   name: string;
@@ -16,7 +15,6 @@ interface University {
   faculties?: number;
 }
 
-// Sample data for Ghanaian universities
 const ghanaUniversities: University[] = [
   { 
     id: 'uog', 
@@ -120,7 +118,6 @@ const Universities: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [regionFilter, setRegionFilter] = useState('');
 
-  // Filter universities based on search term and region
   const filteredUniversities = ghanaUniversities.filter(university => {
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           university.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -128,7 +125,6 @@ const Universities: React.FC = () => {
     return matchesSearch && matchesRegion;
   });
 
-  // Ghana regions for filtering
   const regions = [
     'Accra', 'Kumasi', 'Cape Coast', 'Tamale', 'Winneba', 'Berekuso'
   ];

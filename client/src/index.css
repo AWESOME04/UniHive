@@ -143,16 +143,15 @@
   
   /* Add scrollbar hiding utility */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
   }
 }
 
-/* Add containment for better performance */
 .contain-paint {
   contain: paint;
 }
@@ -165,13 +164,11 @@
   contain: strict;
 }
 
-/* Optimize transitions */
 .optimize-gpu {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
 
-/* Add these styles for better scrolling */
 html,
 body {
   overflow-x: hidden;
@@ -184,7 +181,6 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Optimize performance for fixed elements */
 .fixed {
   transform: translateZ(0);
   will-change: transform;
@@ -223,7 +219,7 @@ body {
 
 /* Fix for sticky header and content */
 .content-wrapper {
-  padding-top: 64px; /* height of navbar */
+  padding-top: 64px;
   min-height: calc(100vh - 64px);
 }
 

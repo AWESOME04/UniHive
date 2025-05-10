@@ -17,13 +17,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const { user: authUser } = useAuth();
   const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  
-  // Sidebar state
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
-  // Listen for window resize to handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -35,13 +33,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     };
   }, []);
 
-  // Fetch user profile data
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        
-        // Try to get the user profile from the API
+
         const response = await userService.getCurrentUserProfile();
         
         if (response.status === 'success' && response.data) {
@@ -57,7 +53,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     fetchUserProfile();
   }, []);
 
-  // Combine user data from auth context and profile API
   const user = userProfile || authUser || {
     name: "Student",
     email: "student@university.edu.gh",
@@ -91,7 +86,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Dashboard sidebar */}
       <DashboardSidebar 
         isOpen={sidebarOpen} 
         isMobile={isMobile} 
@@ -99,18 +93,15 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         isCollapsed={sidebarCollapsed}
         toggleCollapsed={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      
-      {/* Main content */}
+
       <div className={`transition-all duration-300 ${
         !isMobile && (sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64')
       }`}>
-        {/* Dashboard Navbar */}
         <DashboardNavbar 
           user={user} 
           onMenuClick={() => setSidebarOpen(true)} 
         />
         
-        {/* Page content */}
         <motion.main 
           className="min-h-[calc(100vh-64px)]"
           variants={pageVariants}
@@ -121,7 +112,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           {children}
         </motion.main>
 
-        {/* Optional Footer */}
         {showFooter && (
           <footer className="bg-white py-4 px-6 border-t border-gray-200 text-center text-sm text-gray-500">
             &copy; {new Date().getFullYear()} UniHive. All rights reserved.

@@ -139,20 +139,17 @@ interface NetworkError {
 }
 
 const paymentService = {
-  // Initialize a payment for a hive - KEEP REAL IMPLEMENTATION
   initializePayment: async (hiveId: string) => {
     try {
       const response = await apiClient.post(`/payments/initialize/${hiveId}`);
       return response.data;
     } catch (error: unknown) {
       console.error('Payment initialization error:', error);
-      
-      // Check if it's a network error (from our interceptor)
+
       if (typeof error === 'object' && error !== null && 'isNetworkError' in error) {
         throw new Error(`Payment initialization failed due to connection issues. ${(error as NetworkError).message}`);
       }
-      
-      // Handle Paystack specific errors
+
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         throw new Error(`Payment service error: ${error.response.data.message}`);
       }
@@ -183,8 +180,7 @@ const paymentService = {
   // ALWAYS return mock payment data regardless of API call
   getPaymentHistory: async () => {
     console.log('Returning HARDCODED payment history');
-    
-    // No need for API call, just return the mock data
+
     return MOCK_PAYMENTS;
   },
   

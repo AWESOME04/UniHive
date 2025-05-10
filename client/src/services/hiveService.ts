@@ -1,10 +1,8 @@
 import axios from 'axios';
 import authService from './authService';
 
-// Base API URL - from environment or default to the production URL
 const API_URL = import.meta.env?.VITE_API_URL || 'https://unihive-hmoi.onrender.com/api';
 
-// Create a custom axios instance for API calls
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
@@ -23,7 +21,6 @@ apiClient.interceptors.request.use((config) => {
 
 // Hive service
 const hiveService = {
-  // General hives
   getAllHives: async (filters = {}) => {
     try {
       const response = await apiClient.get('/hives', { params: filters });

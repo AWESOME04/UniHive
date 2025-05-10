@@ -26,8 +26,6 @@ const Buzz: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => {
-          // Refresh the events list
-          // Add your refresh logic here
         }}
       />
     </div>

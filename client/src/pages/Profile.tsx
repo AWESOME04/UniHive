@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import authService from '../services/authService';
 
-// Define proper user interface
 interface UserProfile {
   id: string;
   name: string;
@@ -20,7 +19,6 @@ interface UserProfile {
   createdAt?: string;
 }
 
-// Define the properties that must exist on the fallback object
 interface FallbackProfile {
   name: string;
   email: string;
@@ -40,13 +38,11 @@ function Profile() {
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const [, setCursorPosition] = useState({ x: 0, y: 0 });
 
-  // Fetch user profile data
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
         
-        // Try to get the user profile from the API
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://unihive-hmoi.onrender.com/api'}/auth/me`, {
           headers: {
             'Authorization': `Bearer ${authService.getToken()}`

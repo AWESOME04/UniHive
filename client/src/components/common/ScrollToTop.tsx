@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 
 interface ScrollToTopProps {
-  showOffset?: number; // Pixel offset when button should appear
-  bottom?: number;     // Bottom position in pixels
-  right?: number;      // Right position in pixels
+  showOffset?: number;
+  bottom?: number;
+  right?: number;
 }
 
 const ScrollToTop: React.FC<ScrollToTopProps> = ({ 

@@ -5,16 +5,14 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Eye, EyeOff, GraduationCap, Users, ChevronDown } from "lucide-react";
-import authService from "../services/authService";
+import authService from "../../services/authService";
 
-// Define university interface
 interface University {
   id: string;
   name: string;
   emailDomain: string;
 }
 
-// List of Ghanaian universities with their email domains
 const universities: University[] = [
   { id: "uog", name: "University of Ghana", emailDomain: "university.edu.gh" },
   {
@@ -128,7 +126,6 @@ function Register() {
     setStatus(null);
 
     try {
-      // Construct the full email
       const university = universities.find((u) => u.id === values.university);
       if (!university) {
         throw new Error("Invalid university selection");
@@ -136,7 +133,6 @@ function Register() {
 
       const email = `${values.emailUsername}@${university.emailDomain}`;
 
-      // Call the server API to register the user
       console.log('Attempting to register with university:', university.name);
       
       const response = await authService.register({
@@ -152,15 +148,13 @@ function Register() {
         response.message || "Registration initiated! Please verify your email."
       );
 
-      // Store credentials for passing to OTP verification
       const credentials = {
         email,
         password: values.password,
       };
       
       console.log('Navigating to OTP verification with email:', email);
-      
-      // Navigate to OTP verification with email and credentials
+
       navigate("/otp-verification", {
         state: credentials
       });
@@ -187,12 +181,10 @@ function Register() {
         }}
       />
 
-      {/* Background elements */}
       <div className="absolute top-20 right-20 w-48 sm:w-64 h-48 sm:h-64 bg-secondary opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
       <div className="absolute bottom-40 left-20 w-56 sm:w-72 h-56 sm:h-72 bg-accent-purple opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
       <div className="absolute top-1/3 left-1/3 w-64 sm:w-80 h-64 sm:h-80 bg-dark-orange opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
 
-      {/* Decorative elements */}
       <div className="absolute top-10 left-10 text-secondary opacity-10 hidden sm:block">
         <GraduationCap size={120} />
       </div>
@@ -201,7 +193,6 @@ function Register() {
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        {/* Logo and branding */}
         <div className="absolute -top-16 sm:-top-20 left-1/2 transform -translate-x-1/2 flex items-center justify-center">
           <img 
             src="/unihive-no-text.svg" 
@@ -210,9 +201,7 @@ function Register() {
           />
         </div>
 
-        {/* Card with morphism effect */}
         <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-5 sm:p-8 border border-white/20 relative overflow-hidden transform transition-all duration-300 hover:translate-y-[-5px]">
-          {/* Background patterns */}
           <div className="absolute -right-16 -top-16 w-24 sm:w-32 h-24 sm:h-32 rounded-full bg-secondary opacity-5"></div>
           <div className="absolute -left-16 -bottom-16 w-24 sm:w-32 h-24 sm:h-32 rounded-full bg-accent-purple opacity-5"></div>
 
