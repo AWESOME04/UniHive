@@ -18,14 +18,14 @@ import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
 
 // Auth Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
 import OTPVerification from './pages/OTPVerification';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 
 // Dashboard Pages
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/dashboard/Dashboard';
 import Profile from './pages/Profile';
 import Universities from './pages/Universities';
 import NotFound from './pages/NotFound';
@@ -196,7 +196,6 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* Add these new routes before the 404 route */}
           <Route path="/dashboard/settings" element={
             <ProtectedRoute>
               <DashboardLayout>

@@ -9,7 +9,7 @@ const Essentials: React.FC = () => {
       type="essentials"
       icon={<Package className="w-6 h-6" />}
       color="bg-blue-500"
-      detailPageRoute="/dashboard/hives/essentials" // Add this prop to enable linking to detail page
+      detailPageRoute="/dashboard/hives/essentials"
     />
   );
 };

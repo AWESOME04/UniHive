@@ -40,17 +40,15 @@ function AuthLayout({ children }: AuthLayoutProps) {
     };
   }, []);
   
-  // Use CSS variables for cursor position to avoid inline style re-renders
   useEffect(() => {
     document.documentElement.style.setProperty('--cursor-x', `${cursorPosition.x}px`);
     document.documentElement.style.setProperty('--cursor-y', `${cursorPosition.y}px`);
   }, [cursorPosition]);
 
-  // Optimize mouse move handler with useCallback and throttling
   const handleMouseMove = useCallback(
     throttle((e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
-    }, 50), // Throttle to 50ms (20 updates per second)
+    }, 50),
     []
   );
   
@@ -64,19 +62,15 @@ function AuthLayout({ children }: AuthLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col pt-16">
-      {/* Cursor light effect - using CSS variables instead of inline styles */}
       <div 
         className="pointer-events-none fixed inset-0 z-10 opacity-70 hidden md:block cursor-light"
       />
       
-      {/* Background elements - added contain property for performance */}
       <div className="absolute top-20 right-20 w-64 h-64 bg-secondary opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob contain-paint"></div>
       <div className="absolute bottom-40 left-20 w-72 h-72 bg-accent-purple opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000 contain-paint"></div>
       <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-dark-orange opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000 contain-paint"></div>
-      
-      {/* Auth layout structure */}
+
       <div className="flex flex-col min-h-screen">
-        {/* Simple Navbar for Auth Pages */}
         <header className={`bg-white py-4 px-4 md:px-8 ${isScrolled ? 'shadow-md' : 'shadow-sm'} fixed top-0 left-0 right-0 z-50 transition-shadow duration-300`}>
           <div className="container mx-auto">
             <div className="flex justify-between items-center">
@@ -95,21 +89,18 @@ function AuthLayout({ children }: AuthLayoutProps) {
             </div>
           </div>
         </header>
-        
-        {/* Main Content */}
+
         <main className="flex-1">
           <div className="flex-1 flex flex-col items-center justify-center mt-8 sm:mt-0">
             <ScrollRestoration />
             {children}
           </div>
         </main>
-        
-        {/* Footer */}
+
         <Footer />
       </div>
     </div>
   );
 };
 
-// Use memo to prevent unnecessary re-renders
 export default memo(AuthLayout);

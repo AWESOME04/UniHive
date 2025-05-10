@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Eye, EyeOff, GraduationCap, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()

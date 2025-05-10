@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-// Define the allowed hive types
 export type HiveType = "essentials" | "academia" | "logistics" | "buzz" | "archive" | "sidehustle";
 
 export interface HiveCategory {

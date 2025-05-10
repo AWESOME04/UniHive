@@ -84,7 +84,6 @@ interface GhanaJobCategoriesProps {
 }
 
 const GhanaJobCategories: React.FC<GhanaJobCategoriesProps> = ({ limit, showViewAll = true }) => {
-  // If limit is provided, only show that many categories
   const displayedCategories = limit ? ghanaJobCategories.slice(0, limit) : ghanaJobCategories;
 
   return (

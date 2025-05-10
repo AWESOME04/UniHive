@@ -5,51 +5,121 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Eye, EyeOff, GraduationCap, Users, ChevronDown } from "lucide-react";
-import authService from "../services/authService";
+import authService from "../../services/authService";
 
-// Define university interface
 interface University {
   id: string;
   name: string;
+  displayName: string;
   emailDomain: string;
 }
 
-// List of Ghanaian universities with their email domains
 const universities: University[] = [
-  { id: "uog", name: "University of Ghana", emailDomain: "university.edu.gh" },
+  // Public Universities
+  { 
+    id: "ug",
+    name: "University of Ghana",
+    displayName: "UG",
+    emailDomain: "st.ug.edu.gh"
+  },
   {
     id: "knust",
-    name: "Kwame Nkrumah University",
-    emailDomain: "knust.edu.gh",
+    name: "Kwame Nkrumah University of Science & Technology",
+    displayName: "KNUST",
+    emailDomain: "st.knust.edu.gh"
   },
   {
     id: "ucc",
     name: "University of Cape Coast",
-    emailDomain: "ucc.edu.gh",
+    displayName: "UCC",
+    emailDomain: "ucc.edu.gh"
+  },
+  {
+    id: "upsa",
+    name: "University of Professional Studies, Accra",
+    displayName: "UPSA",
+    emailDomain: "upsa.edu.gh"
   },
   {
     id: "gimpa",
-    name: "Ghana Institute of Management",
-    emailDomain: "gimpa.edu.gh",
+    name: "Ghana Institute of Management & Public Administration",
+    displayName: "GIMPA",
+    emailDomain: "gimpa.edu.gh"
   },
-  { id: "central", name: "Central University", emailDomain: "central.edu.gh" },
-  { id: "ashesi", name: "Ashesi University", emailDomain: "ashesi.edu.gh" },
   {
     id: "uew",
     name: "University of Education, Winneba",
-    emailDomain: "uew.edu.gh",
+    displayName: "UEW",
+    emailDomain: "uew.edu.gh"
   },
   {
     id: "uds",
     name: "University for Development Studies",
-    emailDomain: "uds.edu.gh",
+    displayName: "UDS",
+    emailDomain: "uds.edu.gh"
   },
   {
-    id: "upsa",
-    name: "University of Professional Studies",
-    emailDomain: "upsa.edu.gh",
+    id: "umat",
+    name: "University of Mines & Technology",
+    displayName: "UMaT",
+    emailDomain: "umat.edu.gh"
   },
-  { id: "atu", name: "Accra Technical University", emailDomain: "atu.edu.gh" },
+  {
+    id: "uhas",
+    name: "University of Health & Allied Sciences",
+    displayName: "UHAS",
+    emailDomain: "uhas.edu.gh"
+  },
+  {
+    id: "uenr",
+    name: "University of Energy & Natural Resources",
+    displayName: "UENR",
+    emailDomain: "uenr.edu.gh"
+  },
+  
+  // Private Universities
+  {
+    id: "ashesi",
+    name: "Ashesi University",
+    displayName: "Ashesi",
+    emailDomain: "ashesi.edu.gh"
+  },
+  {
+    id: "vvu",
+    name: "Valley View University",
+    displayName: "VVU",
+    emailDomain: "vvu.edu.gh"
+  },
+  {
+    id: "gctu",
+    name: "Ghana Communication Technology University",
+    displayName: "GCTU",
+    emailDomain: "gctu.edu.gh"
+  },
+  {
+    id: "central",
+    name: "Central University",
+    displayName: "Central",
+    emailDomain: "central.edu.gh"
+  },
+  {
+    id: "aucc",
+    name: "African University College of Communications",
+    displayName: "AUCC",
+    emailDomain: "auc.edu.gh"
+  },
+  {
+    id: "regent",
+    name: "Regent University College of Science & Technology",
+    displayName: "Regent",
+    emailDomain: "regent.edu.gh"
+  },
+  {
+    id: "puc",
+    name: "Pentecost University",
+    displayName: "PUC",
+    emailDomain: "puc.edu.gh"
+  }
 ];
 
 const registerSchema = Yup.object().shape({
@@ -128,7 +198,6 @@ function Register() {
     setStatus(null);
 
     try {
-      // Construct the full email
       const university = universities.find((u) => u.id === values.university);
       if (!university) {
         throw new Error("Invalid university selection");
@@ -136,7 +205,6 @@ function Register() {
 
       const email = `${values.emailUsername}@${university.emailDomain}`;
 
-      // Call the server API to register the user
       console.log('Attempting to register with university:', university.name);
       
       const response = await authService.register({
@@ -152,15 +220,13 @@ function Register() {
         response.message || "Registration initiated! Please verify your email."
       );
 
-      // Store credentials for passing to OTP verification
       const credentials = {
         email,
         password: values.password,
       };
       
       console.log('Navigating to OTP verification with email:', email);
-      
-      // Navigate to OTP verification with email and credentials
+
       navigate("/otp-verification", {
         state: credentials
       });
@@ -187,12 +253,10 @@ function Register() {
         }}
       />
 
-      {/* Background elements */}
       <div className="absolute top-20 right-20 w-48 sm:w-64 h-48 sm:h-64 bg-secondary opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
       <div className="absolute bottom-40 left-20 w-56 sm:w-72 h-56 sm:h-72 bg-accent-purple opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
       <div className="absolute top-1/3 left-1/3 w-64 sm:w-80 h-64 sm:h-80 bg-dark-orange opacity-5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
 
-      {/* Decorative elements */}
       <div className="absolute top-10 left-10 text-secondary opacity-10 hidden sm:block">
         <GraduationCap size={120} />
       </div>
@@ -201,7 +265,6 @@ function Register() {
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        {/* Logo and branding */}
         <div className="absolute -top-16 sm:-top-20 left-1/2 transform -translate-x-1/2 flex items-center justify-center">
           <img 
             src="/unihive-no-text.svg" 
@@ -210,9 +273,7 @@ function Register() {
           />
         </div>
 
-        {/* Card with morphism effect */}
         <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-5 sm:p-8 border border-white/20 relative overflow-hidden transform transition-all duration-300 hover:translate-y-[-5px]">
-          {/* Background patterns */}
           <div className="absolute -right-16 -top-16 w-24 sm:w-32 h-24 sm:h-32 rounded-full bg-secondary opacity-5"></div>
           <div className="absolute -left-16 -bottom-16 w-24 sm:w-32 h-24 sm:h-32 rounded-full bg-accent-purple opacity-5"></div>
 
@@ -304,7 +365,7 @@ function Register() {
                         as="select"
                         id="university"
                         name="university"
-                        className="w-full appearance-none border border-gray-300 rounded-xl p-2.5 sm:p-3.5 pr-10 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                        className="w-full appearance-none border border-gray-300 rounded-xl p-2.5 sm:p-3.5 pr-10 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 bg-white/80 backdrop-blur-sm truncate"
                         onFocus={() => setActiveInput("university")}
                         onBlur={() => setActiveInput(null)}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -312,11 +373,30 @@ function Register() {
                         }
                       >
                         <option value="">Select your university</option>
-                        {universities.map((university) => (
-                          <option key={university.id} value={university.id}>
-                            {university.name}
-                          </option>
-                        ))}
+                        <optgroup label="Public Universities">
+                          {universities.slice(0, 10).map((university) => (
+                            <option 
+                              key={university.id} 
+                              value={university.id}
+                              title={university.name}
+                              className="truncate max-w-xs"
+                            >
+                              {university.displayName}
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="Private Universities">
+                          {universities.slice(10).map((university) => (
+                            <option 
+                              key={university.id} 
+                              value={university.id}
+                              title={university.name}
+                              className="truncate max-w-xs"
+                            >
+                              {university.displayName}
+                            </option>
+                          ))}
+                        </optgroup>
                       </Field>
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <ChevronDown size={16} className="text-gray-500" />
@@ -530,3 +610,16 @@ function Register() {
 }
 
 export default Register;
+
+<style>{`
+  select option {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  select optgroup {
+    max-width: 300px;
+  }
+`}</style>

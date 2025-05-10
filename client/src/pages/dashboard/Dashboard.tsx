@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 // Dashboard component
 const Dashboard: React.FC = () => {

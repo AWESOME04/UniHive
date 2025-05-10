@@ -61,17 +61,14 @@ const EssentialDetail: React.FC = () => {
       
       setIsProcessingPayment(true);
       
-      // REAL API CALL - Initialize payment with Paystack
       const response = await paymentService.initializePayment(essential.id);
 
       if (response && response.data && response.data.authorizationUrl) {
-        // Store payment reference for verification after redirect
         if (response.data.reference) {
           sessionStorage.setItem('payment_reference', response.data.reference);
           sessionStorage.setItem('payment_hive_id', essential.id);
         }
 
-        // Redirect to Paystack payment page
         window.location.href = response.data.authorizationUrl;
       } else {
         toast.error('Failed to initiate payment process');
@@ -84,10 +81,8 @@ const EssentialDetail: React.FC = () => {
     }
   };
 
-  // Check for payment verification on component mount
   useEffect(() => {
     const verifyPendingPayment = async () => {
-      // Check if we have a reference from a redirect after payment
       const urlParams = new URLSearchParams(window.location.search);
       const reference = urlParams.get('reference') || sessionStorage.getItem('payment_reference');
       
@@ -98,12 +93,10 @@ const EssentialDetail: React.FC = () => {
           
           if (verificationResult.status === 'success') {
             toast.success('Payment was successful! Thank you for your purchase.');
-            
-            // Clear the stored reference
+
             sessionStorage.removeItem('payment_reference');
             sessionStorage.removeItem('payment_hive_id');
-            
-            // Redirect to payment history page after successful verification
+
             navigate('/dashboard/payments');
           } else {
             toast.error('Payment verification failed. Please contact support.');
@@ -120,19 +113,15 @@ const EssentialDetail: React.FC = () => {
     verifyPendingPayment();
   }, [navigate]);
 
-  // For demo, handle verification automatically
   useEffect(() => {
-    // Check for payment reference in URL (from Paystack redirect)
     const queryParams = new URLSearchParams(window.location.search);
     const reference = queryParams.get('reference');
     const storedReference = sessionStorage.getItem('payment_reference');
-    
-    // If we have a reference from Paystack, show verification message
+
     if ((reference || storedReference) && !isVerifying && essential) {
       const verifyPaymentTransaction = async (paymentReference: string) => {
         setIsVerifying(true);
         try {
-          // For demo, we'll use mock verification
           const verificationResult = await paymentService.verifyPayment(paymentReference);
           
           if (verificationResult.status === 'success') {
@@ -140,15 +129,13 @@ const EssentialDetail: React.FC = () => {
               autoClose: 5000,
               position: 'top-center',
             });
-            
-            // Clean URL by removing query parameters
+
             if (reference) {
               const url = new URL(window.location.href);
               url.search = '';
               window.history.replaceState({}, document.title, url.toString());
             }
-            
-            // Redirect to payment history after a delay
+
             setTimeout(() => {
               navigate('/dashboard/payments');
             }, 3000);
@@ -164,34 +151,28 @@ const EssentialDetail: React.FC = () => {
           setIsVerifying(false);
         }
       };
-      
-      // Use the reference from URL or session storage
+
       const paymentReference = reference || storedReference!;
       verifyPaymentTransaction(paymentReference);
     }
   }, [navigate, essential, isVerifying]);
-  
-  // Payment verification cleanup
+
   useEffect(() => {
     return () => {
-      // Clear any payment check timers on component unmount
       if (paymentCheckTimer) {
         clearInterval(paymentCheckTimer);
       }
     };
   }, [paymentCheckTimer]);
 
-  // Add function to manually check payment status
   const checkPaymentStatus = async (reference: string) => {
     try {
       setIsCheckingPayment(true);
       const result = await paymentService.verifyPayment(reference);
       
       if (result.status === 'success') {
-        // Payment was successful
         toast.success('Payment successful! Thank you for your purchase.');
         
-        // Clear any stored reference and timers
         sessionStorage.removeItem('payment_reference');
         sessionStorage.removeItem('payment_hive_id');
         
@@ -199,8 +180,7 @@ const EssentialDetail: React.FC = () => {
           clearInterval(paymentCheckTimer);
           setPaymentCheckTimer(null);
         }
-        
-        // Redirect to payment history after a delay
+
         setTimeout(() => {
           navigate('/dashboard/payments');
         }, 3000);
@@ -229,7 +209,6 @@ const EssentialDetail: React.FC = () => {
       // Initial check
       checkPaymentStatus(reference).then(success => {
         if (!success) {
-          // If payment verification didn't succeed on first try, set up periodic checks
           const timer = setInterval(() => {
             checkPaymentStatus(reference).then(success => {
               if (success && paymentCheckTimer) {
@@ -237,11 +216,10 @@ const EssentialDetail: React.FC = () => {
                 setPaymentCheckTimer(null);
               }
             });
-          }, 5000); // Check every 5 seconds
+          }, 5000);
           
           setPaymentCheckTimer(timer);
-          
-          // Stop checking after 2 minutes (24 checks)
+
           setTimeout(() => {
             if (paymentCheckTimer) {
               clearInterval(paymentCheckTimer);
@@ -251,8 +229,7 @@ const EssentialDetail: React.FC = () => {
           }, 2 * 60 * 1000);
         }
       });
-      
-      // Clean up URL
+
       if (queryParams.get('reference')) {
         const url = new URL(window.location.href);
         url.search = '';
@@ -289,8 +266,7 @@ const EssentialDetail: React.FC = () => {
       </div>
     );
   }
-  
-  // Extract properties from the essential object and its nested essentialsDetails
+
   const {
     title,
     description,
@@ -298,7 +274,6 @@ const EssentialDetail: React.FC = () => {
     createdAt,
   } = essential;
   
-  // Access the nested essentialsDetails object
   const essentialsDetails: EssentialsDetails = essential.essentialsDetails || {};
   const {
     condition = 'N/A',
@@ -488,9 +463,6 @@ const EssentialDetail: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center mr-3 overflow-hidden">
-                    {/* <span className="font-medium text-secondary">
-                      EA
-                    </span> */}
                     <img src="/assets/images/evans.png" alt="Evans Image" />
                   </div>
                   <div>
@@ -589,7 +561,7 @@ const EssentialDetail: React.FC = () => {
           </div>
         </motion.div>
       )}
-      {/* Payment status indicator */}
+
       {isCheckingPayment && (
         <div className="fixed top-4 right-4 z-50 bg-white border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg shadow-lg">
           <div className="flex items-center">
@@ -598,8 +570,7 @@ const EssentialDetail: React.FC = () => {
           </div>
         </div>
       )}
-      
-      {/* Manual verification button (if we have a reference but verification is taking time) */}
+
       {paymentReference && !isCheckingPayment && paymentCheckTimer && (
         <div className="fixed bottom-4 right-4 z-50">
           <button

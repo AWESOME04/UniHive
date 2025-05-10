@@ -10,7 +10,7 @@ import UniversityDirectory from "../components/universities/UniversityDirectory"
 import GhanaJobCategories from "../components/jobs/GhanaJobCategories";
 import GhanaPaymentMethods from "../components/payment/GhanaPaymentMethods";
 import ScrollToTop from "../components/common/ScrollToTop";
-import PricingSection from "../components/home/PricingSection";
+// import PricingSection from "../components/home/PricingSection";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -147,9 +147,9 @@ function Home() {
           </motion.div>
         </section>
 
-        <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-gray-50">
+        {/* <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-gray-50">
           <PricingSection />
-        </section>
+        </section> */}
 
         <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-light-orange/10">
           <motion.div 

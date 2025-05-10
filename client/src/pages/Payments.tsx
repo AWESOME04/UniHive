@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { DollarSign, Check, X, AlertCircle, Search, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Create a separate interface for mock payments only
 interface MockPaymentDisplay {
   id: string;
   itemTitle: string;
@@ -15,7 +14,6 @@ interface MockPaymentDisplay {
   itemId: string;
 }
 
-// Single source of mock data
 const DEMO_PAYMENTS: MockPaymentDisplay[] = [
   {
     id: 'demo-1',
@@ -34,7 +32,7 @@ const DEMO_PAYMENTS: MockPaymentDisplay[] = [
     amount: 1200.00,
     status: 'pending',
     reference: 'UNIHIVE-DEMO-789012',
-    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    date: new Date(Date.now() - 86400000).toISOString(),
     itemId: 'laptop-456'
   }
 ];
@@ -46,13 +44,10 @@ const Payments: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'failed'>('all');
 
-  // Simple filter function based on mock data structure
   let filteredPayments = payments.filter(payment => {
-    // Apply status filter
     if (statusFilter === 'completed' && payment.status !== 'success') return false;
     if (statusFilter === 'failed' && payment.status !== 'failed') return false;
-    
-    // Apply search filter
+
     if (searchQuery) {
       return payment.itemTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
              payment.reference.toLowerCase().includes(searchQuery.toLowerCase());

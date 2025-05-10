@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import authService from '../services/authService';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Define user type with all possible fields from API
 interface User {
   id: string;
   name: string;
@@ -18,7 +17,6 @@ interface User {
   [key: string]: any;
 }
 
-// Define auth context state
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -30,7 +28,6 @@ interface AuthContextType {
   updateUserData: (data: Partial<User>) => void;
 }
 
-// Create the context with a default value
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
@@ -52,14 +49,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const initAuth = async () => {
       setIsLoading(true);
       try {
-        // Get user from localStorage
         const currentUser = authService.getCurrentUser();
         if (currentUser) {
           setUser(currentUser);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
-        // If there's an error, clear any invalid auth state
         authService.logout();
         setUser(null);
       } finally {
@@ -77,8 +72,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await authService.login({ email, password });
       
       console.log("Auth context login response:", response);
-      
-      // Check for the expected response format - this ensures we adapt to the API structure
+
       if (response && response.data) {
         if (response.data.user) {
           setUser(response.data.user);

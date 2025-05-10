@@ -16,8 +16,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user: authUser, isAuthenticated, logout } = useAuth();
-  
-  // Use prop user if provided, otherwise use the one from auth context
+
   const user = propUser || authUser;
 
   // Handle scroll effect
@@ -51,19 +50,13 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
     };
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);
 
   const handleLogout = () => {
-    // Call logout function from AuthContext
     logout();
-    
-    // Show success message
     toast.success('Logged out successfully');
-    
-    // Redirect to home page
     navigate('/');
   };
 
@@ -100,7 +93,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                 About Us
               </Link>
 
-              <Link
+              {/* <Link
                 to="/pricing"
                 className={`${
                   location.pathname === '/pricing'
@@ -109,7 +102,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Pricing
-              </Link>
+              </Link> */}
 
               <Link
                 to="/contact"
