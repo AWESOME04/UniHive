@@ -187,7 +187,7 @@ function Register() {
     const universityId = e.target.value;
     const university = universities.find((u) => u.id === universityId) || null;
     setSelectedUniversity(university);
-    setFieldValue("university", university?.name || '');
+    setFieldValue("university", universityId);
   };
 
   const handleSubmit = async (
@@ -365,7 +365,7 @@ function Register() {
                         as="select"
                         id="university"
                         name="university"
-                        className="w-full appearance-none border border-gray-300 rounded-xl p-2.5 sm:p-3.5 pr-10 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                        className="w-full appearance-none border border-gray-300 rounded-xl p-2.5 sm:p-3.5 pr-10 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 bg-white/80 backdrop-blur-sm truncate"
                         onFocus={() => setActiveInput("university")}
                         onBlur={() => setActiveInput(null)}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -378,7 +378,8 @@ function Register() {
                             <option 
                               key={university.id} 
                               value={university.id}
-                              title={university.name} // Shows full name on hover
+                              title={university.name}
+                              className="truncate max-w-xs"
                             >
                               {university.displayName}
                             </option>
@@ -389,7 +390,8 @@ function Register() {
                             <option 
                               key={university.id} 
                               value={university.id}
-                              title={university.name} // Shows full name on hover
+                              title={university.name}
+                              className="truncate max-w-xs"
                             >
                               {university.displayName}
                             </option>
@@ -608,3 +610,16 @@ function Register() {
 }
 
 export default Register;
+
+<style>{`
+  select option {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  select optgroup {
+    max-width: 300px;
+  }
+`}</style>
