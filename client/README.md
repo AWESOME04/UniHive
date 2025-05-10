@@ -36,12 +36,10 @@ UniHive is a specialized job platform designed exclusively for Ghana University 
 
 #### Frontend
 - React: Main frontend framework
-- Redux: State management
 - React Router: Navigation
 - Axios: API communication
 - Tailwind CSS: Utility-first CSS framework
 - Formik & Yup: Form handling and validation
-- Socket.io-client: Real-time notifications
 
 #### Backend
 - Node.js: Runtime environment
@@ -63,8 +61,8 @@ UniHive is a specialized job platform designed exclusively for Ghana University 
 #### DevOps
 - Git: Version control
 - GitHub Actions: CI/CD pipeline
-- Netlify: Deployment platform
-- MongoDB Atlas: Cloud database hosting
+- Vercel / Render: Deployment platform
+- PostgreSQL (Neon): Cloud database hosting
 
 ### Getting Started
 To run the development server:
@@ -72,3 +70,66 @@ To run the development server:
 npm install
 npm run dev
 ```
+
+# UniHive Client
+
+Frontend implementation for UniHive platform using React and TypeScript.
+
+## 🛠️ Tech Stack
+
+- React 18+
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Formik & Yup
+
+## 📁 Project Structure
+
+```bash
+client/
+├── public/          # Static assets
+├── src/
+│   ├── components/  # Reusable UI components
+│   ├── context/     # React Context providers
+│   ├── hooks/       # Custom React hooks
+│   ├── pages/       # Page components
+│   ├── services/    # API service calls
+│   └── utils/       # Utility functions
+└── index.html
+```
+
+## 🚀 Development
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Configure environment:
+```bash
+cp .env.example .env
+# Add required environment variables
+```
+
+3. Start development server:
+```bash
+npm run dev
+```
+
+## 📱 Responsive Design
+
+- Mobile-first approach
+- Breakpoints:
+  - xs: 480px
+  - sm: 640px
+  - md: 768px
+  - lg: 1024px
+  - xl: 1280px
+
+## 🎨 Theme Customization
+
+Colors defined in `tailwind.config.js`:
+- Primary: Black (#000000)
+- Secondary: Orange (#FF4500)
+- Background: Light Peach (#FFF6F4)
+- Accent Purple: (#7C3AED)
