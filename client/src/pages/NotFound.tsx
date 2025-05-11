@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Home } from 'lucide-react';
+import notFoundImg from '../assets/404.svg'
 
 const NotFound = () => {
   return (
@@ -18,7 +19,7 @@ const NotFound = () => {
           className="w-full max-w-md mx-auto mb-8"
         >
           <img 
-            src="/src/assets/404.svg" 
+            src={notFoundImg}
             alt="404 Illustration" 
             className="w-full h-auto"
           />

@@ -535,8 +535,6 @@ function Login() {
           </motion.div>
         </motion.div>
       </motion.div>
-
-      <ToastContainer position="bottom-center" />
     </motion.div>
   );
 }

@@ -226,7 +226,16 @@ function App() {
           {/* 404 Route - Must be the last route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ToastContainer position="top-right" />
+        <ToastContainer 
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </Router>
     </AuthProvider>
   );
