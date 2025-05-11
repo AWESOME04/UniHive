@@ -29,7 +29,6 @@ interface HiveCategoriesProps {
   isAuthenticated: boolean;
 }
 
-// Define interface for filtered tasks
 interface HiveTask {
   id: string;
   title: string;
@@ -41,7 +40,6 @@ interface HiveTask {
     name: string;
     icon: string;
   };
-  // Add any other properties that might be used
   createdAt?: string;
   updatedAt?: string;
   status?: string;
@@ -53,12 +51,12 @@ interface HiveTask {
 
 const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
   const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [hiveCategories, setHiveCategories] = useState<HiveCategory[]>([]);
-  const [hiveTasks, setHiveTasks] = useState<Hive[]>([]);
+  const [originalHives, setOriginalHives] = useState<Hive[]>([]); // Store original data
+  const [filteredHives, setFilteredHives] = useState<Hive[]>([]); // Store filtered data
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<HiveCategory[]>([]);
 
-  // Get icon component based on icon name from API
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
       case 'shopping-bag':
@@ -78,7 +76,6 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     }
   };
 
-  // Get SVG image based on task title or type
   const getTaskImage = (title: string, hiveType: string) => {
     if (title.toLowerCase().includes('logo') || title.toLowerCase().includes('design')) {
       return designSvg;
@@ -113,23 +110,26 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     }
   };
 
-  // Fetch hives data from API
   useEffect(() => {
     const fetchHives = async () => {
       try {
         setLoading(true);
         const response = await hivesService.getHives();
+        
+        setOriginalHives(response.data);
+        setFilteredHives(response.data);
 
         const hiveTypeMap = new Map<string, { type: HiveType; count: number }>();
         
         response.data.forEach((hive: HiveTask) => {
-          if (!hiveTypeMap.has(hive.hiveType.id)) {
-            hiveTypeMap.set(hive.hiveType.id, { 
+          const typeId = hive.hiveType.id;
+          if (!hiveTypeMap.has(typeId)) {
+            hiveTypeMap.set(typeId, { 
               type: hive.hiveType, 
               count: 1 
             });
           } else {
-            const existing = hiveTypeMap.get(hive.hiveType.id);
+            const existing = hiveTypeMap.get(typeId);
             if (existing) {
               existing.count += 1;
             }
@@ -137,26 +137,25 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
         });
         
         // Convert map to array of categories
-        const categories: HiveCategory[] = Array.from(hiveTypeMap.values()).map(({ type, count }) => ({
-          id: type.id,
-          name: type.name,
-          icon: getIconComponent(type.icon),
-          count,
-          description: type.description || `Explore ${type.name} hives` // Provide default value
-        }));
-        
-        // Add "All" category
-        const totalCount = response.data.length;
-        categories.unshift({
+        const categoryArray: HiveCategory[] = Array.from(hiveTypeMap.values())
+          .map(({ type, count }) => ({
+            id: type.id,
+            name: type.name,
+            icon: getIconComponent(type.icon),
+            count,
+            description: type.description || `Explore ${type.name} hives`
+          }))
+          .sort((a, b) => b.count - a.count);
+
+        categoryArray.unshift({
           id: 'all',
           name: 'All',
           icon: <Star size={20} className="text-secondary" />,
-          count: totalCount,
+          count: response.data.length,
           description: 'View all Hives'
         });
         
-        setHiveCategories(categories);
-        setHiveTasks(response.data);
+        setCategories(categoryArray);
         setLoading(false);
       } catch (err) {
         setError('Failed to load hives. Please try again later.');
@@ -168,27 +167,22 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
     fetchHives();
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05
-      }
+  // Handle category change
+  useEffect(() => {
+    if (activeCategory === "All") {
+      setFilteredHives(originalHives);
+    } else {
+      const filtered = originalHives.filter(
+        hive => hive.hiveType.name === activeCategory
+      );
+      setFilteredHives(filtered);
     }
+  }, [activeCategory, originalHives]);
+
+  const handleCategoryChange = (categoryName: string) => {
+    setActiveCategory(categoryName);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 }
-  };
-
-  // Filter tasks based on selected category
-  const filteredTasks = activeCategory === "All" 
-    ? hiveTasks 
-    : hiveTasks.filter(task => task.hiveType.name === activeCategory);
-
-  // Type-safe function to format price
   const formatPrice = (price: string | number | undefined): string => {
     if (price === undefined || price === null) {
       return "Free";
@@ -251,24 +245,20 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {/* Tabs for categories with animation */}
+            {/* Category Tabs */}
             <motion.div 
               className="flex overflow-x-auto scrollbar-hide mb-4 sm:mb-8 pb-2"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+              layout
             >
-              {hiveCategories.map((category) => (
+              {categories.map((category) => (
                 <motion.button
                   key={category.id}
-                  onClick={() => setActiveCategory(category.name)}
-                  className={`flex items-center whitespace-nowrap min-w-max px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg mr-2 sm:mr-3 transition-colors ${
+                  onClick={() => handleCategoryChange(category.name)}
+                  className={`flex items-center whitespace-nowrap min-w-max px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg mr-2 sm:mr-3 transition-all ${
                     activeCategory === category.name
-                      ? "bg-secondary text-white"
+                      ? "bg-secondary text-white shadow-lg"
                       : "bg-gray-100 hover:bg-gray-200 text-gray-700"
                   }`}
-                  variants={itemVariants}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -277,6 +267,9 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                   </span>
                   <span className="text-xs sm:text-sm font-medium">
                     {category.name}
+                  </span>
+                  <span className="ml-1.5 text-xs opacity-75">
+                    ({category.count})
                   </span>
                 </motion.button>
               ))}
@@ -298,7 +291,7 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                   </h3>
                   <p className="text-xs text-gray-500">
                     {
-                      hiveCategories.find((cat) => cat.name === activeCategory)
+                      categories.find((cat) => cat.name === activeCategory)
                         ?.description
                     }
                   </p>
@@ -306,72 +299,91 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
               )}
             </AnimatePresence>
 
-            {/* Tasks grid with animation */}
-            <motion.div 
-              className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-            >
-              {filteredTasks.length === 0 ? (
-                <div className="col-span-full text-center py-8 text-gray-500">
-                  No tasks available in this category.
-                </div>
-              ) : (
-                filteredTasks.map((hive: HiveTask) => (
-                  <motion.div
-                    key={hive.id}
-                    className="bg-white rounded-lg border border-gray-100 p-3 sm:p-4 hover:shadow-md transition-all duration-200 hover:border-secondary/20"
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    layout
+            {/* Tasks Grid */}
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeCategory}
+                className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {filteredHives.length === 0 ? (
+                  <motion.div 
+                    className="col-span-full text-center py-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
                   >
-                    <div className="flex justify-between items-start mb-2 sm:mb-3">
-                      <motion.div 
-                        className="flex items-center justify-center"
-                        whileHover={{ scale: 1.2, rotate: 5 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                      >
-                        <img 
-                          src={getTaskImage(hive.title, hive.hiveType.name)} 
-                          alt={hive.title} 
-                          className="w-8 h-8"
-                        />
-                      </motion.div>
-                      <div className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
-                        {formatPrice(hive.price)}
-                      </div>
+                    <div className="text-gray-400 mb-2">
+                      <Archive size={48} className="mx-auto" />
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold mb-1 line-clamp-1">
-                      {hive.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">
-                      {hive.description}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <span className="bg-secondary/10 text-secondary text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">
-                        {hive.hiveType.name}
-                      </span>
-
-                      <motion.div
-                        whileHover={{ x: 3 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                      >
-                        <Link
-                          to={isAuthenticated ? `/tasks/${hive.id}` : "/login"}
-                          className="text-secondary flex items-center text-xs hover:underline"
-                        >
-                          {isAuthenticated ? "View details" : "Login to view"}
-                          <ChevronRight size={12} className="ml-1" />
-                        </Link>
-                      </motion.div>
-                    </div>
+                    <p className="text-gray-600">No hives available in this category yet.</p>
+                    <button
+                      onClick={() => handleCategoryChange("All")}
+                      className="mt-4 text-secondary hover:text-secondary-dark text-sm"
+                    >
+                      View all hives instead
+                    </button>
                   </motion.div>
-                ))
-              )}
-            </motion.div>
+                ) : (
+                  filteredHives.map((hive) => (
+                    <motion.div
+                      key={hive.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      className="bg-white rounded-lg border border-gray-100 p-3 sm:p-4 hover:shadow-md transition-all duration-200 hover:border-secondary/20"
+                    >
+                      <div className="flex justify-between items-start mb-2 sm:mb-3">
+                        <motion.div 
+                          className="flex items-center justify-center"
+                          whileHover={{ scale: 1.2, rotate: 5 }}
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          <img 
+                            src={getTaskImage(hive.title, hive.hiveType.name)} 
+                            alt={hive.title} 
+                            className="w-8 h-8"
+                          />
+                        </motion.div>
+                        <div className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
+                          {formatPrice(hive.price)}
+                        </div>
+                      </div>
+                      <h3 className="text-sm sm:text-base font-bold mb-1 line-clamp-1">
+                        {hive.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">
+                        {hive.description}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <span className="bg-secondary/10 text-secondary text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">
+                          {hive.hiveType.name}
+                        </span>
+
+                        <motion.div
+                          whileHover={{ x: 3 }}
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          <Link
+                            to={isAuthenticated ? `/tasks/${hive.id}` : "/login"}
+                            className="text-secondary flex items-center text-xs hover:underline"
+                          >
+                            {isAuthenticated ? "View details" : "Login to view"}
+                            <ChevronRight size={12} className="ml-1" />
+                          </Link>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         )}
       </div>

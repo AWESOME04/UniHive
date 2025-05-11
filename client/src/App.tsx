@@ -41,8 +41,6 @@ import SideHustle from './pages/hives/SideHustle';
 import EssentialDetail from './pages/hives/EssentialDetail';
 import Payments from './pages/Payments';
 import Messages from './pages/Messages';
-
-// Import new pages
 import Settings from './pages/dashboard/Settings';
 import HelpCenter from './pages/dashboard/HelpCenter';
 import Favorites from './pages/dashboard/Favorites';
