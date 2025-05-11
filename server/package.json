@@ -14,13 +14,15 @@
     "db:seed": "ts-node src/config/seedHiveTypes.ts",
     "serve": "node dist/server.js",
     "db:init": "ts-node src/scripts/initDb.ts",
-    "db:test": "ts-node src/config/testConnection.ts"
+    "db:test": "ts-node src/config/testConnection.ts",
+    "seed:hives": "ts-node src/scripts/seedHives.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@faker-js/faker": "^9.7.0",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.3",
