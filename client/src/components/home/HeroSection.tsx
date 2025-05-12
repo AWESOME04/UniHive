@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 import {
   Sparkles,
   Users,
-  ArrowRight,
   Laptop,
-  CirclePlus,
   Trophy,
   Briefcase,
   Lightbulb,
