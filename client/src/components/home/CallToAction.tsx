@@ -43,17 +43,31 @@ const CallToAction = ({ isAuthenticated }: CallToActionProps) => {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           {isAuthenticated ? (
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                to="/dashboard"
-                className="inline-block px-4 sm:px-8 py-2.5 sm:py-4 bg-white text-secondary rounded-xl font-bold text-sm sm:text-base hover:bg-gray-100 transition-colors"
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Go to Dashboard
-              </Link>
-            </motion.div>
+                <Link
+                  to="/dashboard"
+                  className="inline-block px-4 sm:px-8 py-2.5 sm:py-4 bg-white text-secondary rounded-xl font-bold text-sm sm:text-base hover:bg-gray-100 transition-colors"
+                >
+                  Go to Dashboard
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/dashboard/hives"
+                  className="inline-block px-4 sm:px-8 py-2.5 sm:py-4 bg-white/20 text-white rounded-xl font-bold text-sm sm:text-base hover:bg-white/30 transition-colors"
+                >
+                  Browse Hives
+                </Link>
+              </motion.div>
+            </div>
           ) : (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <motion.div
@@ -64,7 +78,7 @@ const CallToAction = ({ isAuthenticated }: CallToActionProps) => {
                   to="/register"
                   className="inline-block px-4 sm:px-8 py-2.5 sm:py-4 bg-white text-secondary rounded-xl font-bold text-sm sm:text-base hover:bg-gray-100 transition-colors"
                 >
-                  Join UniHive
+                  Get Started Now
                 </Link>
               </motion.div>
               

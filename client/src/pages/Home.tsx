@@ -18,8 +18,21 @@ function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    // Check for token in localStorage to determine authentication status
+    const token = localStorage.getItem('unihive_token');
     setIsAuthenticated(!!token);
+    
+    // Add event listener to detect auth changes
+    const handleAuthChange = () => {
+      const token = localStorage.getItem('unihive_token');
+      setIsAuthenticated(!!token);
+    };
+    
+    window.addEventListener('storage', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleAuthChange);
+    };
   }, []);
 
   useEffect(() => {

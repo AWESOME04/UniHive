@@ -10,6 +10,7 @@ import {
   Briefcase,
   Lightbulb,
   Clock,
+  Github
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -121,13 +122,15 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                     whileHover="hover"
                     whileTap="tap"
                   >
-                    <Link
-                      to="/dashboard/add-job"
+                    <a
+                      href="https://github.com/AWESOME04/unihive"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="btn-secondary flex items-center justify-center py-2.5 sm:py-3 md:py-4 px-5 sm:px-6 md:px-8 rounded-xl text-sm sm:text-base w-full"
                     >
-                      <CirclePlus size={18} className="mr-2" />
-                      <span>Post a Job</span>
-                    </Link>
+                      <Github size={18} className="mr-2" />
+                      <span>Star on GitHub</span>
+                    </a>
                   </motion.div>
                 </>
               ) : (
@@ -143,7 +146,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                       className="btn-primary flex items-center justify-center py-2.5 sm:py-3 md:py-4 px-5 sm:px-6 md:px-8 rounded-xl text-sm sm:text-base w-full"
                     >
                       <Users size={18} className="mr-2" />
-                      <span>Join UniHive</span>
+                      <span>Get Started</span>
                     </Link>
                   </motion.div>
 
@@ -152,13 +155,15 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                     whileHover="hover"
                     whileTap="tap"
                   >
-                    <Link
-                      to="/login"
+                    <a
+                      href="https://github.com/AWESOME04/unihive"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="btn-secondary flex items-center justify-center py-2.5 sm:py-3 md:py-4 px-5 sm:px-6 md:px-8 rounded-xl text-sm sm:text-base w-full"
                     >
-                      <ArrowRight size={18} className="mr-2" />
-                      <span>Login</span>
-                    </Link>
+                      <Github size={18} className="mr-2" />
+                      <span>Star on GitHub</span>
+                    </a>
                   </motion.div>
                 </>
               )}
