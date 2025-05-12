@@ -60,19 +60,19 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
       case 'shopping-bag':
-        return <ShoppingBag size={20} className="text-secondary" />;
+        return <ShoppingBag size={20} />;
       case 'book':
-        return <Book size={20} className="text-secondary" />;
+        return <Book size={20} />;
       case 'truck':
-        return <Truck size={20} className="text-secondary" />;
+        return <Truck size={20} />;
       case 'megaphone':
-        return <Megaphone size={20} className="text-secondary" />;
+        return <Megaphone size={20} />;
       case 'archive':
-        return <Archive size={20} className="text-secondary" />;
+        return <Archive size={20} />;
       case 'briefcase':
-        return <Briefcase size={20} className="text-secondary" />;
+        return <Briefcase size={20} />;
       default:
-        return <Star size={20} className="text-secondary" />;
+        return <Star size={20} />;
     }
   };
 
@@ -254,21 +254,23 @@ const HiveCategories = ({ isAuthenticated }: HiveCategoriesProps) => {
                 <motion.button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.name)}
-                  className={`flex items-center whitespace-nowrap min-w-max px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg mr-2 sm:mr-3 transition-all ${
+                  className={`category-btn ${
                     activeCategory === category.name
-                      ? "bg-secondary text-white shadow-lg"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                      ? "category-btn-active"
+                      : "category-btn-inactive"
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span className="flex items-center justify-center mr-1.5 sm:mr-2">
+                  <span className={activeCategory === category.name ? "text-white" : "text-secondary"}>
                     {category.icon}
                   </span>
-                  <span className="text-xs sm:text-sm font-medium">
+                  <span className="text-xs sm:text-sm font-medium ml-3">
                     {category.name}
                   </span>
-                  <span className="ml-1.5 text-xs opacity-75">
+                  <span className={`ml-1.5 text-xs ${
+                    activeCategory === category.name ? "text-white/75" : "text-gray-500"
+                  }`}>
                     ({category.count})
                   </span>
                 </motion.button>

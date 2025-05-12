@@ -182,7 +182,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                           to={item.href}
                           className={`flex items-center ${isCollapsed ? 'justify-center' : ''} px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${
                             isItemActive
-                              ? 'bg-secondary text-white font-medium'
+                              ? 'bg-secondary hover:text-white hover:bg-opacity-90 text-white font-medium'
                               : 'text-gray-700 hover:bg-gray-100'
                           }`}
                         >

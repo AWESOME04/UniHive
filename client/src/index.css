@@ -50,7 +50,7 @@
   }
   
   .btn-primary {
-    @apply bg-secondary text-white py-2 px-4 rounded-lg hover:bg-dark-orange hover:shadow-md transition-default;
+    @apply bg-secondary text-white hover:text-white py-2 px-4 rounded-lg hover:bg-dark-orange hover:shadow-md transition-default;
   }
   
   .btn-secondary {
@@ -149,6 +149,26 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  .category-btn {
+    @apply flex items-center whitespace-nowrap px-3 py-2 rounded-lg mr-2 transition-colors;
+  }
+  
+  .category-btn-active {
+    @apply bg-secondary text-white hover:bg-opacity-90;
+  }
+  
+  .category-btn-active svg {
+    @apply text-white;
+  }
+  
+  .category-btn-inactive {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700;
+  }
+  
+  .category-btn-inactive svg {
+    @apply text-secondary;
   }
 }
 
