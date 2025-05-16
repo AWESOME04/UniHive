@@ -1,4 +1,4 @@
-import { Bell, Menu, User, Search, MessageSquare } from 'lucide-react';
+import { Menu, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -16,8 +16,7 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user: authUser, isAuthenticated, logout } = useAuth();
-  
-  // Use prop user if provided, otherwise use the one from auth context
+
   const user = propUser || authUser;
 
   // Handle scroll effect
@@ -51,19 +50,13 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
     };
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);
 
   const handleLogout = () => {
-    // Call logout function from AuthContext
     logout();
-    
-    // Show success message
     toast.success('Logged out successfully');
-    
-    // Redirect to home page
     navigate('/');
   };
 
@@ -99,6 +92,18 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
               >
                 About Us
               </Link>
+
+              {/* <Link
+                to="/pricing"
+                className={`${
+                  location.pathname === '/pricing'
+                    ? 'border-secondary text-gray-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+              >
+                Pricing
+              </Link> */}
+
               <Link
                 to="/contact"
                 className={`${
@@ -109,48 +114,11 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
               >
                 Contact
               </Link>
-              {isAuthenticated && (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className={`${
-                      location.pathname === '/dashboard'
-                        ? 'border-secondary text-gray-900'
-                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                    } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/search"
-                    className={`${
-                      location.pathname === '/search'
-                        ? 'border-secondary text-gray-900'
-                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                    } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                  >
-                    Find Jobs
-                  </Link>
-                </>
-              )}
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {isAuthenticated ? (
               <>
-                <Link to="/search" className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
-                  <span className="sr-only">Search</span>
-                  <Search className="h-6 w-6" />
-                </Link>
-                <Link to="/messages" className="p-1 ml-3 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
-                  <span className="sr-only">Messages</span>
-                  <MessageSquare className="h-6 w-6" />
-                </Link>
-                <Link to="/notifications" className="p-1 ml-3 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
-                  <span className="sr-only">Notifications</span>
-                  <Bell className="h-6 w-6" />
-                </Link>
-
                 {/* Profile dropdown */}
                 <div className="ml-3 relative" id="profile-menu">
                   <div>
@@ -185,21 +153,14 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
                       aria-labelledby="user-menu-button"
                     >
                       <Link
-                        to="/profile"
+                        to="/dashboard"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
-                        Your Profile
+                        Dashboard
                       </Link>
                       <Link
-                        to="/saved-jobs"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                      >
-                        Saved Jobs
-                      </Link>
-                      <Link
-                        to="/settings"
+                        to="/dashboard/settings"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
@@ -270,6 +231,18 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
             >
               About Us
             </Link>
+
+            <Link
+              to="/pricing"
+              className={`${
+                location.pathname === '/pricing'
+                  ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+            >
+              Pricing
+            </Link>
+
             <Link
               to="/contact"
               className={`${
@@ -280,50 +253,6 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
             >
               Contact
             </Link>
-            {isAuthenticated && (
-              <>
-                <Link
-                  to="/dashboard"
-                  className={`${
-                    location.pathname === '/dashboard'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/search"
-                  className={`${
-                    location.pathname === '/search'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Find Jobs
-                </Link>
-                <Link
-                  to="/messages"
-                  className={`${
-                    location.pathname === '/messages'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Messages
-                </Link>
-                <Link
-                  to="/notifications"
-                  className={`${
-                    location.pathname === '/notifications'
-                      ? 'bg-secondary bg-opacity-10 border-secondary text-secondary'
-                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-                  } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                >
-                  Notifications
-                </Link>
-              </>
-            )}
           </div>
           {isAuthenticated ? (
             <div className="pt-4 pb-3 border-t border-gray-200">
@@ -348,16 +277,10 @@ const Navbar = ({ user: propUser, onMenuClick }: NavbarProps) => {
               </div>
               <div className="mt-3 space-y-1">
                 <Link
-                  to="/profile"
+                  to="/dashboard"
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                 >
-                  Your Profile
-                </Link>
-                <Link
-                  to="/saved-jobs"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Saved Jobs
+                  Dashboard
                 </Link>
                 <Link
                   to="/settings"

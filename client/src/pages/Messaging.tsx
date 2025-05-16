@@ -39,8 +39,7 @@ function Messaging() {
   const [showFilter, setShowFilter] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'unread' | 'groups'>('all');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // Add cursor light effect
+
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   
   useEffect(() => {
@@ -120,7 +119,6 @@ function Messaging() {
         setActiveContact(selectedContact);
       }
 
-      // In a real app, fetch messages for this conversation
       setMessages([
         {
           id: '1',

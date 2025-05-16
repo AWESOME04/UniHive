@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
+
+interface ForgotPasswordValues {
+  email: string;
+}
 
 const forgotPasswordSchema = Yup.object().shape({
   email: Yup.string()
@@ -15,12 +19,18 @@ function ForgotPassword() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (
+    values: ForgotPasswordValues, 
+    { setSubmitting }: FormikHelpers<ForgotPasswordValues>
+  ) => {
     setLoading(true);
     
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      // Here we would normally call the API with the email
+      console.log('Sending password reset email to:', values.email);
       
       setIsSubmitted(true);
       toast.success('Reset link sent! Check your email');

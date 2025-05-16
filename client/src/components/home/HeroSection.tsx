@@ -38,7 +38,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
   };
 
   return (
-    <section className="relative pt-8 sm:pt-16 md:pt-20 pb-10 sm:pb-16 md:pb-24 px-3 sm:px-4 md:px-8 lg:px-12 overflow-hidden bg-gradient-to-br from-background via-white to-light-orange/20">
+    <section className="relative pt-8 sm:pt-16 md:pt-20 pb-10 sm:pb-16 md:pb-24 px-3 sm:px-4 md:px-8 lg:px-12 bg-gradient-to-br from-background via-white to-light-orange/20 overflow-hidden">
       {/* Floating Elements with Framer Motion */}
       <motion.div 
         className="absolute top-20 left-1/4 w-12 h-12 bg-light-orange rounded-lg hidden lg:block" 
@@ -59,10 +59,10 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
         transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
       />
 
-      <div className="container mx-auto relative z-10 px-0">
+      <div className="container mx-auto relative z-10">
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-16 items-center justify-between">
           <motion.div 
-            className="flex-1 max-w-full sm:max-w-xl lg:max-w-2xl w-full"
+            className="flex-1 max-w-full sm:max-w-xl lg:max-w-2xl"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -188,14 +188,14 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
           </motion.div>
 
           <motion.div 
-            className="flex-1 w-full mt-6 lg:mt-0"
+            className="flex-1 w-full mt-6 lg:mt-0 max-w-full"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <div className="relative p-1.5 sm:p-2 rounded-2xl bg-gradient-to-br from-secondary to-accent-purple">
               <div className="absolute inset-0 bg-white rounded-xl opacity-90"></div>
-              <div className="relative bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-xl">
+              <div className="relative bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-xl overflow-hidden">
                 <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6">
                   Explore Top Hives
                 </h2>
@@ -264,7 +264,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                     Popular Universities
                   </h3>
                   <div className="flex flex-wrap gap-3 sm:gap-4">
-                    <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full">
                       <motion.div 
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
@@ -290,7 +290,7 @@ const HeroSection = ({ isAuthenticated }: HeroSectionProps) => {
                         className="flex items-center bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
-                        <img src="/central.jpeg" alt="Central University" className="h-6 w-6 object-contain mr-2" />
+                        <img src="/central.png" alt="Central University" className="h-6 w-6 object-contain mr-2" />
                         <span className="text-xs font-medium">Central</span>
                       </motion.div>
                     </div>

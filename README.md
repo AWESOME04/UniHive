@@ -8,28 +8,102 @@
   [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-4.9+-blue.svg)](https://www.typescriptlang.org/)
   [![React](https://img.shields.io/badge/React-18.0+-61DAFB.svg?logo=react&logoColor=white)](https://reactjs.org/)
-  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.0+-336791.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+  [![Sequelize](https://img.shields.io/badge/Sequelize-6.0+-336791.svg)](https://sequelize.org/)
 </div>
 
-> A university-specific services marketplace that connects students for tasks, tutoring, and item exchange.
+## 🎯 Overview
 
-UniHive creates a secure and verified platform where university students can exchange services, skills, and items within their campus community. Whether you need academic help, want to sell used textbooks, or are looking to earn extra income by helping others, UniHive provides the perfect platform to connect.
+UniHive is a specialized marketplace platform exclusively for Ghanaian university students. Born during the Hachive Hackathon 1.0 by WeWire, it enables students to:
 
-## ✨ Key Features
+- Buy and sell essential items (books, electronics, etc.)
+- Find and offer academic help
+- Request and provide logistics services
+- Share campus events and activities
+- Access academic resources
+- Find side hustle opportunities
 
-- **🎓 University Email Verification** - Ensures a secure, campus-specific environment
-- **💼 Specialized Marketplaces** - Six dedicated "Hives" for different needs:
-  - **Essentials** - Buy/sell used items like textbooks, electronics, and furniture
-  - **Academia** - Find tutors or offer tutoring in your strong subjects
-  - **Logistics** - Get help with deliveries, pickups, and errand running
-  - **Buzz** - Discover campus events and activities
-  - **Archive** - Access shared academic resources and study materials
-  - **SideHustle** - Find short-term gigs and part-time work opportunities
-- **⭐ Trust & Reputation System** - Build credibility through ratings and reviews
-- **🔎 Advanced Search & Filtering** - Find exactly what you need quickly
-- **📱 Mobile-Responsive Design** - Use on any device, anywhere on campus
-- **🔒 Secure Messaging** - Communicate directly with other users
-- **📁 File Uploads** - Share images and documents for listings and resources
+## 📸 Screenshots
+
+### Overview
+![Home](/docs/images/home.PNG)
+*platform overview*
+
+### Authentication
+![Registration](/docs/images/register.PNG)
+*Student registration with university email verification*
+
+![Login](/docs/images/login.PNG)
+*Secure login with university credentials*
+
+### Core Features
+![Dashboard](/docs/images/dashboard.PNG)
+*Student dashboard showing recent activities and stats*
+
+![Hives Overview](/docs/images/hives.PNG)
+*Different hive categories for various student needs*
+
+### Marketplace Features
+![Essentials](/docs/images/essentials.PNG)
+*Buy and sell university essentials*
+
+![Services](/docs/images/services.PNG)
+*Find and offer student services*
+
+### Communication
+![Messages](/docs/images/messages.PNG)
+*Real-time messaging between students*
+
+![Profile](/docs/images/profile.PNG)
+*Detailed student profiles with verification status*
+
+## ✨ Features
+
+### 🔐 User Management
+- University email verification system
+- OTP-based email verification
+- JWT authentication
+- Profile customization
+
+### 🎓 Hive Categories
+1. **Essentials Hive**
+   - Buy/sell university essentials
+   - Item condition tracking
+   - Price comparisons
+
+2. **Academia Hive**
+   - Tutoring services
+   - Study groups
+   - Assignment help
+
+3. **Logistics Hive**
+   - Campus delivery services
+   - Errand running
+   - Package pickups
+
+4. **Buzz Hive**
+   - Campus events
+   - Activities
+   - Announcements
+
+5. **Archive Hive**
+   - Study materials
+   - Past questions
+   - Course resources
+
+6. **SideHustle Hive**
+   - Part-time jobs
+   - Freelance opportunities
+   - Campus gigs
+
+### 💬 Communication
+- Real-time messaging
+- Notifications system
+- File sharing
+
+### 💰 Payments
+- Integration with local payment methods
+- Transaction tracking
+- Secure payment processing
 
 ## 🛠️ Tech Stack
 
@@ -43,26 +117,28 @@ UniHive creates a secure and verified platform where university students can exc
   <tr>
     <td>
       • React.js<br/>
+      • Typescript<br/>
       • Tailwind CSS<br/>
-      • React Router<br/>
-      • Socket.io (client)
+      • Framer Motion<br/>
+      • Formik & Yup
     </td>
     <td>
       • Node.js<br/>
       • Express.js<br/>
       • TypeScript<br/>
+      • Nodemailer<br/>
       • JWT Authentication
     </td>
     <td>
       • PostgreSQL<br/>
       • Sequelize ORM<br/>
       • Cloudinary (media)<br/>
-      • Redis (caching)
     </td>
     <td>
       • Git/GitHub<br/>
       • Postman<br/>
-      • Nodemailer<br/>
+      • Vercel (client)<br/>
+      • Render (server)<br/>
       • ESLint/Prettier
     </td>
   </tr>
@@ -71,189 +147,95 @@ UniHive creates a secure and verified platform where university students can exc
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js (v16 or higher)
+- Node.js (v16+)
 - npm or yarn
 - PostgreSQL database
-- Git
 
-### Quick Start
+### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/AWESOME04/unihive.git
-   cd UniHive
-   ```
-
-2. **Set up environment variables**
-   ```bash
-   # In the server directory
-   cp .env.example .env
-   # Edit .env with your database credentials and other config
-   ```
-
-3. **Install dependencies and start servers**
-   ```bash
-   # Backend setup
-   cd server
-   npm install
-   npm run db:setup
-   npm run dev
-   
-   # Frontend setup (in another terminal)
-   cd client
-   npm install
-   npm start
-   ```
-
-4. **Access the application**
-   - Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## 📊 Project Structure
-
-```
-unihive/
-├── client/                 # Frontend React application
-│   ├── public/             # Static files
-│   ├── src/                # React source code
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/          # Page components
-│   │   ├── services/       # API service calls
-│   │   └── utils/          # Utility functions
-│   └── package.json        # Frontend dependencies
-│
-├── server/                 # Backend Node.js application
-│   ├── config/             # Configuration files
-│   ├── controllers/        # Route controllers
-│   ├── middleware/         # Custom middleware
-│   ├── models/             # Database models
-│   ├── routes/             # API routes
-│   ├── services/           # Business logic
-│   ├── utils/              # Utility functions
-│   ├── app.js              # Express application
-│   └── package.json        # Backend dependencies
-│
-├── docs/                   # Documentation
-└── README.md               # Project readme
+1. Clone the repository
+```bash
+git clone https://github.com/AWESOME04/UniHive.git
+cd UniHive
 ```
 
-## 📚 API Documentation
+2. Install server dependencies
+```bash
+cd server
+npm install
+```
 
-For detailed API documentation, please visit our Postman collection:
-[UniHive API Documentation](https://documenter.getpostman.com/view/28591712/2sB2j7epgT)
+3. Install client dependencies
+```bash
+cd client
+npm install
+```
 
-### Main Endpoints
+4. Set up environment variables
+```bash
+# In server directory
+cp .env.example .env
+# Edit .env with your database credentials
+```
 
-#### Authentication
+5. Start development servers
+```bash
+# Start server (from server directory)
+npm run dev
 
-| **Method** | **Endpoint**                   | **Description**                      |
-|------------|--------------------------------|--------------------------------------|
-| POST       | `/api/auth/register`           | Register a new user account          |
-| POST       | `/api/auth/verify-otp`         | Verify email with OTP                |
-| POST       | `/api/auth/login`              | Authenticate user with credentials   |
-| POST       | `/api/auth/resend-otp`         | Resend verification OTP              |
-| GET        | `/api/auth/me`                 | Get current user information         |
+# Start client (from client directory)
+npm run dev
+```
 
-#### User Profile
+## 📚 Documentation
 
-| **Method** | **Endpoint**                   | **Description**                      |
-|------------|--------------------------------|--------------------------------------|
-| GET        | `/api/users/:id`               | Get user profile by ID               |
-| PUT        | `/api/users/profile`           | Update user profile                  |
-| PUT        | `/api/users/password`          | Change user password                 |
-
-#### Hives (General)
-
-| **Method** | **Endpoint**                   | **Description**                      |
-|------------|--------------------------------|--------------------------------------|
-| GET        | `/api/hives/types`             | Get all hive types                   |
-| GET        | `/api/hives`                   | Get all hives with filtering         |
-| GET        | `/api/hives/:id`               | Get hive by ID                       |
-| GET        | `/api/hives/my/posted`         | Get hives posted by current user     |
-| GET        | `/api/hives/my/assigned`       | Get hives assigned to current user   |
-| DELETE     | `/api/hives/:id`               | Delete a hive                        |
-| PUT        | `/api/hives/:id/status`        | Update hive status                   |
-| PUT        | `/api/hives/:id/assign`        | Assign hive to a user                |
-
-#### Specialized Hives
-
-| **Method** | **Endpoint**                   | **Description**                      |
-|------------|--------------------------------|--------------------------------------|
-| GET        | `/api/essentials`              | Get all essentials listings          |
-| POST       | `/api/essentials`              | Create essentials listing            |
-| PUT        | `/api/essentials/:id`          | Update essentials listing            |
-| GET        | `/api/academia`                | Get all academia posts               |
-| POST       | `/api/academia`                | Create academia post                 |
-| PUT        | `/api/academia/:id`            | Update academia post                 |
-| GET        | `/api/logistics`               | Get all logistics posts              |
-| POST       | `/api/logistics`               | Create logistics post                |
-| PUT        | `/api/logistics/:id`           | Update logistics post                |
-| GET        | `/api/buzz`                    | Get all buzz posts                   |
-| POST       | `/api/buzz`                    | Create buzz post                     |
-| PUT        | `/api/buzz/:id`                | Update buzz post                     |
-| GET        | `/api/archive`                 | Get all archive resources            |
-| POST       | `/api/archive`                 | Create archive resource              |
-| PUT        | `/api/archive/:id`             | Update archive resource              |
-| GET        | `/api/sidehustle`              | Get all side hustle listings         |
-| POST       | `/api/sidehustle`              | Create side hustle listing           |
-| PUT        | `/api/sidehustle/:id`          | Update side hustle listing           |
-
-#### Applications & Reviews
-
-| **Method** | **Endpoint**                             | **Description**                      |
-|------------|------------------------------------------|--------------------------------------|
-| POST       | `/api/hives/:hiveId/applications`        | Apply to a hive                      |
-| GET        | `/api/hives/:hiveId/applications`        | Get applications for a hive          |
-| PUT        | `/api/hives/:hiveId/applications/:appId` | Update application status            |
-| GET        | `/api/hives/applications/me`             | Get current user's applications      |
-| POST       | `/api/hives/:hiveId/reviews`             | Create a review for a hive           |
-| GET        | `/api/hives/:hiveId/reviews`             | Get reviews for a specific hive      |
-| GET        | `/api/users/:userId/reviews`             | Get reviews for a specific user      |
-
-#### Payments
-
-| **Method** | **Endpoint**                   | **Description**                      |
-|------------|--------------------------------|--------------------------------------|
-| POST       | `/api/payments/initialize/:hiveId` | Initialize payment for a hive        |
-| GET        | `/api/payments/verify`         | Verify a payment transaction         |
-| GET        | `/api/payments/history`        | Get user's payment history           |
-| POST       | `/api/payments/webhook`        | Paystack webhook handler (internal)  |
-
-## 📱 Screenshots
-
-Coming soon...
+- [API Documentation](https://documenter.getpostman.com/view/28591712/2sB2j7epgT)
 
 ## 👥 Team
 
-### Core Developers
-
 <table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/Mintahandrews">
-        <img src="https://github.com/Mintahandrews.png" width="100px;" alt="Andrews Mintah"/>
-        <br /><sub><b>Andrews Mintah</b></sub>
-      </a>
-      <br />Frontend Lead
-    </td>
-    <td align="center">
-      <a href="https://github.com/AWESOME04">
-        <img src="https://github.com/AWESOME04.png" width="100px;" alt="Evans Acheampong"/>
-        <br /><sub><b>Evans Acheampong</b></sub>
-      </a>
-      <br />Backend Lead
-    </td>
-  </tr>
+<tr>
+<td align="center">
+<a href="https://github.com/AWESOME04">
+<img src="https://github.com/AWESOME04.png" width="100px;" alt="Evans Acheampong"/>
+<br />
+<sub><b>Evans Acheampong</b></sub>
+</a>
+<br />
+Fullstack Developer
+</td>
+<td align="center">
+<a href="https://github.com/Mintahandrews">
+<img src="https://github.com/Mintahandrews.png" width="100px;" alt="Andrews Mintah"/>
+<br />
+<sub><b>Andrews Mintah</b></sub>
+</a>
+<br />
+Frontend Developer
+</td>
+</tr>
 </table>
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- The [WeWire Team](https://www.wewire.com) for their support and feedback
-- All the open source libraries that made this project possible
-- Our mentors and advisors for their guidance
+- The WeWire team for organizing Hachive Hackathon 1.0
+- All participating universities for their support
+- Our mentors and advisors
 
 ---
 
 <div align="center">
-  Made with ❤️ by the UniHive Team
+Made with ❤️ for Ghanaian University Students
 </div>

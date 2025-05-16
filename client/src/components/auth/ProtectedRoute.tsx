@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   
   if (!isAuthenticated) {
     // Redirect to login but remember where they were trying to go
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
   
   return <>{children}</>;

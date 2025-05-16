@@ -2,54 +2,61 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Zap, ChevronRight } from "lucide-react";
 
+import photoSvg from '../../assets/photo.svg';
+import designSvg from '../../assets/design.svg';
+import riceSvg from '../../assets/rice.svg';
+import webDevSvg from '../../assets/web-dev.svg';
+import calculusSvg from '../../assets/calculus.svg';
+import lectureSvg from '../../assets/lecture.svg';
+
 interface FeaturedTasksProps {
   isAuthenticated: boolean;
   isScrolled: boolean;
 }
 
 const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
-  // Featured tasks data - using SVG icons
+  // Featured tasks data - using imported SVG assets
   const featuredTasks = [
     {
       title: "Photography",
       description: "Wedding photographer needed",
       price: "₵250",
-      icon: <img src="/src/assets/photo.svg" alt="Photography" className="w-8 h-8" />,
+      icon: <img src={photoSvg} alt="Photography" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Design",
       description: "Create a high converting landing page",
       price: "₵100",
-      icon: <img src="/src/assets/design.svg" alt="Design" className="w-8 h-8" />,
+      icon: <img src={designSvg} alt="Design" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Rice Cooker",
       description: "Slightly used rice cooker in good condition",
       price: "₵40",
-      icon: <img src="/src/assets/rice.svg" alt="Rice Cooker" className="w-8 h-8" />,
+      icon: <img src={riceSvg} alt="Rice Cooker" className="w-8 h-8" />,
       hive: "Essentials",
     },
     {
       title: "Web Development",
       description: "Build a responsive website",
       price: "₵500",
-      icon: <img src="/src/assets/web-dev.svg" alt="Web Development" className="w-8 h-8" />,
+      icon: <img src={webDevSvg} alt="Web Development" className="w-8 h-8" />,
       hive: "SideHustle",
     },
     {
       title: "Calculus Tutor",
       description: "Need help with Calculus II assignments",
       price: "₵80",
-      icon: <img src="/src/assets/calculus.svg" alt="Calculus" className="w-8 h-8" />,
+      icon: <img src={calculusSvg} alt="Calculus" className="w-8 h-8" />,
       hive: "Academia",
     },
     {
       title: "Lecture Notes",
       description: "Complete Engineering Physics notes available",
       price: "₵30",
-      icon: <img src="/src/assets/lecture.svg" alt="Lecture Notes" className="w-8 h-8" />,
+      icon: <img src={lectureSvg} alt="Lecture Notes" className="w-8 h-8" />,
       hive: "Archive",
     },
   ];
@@ -71,7 +78,7 @@ const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
 
   return (
     <motion.section
-      className={`py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white transition-all duration-700`}
+      className="py-8 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 bg-white overflow-hidden w-full transition-all duration-700"
       initial={{ opacity: 0, y: 20 }}
       animate={{ 
         opacity: 1, 
@@ -83,7 +90,7 @@ const FeaturedTasks = ({ isAuthenticated, isScrolled }: FeaturedTasksProps) => {
         opacity: isScrolled ? 1 : 0.95
       }}
     >
-      <div className="container mx-auto px-0">
+      <div className="container mx-auto overflow-hidden px-0">
         <motion.div 
           className="text-center mb-6 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}

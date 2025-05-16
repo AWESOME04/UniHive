@@ -19,7 +19,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
       transition={{ duration: 0.5 }}
     >
       <Navbar user={user} />
-      <main className="flex-grow pt-16"> {/* pt-16 to account for fixed navbar */}
+      <main className="flex-grow pt-16">
         {children}
       </main>
       <Footer />

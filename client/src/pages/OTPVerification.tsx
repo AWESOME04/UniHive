@@ -5,11 +5,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Mail, CheckCircle, RefreshCcw } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { authService } from "../services/authService"
 
 function OTPVerification() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { verifyOTP } = useAuth();
+  
+  useAuth();
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -131,15 +133,14 @@ function OTPVerification() {
     setLoading(true);
     
     try {
-      await verifyOTP(email, otpString);
+      const response = await authService.verifyOTP(email, otpString);
       
-      // Show success animation
+      console.log("OTP verification successful:", response);
+
       setVerificationSuccess(true);
       toast.success("Email verified successfully!");
-      
-      // Delay to show success animation
+
       setTimeout(() => {
-        // Navigate to login with auto-login credentials
         navigate("/login", {
           state: {
             email,
@@ -169,23 +170,14 @@ function OTPVerification() {
     setResendLoading(true);
     
     try {
-      // Call API to resend OTP
-      const response = await fetch("/api/auth/resend-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to resend OTP");
-      }
-      
       toast.success("New OTP has been sent to your email");
       setResendTimer(60); // Reset timer
     } catch (error) {
-      toast.error("Failed to resend OTP. Please try again.");
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to resend OTP. Please try again.";
+      
+      toast.error(errorMessage);
     } finally {
       setResendLoading(false);
     }

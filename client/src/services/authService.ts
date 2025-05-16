@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Base API URL - from environment or default to the production URL
 const API_URL = import.meta.env?.VITE_API_URL || 'https://unihive-hmoi.onrender.com/api';
 
 // Token storage key
@@ -24,6 +23,12 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+interface ResetPasswordData {
+  email: string;
+  token: string;
+  newPassword: string;
+}
+
 // Authentication service without Redux
 export const authService = {
   // Register a new user
@@ -34,15 +39,9 @@ export const authService = {
     university: string;
   }) => {
     try {
-      console.log('Sending registration request with data:', { 
-        name: userData.fullName,
-        email: userData.email,
-        password: '********', // Don't log actual password
-        university: userData.university
-      });
       
       const response = await apiClient.post('/auth/register', {
-        name: userData.fullName, // API expects 'name', not 'fullName'
+        name: userData.fullName,
         email: userData.email,
         password: userData.password,
         university: userData.university,
@@ -62,21 +61,18 @@ export const authService = {
   },
 
   // Verify OTP
-  verifyOTP: async (verificationData: { email: string; otp: string }) => {
+  verifyOTP: async (email: string, otp: string) => {
     try {
-      console.log('Verifying OTP for email:', verificationData.email);
+      console.log('Verifying OTP for email:', email);
       
+      const verificationData = { email, otp };
       const response = await apiClient.post('/auth/verify-otp', verificationData);
       
-      console.log('OTP verification response:', response.data);
-      
-      // If API returned a token, store it
-      if (response.data && response.data.token) {
-        localStorage.setItem(TOKEN_KEY, response.data.token);
-        
-        // If user data is available, store it
-        if (response.data.user) {
-          localStorage.setItem(USER_KEY, JSON.stringify(response.data.user));
+      if (response.data && response.data.data && response.data.data.token) {
+        localStorage.setItem(TOKEN_KEY, response.data.data.token);
+
+        if (response.data.data.user) {
+          localStorage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
         }
       }
       
@@ -107,28 +103,32 @@ export const authService = {
   // Login user
   login: async (credentials: { email: string; password: string }) => {
     try {
-      console.log('Sending login request for:', credentials.email);
+      console.log('Sending login request to:', `${API_URL}/auth/login`);
+      console.log('With credentials:', { email: credentials.email, passwordProvided: !!credentials.password });
       
       const response = await apiClient.post('/auth/login', credentials);
       
-      console.log('Login response:', response.data);
-      
-      // Store token in localStorage
-      if (response.data && response.data.token) {
-        localStorage.setItem(TOKEN_KEY, response.data.token);
+      console.log('Login API response:', response.data);
+
+      if (response.data && response.data.data && response.data.data.token) {
+        localStorage.setItem(TOKEN_KEY, response.data.data.token);
         
-        // If user data is available, store it
-        if (response.data.user) {
-          localStorage.setItem(USER_KEY, JSON.stringify(response.data.user));
+        // Store user data if available
+        if (response.data.data.user) {
+          localStorage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
         }
+        
+        return response.data;
+      } else {
+        console.error('Login response does not contain token or is in unexpected format:', response.data);
+        throw new Error('Unexpected response format from server');
       }
-      
-      return response.data;
     } catch (error) {
       console.error('Login error:', error);
       
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data?.message || 'Login failed');
+        const errorMessage = error.response.data?.message || 'Login failed';
+        throw new Error(errorMessage);
       }
       throw new Error('Network error during login');
     }
@@ -141,7 +141,6 @@ export const authService = {
     return true;
   },
 
-  // Get the current authenticated user
   getCurrentUser: () => {
     try {
       const userJSON = localStorage.getItem(USER_KEY);
@@ -154,17 +153,14 @@ export const authService = {
     }
   },
 
-  // Get the authentication token
   getToken: () => {
     return localStorage.getItem(TOKEN_KEY);
   },
 
-  // Check if user is authenticated
   isAuthenticated: () => {
     return !!localStorage.getItem(TOKEN_KEY);
   },
 
-  // Update user information
   updateUserInfo: (userData: any) => {
     try {
       localStorage.setItem(USER_KEY, JSON.stringify(userData));
@@ -172,6 +168,25 @@ export const authService = {
     } catch (e) {
       console.error('Error updating user data:', e);
       return false;
+    }
+  },
+
+  resetPassword: async (data: ResetPasswordData) => {
+    try {
+      console.log('Resetting password for email:', data.email);
+      
+      const response = await apiClient.post('/auth/reset-password', data);
+      
+      console.log('Password reset response:', response.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Password reset error:', error);
+      
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data?.message || 'Failed to reset password');
+      }
+      throw new Error('Network error during password reset');
     }
   }
 };

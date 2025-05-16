@@ -11,10 +11,8 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [shouldRedirect, setShouldRedirect] = useState(true);
   
   useEffect(() => {
-    // Check if token exists in localStorage using environment variable key
     const token = localStorage.getItem(import.meta.env.VITE_TOKEN_KEY || 'unihive_token');
     
-    // Only redirect if there's no authentication (either via Redux or token)
     if (isAuthenticated || token) {
       setShouldRedirect(false);
     } else {

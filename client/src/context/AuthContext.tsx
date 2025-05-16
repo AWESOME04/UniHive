@@ -2,18 +2,21 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import authService from '../services/authService';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Define user type
 interface User {
   id: string;
   name: string;
   email: string;
   university?: string;
+  profileImage?: string | null;
   avatarUrl?: string;
+  bio?: string | null;
+  rating?: number;
+  isVerified?: boolean;
   role?: string;
-  [key: string]: any; // Allow for additional properties
+  createdAt?: string;
+  [key: string]: any;
 }
 
-// Define auth context state
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -25,7 +28,6 @@ interface AuthContextType {
   updateUserData: (data: Partial<User>) => void;
 }
 
-// Create the context with a default value
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
@@ -47,14 +49,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const initAuth = async () => {
       setIsLoading(true);
       try {
-        // Get user from localStorage
         const currentUser = authService.getCurrentUser();
         if (currentUser) {
           setUser(currentUser);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
-        // If there's an error, clear any invalid auth state
         authService.logout();
         setUser(null);
       } finally {
@@ -71,23 +71,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await authService.login({ email, password });
       
-      // If the login was successful and returned user data
-      if (response && (response.user || response.userData)) {
-        const userData = response.user || response.userData;
-        setUser(userData);
+      console.log("Auth context login response:", response);
+
+      if (response && response.data) {
+        if (response.data.user) {
+          setUser(response.data.user);
+        } else if (response.data.userData) {
+          setUser(response.data.userData);
+        } else {
+          // Minimal user construct if no detailed user data
+          setUser({
+            id: response.data.userId || 'unknown',
+            name: email.split('@')[0],
+            email
+          });
+        }
       } else {
-        // If no user data was returned but we have a token,
-        // construct minimal user object from email
-        setUser({
-          id: response.userId || 'unknown',
-          name: email.split('@')[0],
-          email
-        });
+        console.error("Unexpected login response format:", response);
       }
       
       return response;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error in context:', error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -112,19 +117,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const verifyOTP = async (email: string, otp: string) => {
     setIsLoading(true);
     try {
-      const response = await authService.verifyOTP({ email, otp });
+      const response = await authService.verifyOTP(email, otp);
       
       // If verification successful and returned user data
-      if (response && (response.user || response.userData)) {
-        const userData = response.user || response.userData;
-        setUser(userData);
-      } else if (response && response.token) {
-        // Construct minimal user object if only token provided
-        setUser({
-          id: response.userId || 'unknown',
-          name: email.split('@')[0],
-          email
-        });
+      if (response && response.data) {
+        if (response.data.user) {
+          setUser(response.data.user);
+        } else if (response.data.userData) {
+          setUser(response.data.userData);
+        } else if (response.data.userId) {
+          // Construct minimal user object if only userId provided
+          setUser({
+            id: response.data.userId,
+            name: email.split('@')[0],
+            email
+          });
+        }
       }
       
       return response;

@@ -1,142 +1,69 @@
 import axios from 'axios';
-import api from '../utils/apiUtils';
-import { User } from '../types';
+import authService from './authService';
+
+// Base API URL - from environment or default to the production URL
+const API_URL = import.meta.env?.VITE_API_URL || 'https://unihive-hmoi.onrender.com/api';
+
+// Create a custom axios instance for API calls
+const apiClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add token to requests if available
+apiClient.interceptors.request.use((config) => {
+  const token = authService.getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // User service
 export const userService = {
-  // Get current user profile
-  getProfile: async () => {
+  // Get current user profile (authenticated)
+  getCurrentUserProfile: async () => {
     try {
-      const response = await api.get('/v1/users/me');
+      const response = await apiClient.get('/auth/me');
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const errorMessage = error.response.data.message || error.response.data.error || 'Failed to get profile';
-        throw new Error(errorMessage);
-      }
-      throw new Error('Network error while fetching profile');
+      console.error('Error fetching current user profile:', error);
+      throw error;
+    }
+  },
+
+  // Get user profile by ID (no auth required)
+  getUserProfileById: async (userId: string) => {
+    try {
+      const response = await apiClient.get(`/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user profile by ID:', error);
+      throw error;
     }
   },
 
   // Update user profile
-  updateProfile: async (userData: Partial<User>) => {
+  updateUserProfile: async (userData: any) => {
     try {
-      const response = await api.put('/v1/users/me', userData);
+      const response = await apiClient.put('/users/profile', userData);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const errorMessage = error.response.data.message || error.response.data.error || 'Failed to update profile';
-        throw new Error(errorMessage);
-      }
-      throw new Error('Network error while updating profile');
-    }
-  },
-
-  // Upload profile picture
-  uploadProfilePicture: async (formData: FormData) => {
-    try {
-      const response = await api.post('/v1/users/me/avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to upload profile picture');
-      }
-      throw new Error('Network error while uploading profile picture');
+      console.error('Error updating user profile:', error);
+      throw error;
     }
   },
 
   // Change password
-  changePassword: async (passwordData: { currentPassword: string; newPassword: string }) => {
+  changePassword: async (passwords: { currentPassword: string; newPassword: string }) => {
     try {
-      const response = await api.put('/v1/users/me/password', passwordData);
+      const response = await apiClient.put('/users/password', passwords);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to change password');
-      }
-      throw new Error('Network error while changing password');
-    }
-  },
-
-  // Get user notifications
-  getNotifications: async (params: { page?: number; limit?: number; isRead?: boolean }) => {
-    try {
-      const response = await api.get('/v1/notifications', { params });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to get notifications');
-      }
-      throw new Error('Network error while fetching notifications');
-    }
-  },
-
-  // Mark notification as read
-  markNotificationAsRead: async (notificationId: string) => {
-    try {
-      const response = await api.put(`/v1/notifications/${notificationId}/read`);
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to mark notification as read');
-      }
-      throw new Error('Network error while updating notification');
-    }
-  },
-
-  // Get user by ID
-  getUserById: async (userId: string) => {
-    try {
-      const response = await api.get(`/v1/users/${userId}`);
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to get user');
-      }
-      throw new Error('Network error while fetching user');
-    }
-  },
-
-  // Get user's saved jobs
-  getSavedJobs: async (params: { page?: number; limit?: number }) => {
-    try {
-      const response = await api.get('/v1/users/me/saved-jobs', { params });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch saved jobs');
-      }
-      throw new Error('Network error while fetching saved jobs');
-    }
-  },
-
-  // Get user's job applications
-  getJobApplications: async (params: { page?: number; limit?: number; status?: string }) => {
-    try {
-      const response = await api.get('/v1/users/me/job-applications', { params });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch your applications');
-      }
-      throw new Error('Network error while fetching your applications');
-    }
-  },
-
-  // Get user's followed universities
-  getFollowedUniversities: async (params: { page?: number; limit?: number }) => {
-    try {
-      const response = await api.get('/v1/users/me/followed-universities', { params });
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.message || 'Failed to fetch followed universities');
-      }
-      throw new Error('Network error while fetching followed universities');
+      console.error('Error changing password:', error);
+      throw error;
     }
   }
 };
