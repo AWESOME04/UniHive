@@ -15,7 +15,8 @@
     "serve": "node dist/server.js",
     "db:init": "ts-node src/scripts/initDb.ts",
     "db:test": "ts-node src/config/testConnection.ts",
-    "seed:hives": "ts-node src/scripts/seedHives.ts"
+    "seed:hives": "ts-node src/scripts/seedHives.ts",
+    "fix-db": "ts-node src/scripts/fixForeignKeys.ts"
   },
   "keywords": [],
   "author": "",
@@ -38,6 +39,7 @@
     "pg": "^8.15.6",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
+    "socket.io": "^4.7.4",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
@@ -51,6 +53,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/pg": "^8.11.14",
     "@types/sequelize": "^4.28.20",
+    "@types/socket.io": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
     "eslint": "^9.26.0",

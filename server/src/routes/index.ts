@@ -11,6 +11,7 @@ import sideHustleRoutes from './sidehustle.routes';
 import applicationRoutes from './application.routes';
 import reviewRoutes from './review.routes';
 import paymentRoutes from './payment.routes';
+import messageRoutes from './message.routes';
 
 const router = express.Router();
 
@@ -23,16 +24,10 @@ router.get('/status', (req, res) => {
   });
 });
 
-// Auth routes
 router.use('/auth', authRoutes);
-
-// User routes
 router.use('/users', userRoutes);
-
-// General hive routes
 router.use('/hives', hiveRoutes);
 
-// Specific hive type routes
 router.use('/essentials', essentialsRoutes);
 router.use('/academia', academiaRoutes);
 router.use('/logistics', logisticsRoutes);
@@ -43,7 +38,7 @@ router.use('/sidehustle', sideHustleRoutes);
 router.use('/hives', applicationRoutes);
 router.use('/hives', reviewRoutes);
 
-// Payment routes
 router.use('/payments', paymentRoutes);
+router.use('/messages', messageRoutes);
 
 export default router;
