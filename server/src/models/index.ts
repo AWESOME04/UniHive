@@ -14,6 +14,8 @@ import { HiveApplication } from './HiveApplication';
 import { HiveReview } from './HiveReview';
 import { PasswordReset } from './PasswordReset';
 import { Transaction } from './Transaction';
+import { Conversation } from './Conversation';
+import { Message } from './Message';
 
 const models = {
   User,
@@ -29,7 +31,9 @@ const models = {
   HiveApplication,
   HiveReview,
   PasswordReset,
-  Transaction
+  Transaction,
+  Conversation,
+  Message
 };
 
 const setupAssociations = () => {
@@ -129,7 +133,6 @@ const setupAssociations = () => {
     foreignKey: 'hiveId' 
   });
 
-  // Application and Review associations
   Hive.hasMany(HiveApplication, { 
     foreignKey: 'hiveId', 
     as: 'applications' 
@@ -146,7 +149,7 @@ const setupAssociations = () => {
   
   HiveApplication.belongsTo(User, { 
     foreignKey: 'applicantId', 
-    as: 'applicantUser'  // Changed from 'applicant' to 'applicantUser'
+    as: 'applicantUser'
   });
 
   Hive.hasMany(HiveReview, { 
@@ -165,7 +168,7 @@ const setupAssociations = () => {
   
   HiveReview.belongsTo(User, { 
     foreignKey: 'reviewerId', 
-    as: 'reviewerUser'  // Changed from 'reviewer' to 'reviewerUser'
+    as: 'reviewerUser'
   });
 
   User.hasMany(HiveReview, { 
@@ -178,7 +181,6 @@ const setupAssociations = () => {
     as: 'reviewedUser'
   });
 
-  // Password Reset associations
   User.hasMany(PasswordReset, {
     foreignKey: 'userId',
     as: 'passwordResets',
@@ -219,6 +221,51 @@ const setupAssociations = () => {
     foreignKey: 'hiveId',
     as: 'transactionHive'
   });
+
+  User.hasMany(Conversation, { 
+    foreignKey: 'participantOneId', 
+    as: 'conversationsAsParticipantOne' 
+  });
+  
+  User.hasMany(Conversation, { 
+    foreignKey: 'participantTwoId', 
+    as: 'conversationsAsParticipantTwo' 
+  });
+  
+  Conversation.belongsTo(User, { 
+    foreignKey: 'participantOneId', 
+    as: 'participantOneUser'
+  });
+  
+  Conversation.belongsTo(User, { 
+    foreignKey: 'participantTwoId', 
+    as: 'participantTwoUser'
+  });
+
+  Conversation.hasMany(Message, { 
+    foreignKey: 'conversationId', 
+    as: 'conversationMessages'
+  });
+  
+  Message.belongsTo(Conversation, { 
+    foreignKey: 'conversationId'
+  });
+  
+  User.hasMany(Message, { 
+    foreignKey: 'senderId', 
+    as: 'sentMessages' 
+  });
+  
+  Message.belongsTo(User, { 
+    foreignKey: 'senderId', 
+    as: 'messageAuthor'
+  });
+
+  Conversation.belongsTo(Message, { 
+    foreignKey: 'lastMessageId', 
+    as: 'conversationLastMessage',
+    constraints: false
+  });
 };
 
 export {
@@ -235,7 +282,9 @@ export {
   HiveApplication,
   HiveReview,
   PasswordReset,
-  Transaction
+  Transaction,
+  Conversation,
+  Message
 };
 
 export default setupAssociations;

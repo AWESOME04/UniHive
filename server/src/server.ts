@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import http from 'http';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -6,20 +7,24 @@ import dotenv from 'dotenv';
 import routes from './routes';
 import { sequelize } from './config/database';
 import setupAssociations from './models/index';
+import { setupSocketServer } from './socket/socketManager';
+import { Conversation, Message } from './models';
 
 dotenv.config();
 
 const app: Express = express();
 const PORT = parseInt(process.env.PORT || '10000', 10);
 
+const server = http.createServer(app);
+
 // Define allowed origins
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://unihive.vercel.app'
+  'https://unihive.vercel.app',
+  'https://uni-hive.vercel.app'
 ];
 
-// Middleware
 app.use(helmet());
 app.use(cors({
   origin: function (origin, callback) {
@@ -66,11 +71,24 @@ const startServer = async () => {
     
     setupAssociations();
     console.log('Model associations initialized successfully.');
-    
+
+    console.log('Synchronizing database models without altering existing constraints...');
     await sequelize.sync({ force: false, alter: false });
-    console.log('Database synchronized successfully.');
+
+    // Only force sync Conversation and Message models in non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Force syncing conversation and message models...');
+      await Conversation.sync({ force: true });
+      await Message.sync({ force: true });
+      console.log('Database synchronized successfully.');
+    } else {
+      console.warn('Skipping force sync of conversation and message models in production to prevent data loss.');
+    }
     
-    app.listen(PORT, '0.0.0.0', () => {
+    const io = setupSocketServer(server);
+    console.log('Socket.IO server initialized.');
+    
+    server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Server bound to 0.0.0.0:${PORT}`);
     });

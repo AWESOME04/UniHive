@@ -14,12 +14,14 @@ import { HiveApplication } from '../models/HiveApplication';
 import { HiveReview } from '../models/HiveReview';
 import { PasswordReset } from '../models/PasswordReset';
 import { Transaction } from '../models/Transaction';
+import { Conversation } from '../models/Conversation';
+import { Message } from '../models/Message';
 
 dotenv.config();
 
 const connectionString = process.env.DATABASE_URL;
 
-const frontendUrl = process.env.FRONTEND_URL || 'https://unihive.vercel.app';
+const frontendUrl = process.env.FRONTEND_URL || 'https://uni-hive.vercel.app';
 console.log(`Frontend URL configured as: ${frontendUrl}`);
 
 let sequelizeConfig: any;
@@ -73,7 +75,9 @@ sequelize.addModels([
   HiveApplication, 
   HiveReview,
   PasswordReset,
-  Transaction
+  Transaction,
+  Conversation,
+  Message
 ]);
 
 export { sequelize };
