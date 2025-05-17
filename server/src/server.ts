@@ -75,11 +75,16 @@ const startServer = async () => {
     console.log('Synchronizing database models without altering existing constraints...');
     await sequelize.sync({ force: false, alter: false });
 
-    console.log('Force syncing conversation and message models...');
-    await Conversation.sync({ force: true });
-    await Message.sync({ force: true });
-    console.log('Database synchronized successfully.');
-
+    // Only force sync Conversation and Message models in non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Force syncing conversation and message models...');
+      await Conversation.sync({ force: true });
+      await Message.sync({ force: true });
+      console.log('Database synchronized successfully.');
+    } else {
+      console.warn('Skipping force sync of conversation and message models in production to prevent data loss.');
+    }
+    
     const io = setupSocketServer(server);
     console.log('Socket.IO server initialized.');
     
