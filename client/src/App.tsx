@@ -193,6 +193,13 @@ function App() {
               </DashboardLayout>
             </ProtectedRoute>
           } />
+          <Route path="/dashboard/messages/:id" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Messages />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
 
           <Route path="/dashboard/settings" element={
             <ProtectedRoute>
