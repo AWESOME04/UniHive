@@ -35,6 +35,37 @@ interface Contact {
   unreadCount?: number;
 }
 
+// Update the interface for conversations to reflect the actual API response
+interface Conversation {
+  id: string;
+  participantOneId: string;
+  participantTwoId: string;
+  lastMessageId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  participantOneUser?: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  };
+  participantTwoUser?: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  };
+  conversationLastMessage?: {
+    id: string;
+    content: string;
+    createdAt: string;
+  } | null;
+  otherParticipant?: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  };
+  unreadCount?: number;
+}
+
 function Messages() {
   const { id: conversationId } = useParams();
   const navigate = useNavigate();
@@ -47,11 +78,11 @@ function Messages() {
   const [activeTab, setActiveTab] = useState<'all' | 'unread' | 'groups'>('all');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingConversations, setLoadingConversations] = useState(true);
   const [sending, setSending] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [, setCursorPosition] = useState({ x: 0, y: 0 });
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -98,16 +129,16 @@ function Messages() {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        setLoading(true);
+        setLoadingConversations(true);
         const conversations = await messageService.getConversations();
         
-        // Transform conversations to contacts
-        const contactList: Contact[] = conversations.map(conv => {
-          const otherUser = conv.otherParticipant;
+        // Transform conversations to contacts with proper type handling
+        const contactList: Contact[] = conversations.map((conv: Conversation) => {
+          const otherUser = conv.otherParticipant || null;
           return {
             id: conv.id,
             name: otherUser?.name || 'Unknown User',
-            avatar: otherUser?.profileImage || null, // Convert undefined to null
+            avatar: otherUser?.profileImage || null,
             lastMessage: conv.conversationLastMessage?.content || 'No messages yet',
             time: conv.conversationLastMessage 
               ? new Date(conv.conversationLastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -128,10 +159,10 @@ function Messages() {
           }
         }
         
-        setLoading(false);
+        setLoadingConversations(false);
       } catch (error) {
         console.error('Error fetching conversations:', error);
-        setLoading(false);
+        setLoadingConversations(false);
       }
     };
     
@@ -184,10 +215,30 @@ function Messages() {
     };
   }, [conversationId]);
 
-  // Scroll to bottom of messages
+  // Optimize scrolling behavior
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      // Use scrollIntoView with specific settings to prevent layout shifts
+      messagesEndRef.current.scrollIntoView({ 
+        block: 'end',
+        inline: 'nearest'
+      });
+    }
   }, [messages]);
+
+  // Add a function to prevent the abrupt scrolling issue
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      // Use a timeout to ensure DOM is fully updated before scrolling
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest'
+        });
+      }, 100);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || !conversationId || !activeContact) return;
@@ -211,6 +262,9 @@ function Messages() {
       // Add message to local state
       setMessages([...messages, newMessage]);
       setMessageText('');
+      
+      // Scroll to bottom after sending message
+      scrollToBottom();
       
       setSending(false);
     } catch (error) {
@@ -266,26 +320,8 @@ function Messages() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Cursor light effect */}
-      <div 
-        className="pointer-events-none absolute -inset-40 opacity-20 bg-gradient-radial from-primary to-transparent rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"
-        style={{ 
-          left: `${cursorPosition.x}px`, 
-          top: `${cursorPosition.y}px`,
-          width: '80vw',
-          height: '80vw',
-          transition: 'left 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)'
-        }}
-      ></div>
-      
-      {/* Background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-light-orange opacity-10 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary opacity-10 rounded-full filter blur-3xl"></div>
-      </div>
-      
-      <div className="container mx-auto px-4 py-6 relative z-10">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
+      <div className="container mx-auto px-4 py-6 flex flex-col flex-1 overflow-hidden">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Messages</h1>
           <button className="btn-primary flex items-center">
@@ -293,10 +329,11 @@ function Messages() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 overflow-hidden">
           {/* Message List Column */}
-          <div className="lg:col-span-4 bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="p-4 border-b flex justify-between items-center">
+          <div className="lg:col-span-4 bg-white rounded-xl shadow-sm flex flex-col overflow-hidden">
+            {/* Contact list header */}
+            <div className="flex-none p-4 border-b">
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setActiveTab('all')}
@@ -358,6 +395,7 @@ function Messages() {
               </div>
             )}
             
+            {/* Search bar - keep as is */}
             <div className="p-3 border-b">
               <div className="relative">
                 <input
@@ -379,8 +417,9 @@ function Messages() {
               </div>
             </div>
             
-            <div className="overflow-y-auto max-h-[calc(100vh-250px)]">
-              {loading ? (
+            {/* Contact list - scrollable */}
+            <div className="flex-1 overflow-y-auto">
+              {loadingConversations ? (
                 <div className="flex justify-center items-center h-40">
                   <Loader size={24} className="animate-spin text-secondary" />
                 </div>
@@ -439,28 +478,31 @@ function Messages() {
               )}
             </div>
             
-            <div className="p-3 flex justify-around border-t bg-gray-50">
-              <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
-                <Users size={20} />
-              </button>
-              <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
-                <Bell size={20} />
-              </button>
-              <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
-                <User size={20} />
-              </button>
-              <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
-                <Calendar size={20} />
-              </button>
+            {/* Navigation buttons fixed at bottom */}
+            <div className="p-3 border-t bg-gray-50">
+              <div className="flex justify-around">
+                <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
+                  <Users size={20} />
+                </button>
+                <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
+                  <Bell size={20} />
+                </button>
+                <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
+                  <User size={20} />
+                </button>
+                <button className="text-gray-500 hover:text-secondary p-2 rounded-full">
+                  <Calendar size={20} />
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Chat Column */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 flex flex-col overflow-hidden">
             {activeContact ? (
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col h-[calc(100vh-150px)]">
-                {/* Header */}
-                <div className="p-4 border-b flex items-center justify-between">
+              <div className="bg-white rounded-xl shadow-sm flex flex-col overflow-hidden h-full">
+                {/* Header - fixed */}
+                <div className="p-4 border-b flex-shrink-0">
                   <div className="flex items-center">
                     <button
                       onClick={() => navigate('/dashboard/messages')}
@@ -506,71 +548,74 @@ function Messages() {
                   </div>
                 </div>
 
-                {/* Message area */}
+                {/* Messages area with flex-1 and overflow */}
                 <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-                  {loadingMessages ? (
-                    <div className="h-full flex items-center justify-center">
-                      <Loader size={24} className="animate-spin text-secondary" />
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {messages.length === 0 ? (
-                        <div className="text-center py-10">
-                          <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                            <MessageSquare size={24} className="text-gray-400" />
+                  <div className="space-y-4">
+                    {/* Messages content */}
+                    {loadingMessages ? (
+                      <div className="flex items-center justify-center h-full">
+                        <Loader size={24} className="animate-spin text-secondary" />
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {messages.length === 0 ? (
+                          <div className="text-center py-10">
+                            <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                              <MessageSquare size={24} className="text-gray-400" />
+                            </div>
+                            <p className="text-gray-500">No messages yet</p>
+                            <p className="text-sm text-gray-400">Send a message to start the conversation</p>
                           </div>
-                          <p className="text-gray-500">No messages yet</p>
-                          <p className="text-sm text-gray-400">Send a message to start the conversation</p>
-                        </div>
-                      ) : (
-                        messages.map((message) => (
-                          <div
-                            key={message.id}
-                            className={`flex ${
-                              message.senderId === user?.id ? 'justify-end' : 'justify-start'
-                            }`}
-                          >
-                            {message.senderId !== user?.id && (
-                              <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center mr-2 self-end">
-                                {message.messageAuthor?.profileImage ? (
-                                  <img
-                                    src={message.messageAuthor.profileImage}
-                                    alt={message.messageAuthor.name}
-                                    className="w-8 h-8 rounded-full object-cover"
-                                  />
-                                ) : (
-                                  <span className="text-xs font-bold text-secondary">
-                                    {message.messageAuthor?.name?.[0] || '?'}
-                                  </span>
-                                )}
-                              </div>
-                            )}
+                        ) : (
+                          messages.map((message) => (
                             <div
-                              className={`max-w-xs sm:max-w-sm md:max-w-md p-3 rounded-lg ${
-                                message.senderId === user?.id
-                                  ? 'bg-secondary text-white rounded-br-none'
-                                  : 'bg-white text-gray-800 rounded-bl-none shadow-sm'
-                              }`}
+                              key={message.id}
+                              className={`flex ${
+                                message.senderId === user?.id ? 'justify-end' : 'justify-start'
+                            }`}
                             >
-                              <p className="mb-1">{message.content}</p>
-                              <div className="text-right flex items-center justify-end space-x-1">
-                                <span className={`text-xs ${message.senderId === user?.id ? 'text-gray-200' : 'text-gray-500'}`}>
-                                  {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                                {message.senderId === user?.id && getStatusIcon(message)}
+                              {message.senderId !== user?.id && (
+                                <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center mr-2 self-end">
+                                  {message.messageAuthor?.profileImage ? (
+                                    <img
+                                      src={message.messageAuthor.profileImage}
+                                      alt={message.messageAuthor.name}
+                                      className="w-8 h-8 rounded-full object-cover"
+                                    />
+                                  ) : (
+                                    <span className="text-xs font-bold text-secondary">
+                                      {message.messageAuthor?.name?.[0] || '?'}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              <div
+                                className={`max-w-xs sm:max-w-sm md:max-w-md p-3 rounded-lg ${
+                                  message.senderId === user?.id
+                                    ? 'bg-secondary text-white rounded-br-none'
+                                    : 'bg-white text-gray-800 rounded-bl-none shadow-sm'
+                                }`}
+                              >
+                                <p className="mb-1">{message.content}</p>
+                                <div className="text-right flex items-center justify-end space-x-1">
+                                  <span className={`text-xs ${message.senderId === user?.id ? 'text-gray-200' : 'text-gray-500'}`}>
+                                    {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                  {message.senderId === user?.id && getStatusIcon(message)}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))
-                      )}
-                      <div ref={messagesEndRef} />
-                    </div>
-                  )}
+                          ))
+                        )}
+                        <div ref={messagesEndRef} className="h-0" />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Input area */}
-                <div className="p-3 border-t flex items-center bg-white">
-                  <div className="flex space-x-2 mr-3">
+                {/* Input area fixed at bottom */}
+                <div className="p-3 border-t bg-white flex items-center gap-2">
+                  <div className="flex space-x-2">
                     <button className="p-2 text-gray-500 hover:text-secondary rounded-full">
                       <Paperclip size={18} />
                     </button>
@@ -586,7 +631,7 @@ function Messages() {
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     placeholder="Type your message..."
-                    className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-secondary"
+                    className="flex-1 min-w-0 bg-gray-100 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-secondary"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         handleSendMessage();
@@ -597,7 +642,7 @@ function Messages() {
                   <button
                     onClick={handleSendMessage}
                     disabled={!messageText.trim() || sending}
-                    className={`p-2 rounded-full ml-3 ${
+                    className={`p-2 rounded-full ml-2 ${
                       messageText.trim() && !sending ? 'bg-secondary text-white' : 'bg-gray-200 text-gray-500'
                     }`}
                   >
@@ -606,7 +651,7 @@ function Messages() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col h-[calc(100vh-150px)]">
+              <div className="bg-white rounded-xl shadow-sm flex items-center justify-center h-full">
                 <div className="p-4 border-b">
                   <h2 className="font-semibold">Select a conversation</h2>
                 </div>
