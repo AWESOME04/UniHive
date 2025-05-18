@@ -13,28 +13,30 @@ export interface EssentialsDetails {
   updatedAt?: string;
 }
 
-// Define the Hive interface
+export interface HiveType {
+  id: string;
+  name: string;
+  icon: string;
+  description?: string;
+}
 export interface Hive {
   id: string;
   title: string;
   description: string;
+  hiveTypeId: string;
   price: string | number;
-  location?: string;
-  hiveType: {
+  status: string;
+  postedById: string;
+  postedBy?: {
     id: string;
     name: string;
-    icon: string;
-    description?: string;
+    profileImage?: string | null;
   };
-  createdAt?: string;
-  updatedAt?: string;
-  status?: string;
-  tags?: string[];
-  userId?: string;
-  postedBy?: {
-    name: string;
-    avatar?: string;
-  };
+  assignedToId?: string | null;
+  deadline?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  hiveType?: HiveType;
   essentialsDetails?: EssentialsDetails;
 }
 

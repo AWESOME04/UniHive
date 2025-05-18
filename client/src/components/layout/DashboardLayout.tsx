@@ -5,6 +5,18 @@ import DashboardNavbar from './DashboardNavbar';
 import { useAuth } from '../../context/AuthContext';
 import userService from '../../services/userService';
 
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  profileImage?: string | null;
+  bio?: string | null;
+  university?: string;
+  rating?: number;
+  createdAt?: string;
+  status?: string;
+}
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
   showFooter?: boolean;
@@ -15,7 +27,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   showFooter = false 
 }) => {
   const { user: authUser } = useAuth();
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -37,11 +49,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-
-        const response = await userService.getCurrentUserProfile();
+        const userData = await userService.getCurrentUserProfile();
         
-        if (response.status === 'success' && response.data) {
-          setUserProfile(response.data);
+        if (userData) {
+          setUserProfile(userData);
         }
       } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -53,11 +64,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     fetchUserProfile();
   }, []);
 
-  const user = userProfile || authUser || {
-    name: "Student",
-    email: "student@university.edu.gh",
-    university: "University of Ghana"
-  };
+  const user = userProfile || authUser;
 
   // Animation variants
   const pageVariants = {
