@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import { ArrowLeft, AlertCircle, MapPin, Calendar, Package, Tag, ChevronRight, Heart, Share, Check, MessageSquare } from 'lucide-react';
+import { ArrowLeft, AlertCircle, MapPin, Calendar, Package, Tag, ChevronRight, Heart, Share, Check } from 'lucide-react';
 import { toast } from 'react-toastify';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -11,13 +11,18 @@ import 'swiper/css/pagination';
 
 import hiveService from '../../services/hiveService';
 import paymentService from '../../services/paymentService';
-import { Hive, EssentialsDetails } from '../../types/hiveTypes';
+import { Hive } from '../../types/hiveTypes';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import SellerInfo from '../../components/hives/SellerInfo';
+
+interface Essential extends Hive {
+  postedById: string;
+}
 
 const EssentialDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [essential, setEssential] = useState<Hive | null>(null);
+  const [essential, setEssential] = useState<Essential | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
@@ -271,10 +276,9 @@ const EssentialDetail: React.FC = () => {
     title,
     description,
     price,
-    createdAt,
   } = essential;
   
-  const essentialsDetails: EssentialsDetails = essential.essentialsDetails || {};
+  const essentialsDetails = essential.essentialsDetails || {};
   const {
     condition = 'N/A',
     brand = 'N/A',
@@ -290,259 +294,250 @@ const EssentialDetail: React.FC = () => {
     : 'N/A';
   
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <button 
-          onClick={() => navigate('/dashboard/hives/essentials')}
-          className="flex items-center text-gray-600 hover:text-secondary transition-colors"
-        >
-          <ArrowLeft size={16} className="mr-1" />
-          <span>Back to Essentials</span>
-        </button>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Column - Images */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {photos && photos.length > 0 ? (
-            <div className="rounded-xl overflow-hidden bg-white shadow-sm border border-gray-100">
-              <Swiper
-                modules={[Navigation, Pagination]}
-                navigation
-                pagination={{ clickable: true }}
-                spaceBetween={0}
-                slidesPerView={1}
-                className="w-full aspect-square"
-              >
-                {photos.map((photo: string, index: number) => (
-                  <SwiperSlide key={index}>
-                    <div className="w-full h-full flex items-center justify-center bg-gray-50">
-                      <motion.img 
-                        src={photo} 
-                        alt={`${title} - Image ${index + 1}`} 
-                        className="max-w-full max-h-full object-contain"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              
-              {/* Thumbnail preview - optional */}
-              {photos.length > 1 && (
-                <div className="flex mt-2 gap-2 px-2 pb-2">
-                  {photos.slice(0, 4).map((photo: string, index: number) => (
-                    <div 
-                      key={`thumb-${index}`} 
-                      className="w-16 h-16 rounded border border-gray-200 cursor-pointer hover:border-secondary transition-colors"
-                    >
-                      <img 
-                        src={photo} 
-                        alt={`Thumbnail ${index + 1}`} 
-                        className="w-full h-full object-cover rounded"
-                      />
-                    </div>
-                  ))}
-                  {photos.length > 4 && (
-                    <div className="w-16 h-16 rounded border border-gray-200 flex items-center justify-center bg-gray-50 text-gray-500">
-                      +{photos.length - 4}
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <button 
+            onClick={() => navigate('/dashboard/hives/essentials')}
+            className="flex items-center text-gray-600 hover:text-secondary transition-colors"
+          >
+            <ArrowLeft size={16} className="mr-1" />
+            <span>Back to Essentials</span>
+          </button>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column - Images */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {photos && photos.length > 0 ? (
+                <div className="rounded-xl overflow-hidden bg-white shadow-sm border border-gray-100">
+                  <Swiper
+                    modules={[Navigation, Pagination]}
+                    navigation
+                    pagination={{ clickable: true }}
+                    spaceBetween={0}
+                    slidesPerView={1}
+                    className="w-full aspect-square"
+                  >
+                    {photos.map((photo: string, index: number) => (
+                      <SwiperSlide key={index}>
+                        <div className="w-full h-full flex items-center justify-center bg-gray-50">
+                          <motion.img 
+                            src={photo} 
+                            alt={`${title} - Image ${index + 1}`} 
+                            className="max-w-full max-h-full object-contain"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                          />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                  
+                  {/* Thumbnail preview - optional */}
+                  {photos.length > 1 && (
+                    <div className="flex mt-2 gap-2 px-2 pb-2">
+                      {photos.slice(0, 4).map((photo: string, index: number) => (
+                        <div 
+                          key={`thumb-${index}`} 
+                          className="w-16 h-16 rounded border border-gray-200 cursor-pointer hover:border-secondary transition-colors"
+                        >
+                          <img 
+                            src={photo} 
+                            alt={`Thumbnail ${index + 1}`} 
+                            className="w-full h-full object-cover rounded"
+                          />
+                        </div>
+                      ))}
+                      {photos.length > 4 && (
+                        <div className="w-16 h-16 rounded border border-gray-200 flex items-center justify-center bg-gray-50 text-gray-500">
+                          +{photos.length - 4}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="bg-gray-100 rounded-xl flex items-center justify-center h-80">
-              <Package size={64} className="text-gray-400" />
-            </div>
-          )}
-          
-          {/* Social buttons */}
-          <div className="flex mt-4 gap-3">
-            <motion.button 
-              className="flex items-center justify-center gap-1 bg-white rounded-lg border border-gray-200 py-2 px-4 text-gray-600 hover:bg-gray-50"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Heart size={16} />
-              <span className="text-sm">Save</span>
-            </motion.button>
-            <motion.button 
-              className="flex items-center justify-center gap-1 bg-white rounded-lg border border-gray-200 py-2 px-4 text-gray-600 hover:bg-gray-50"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Share size={16} />
-              <span className="text-sm">Share</span>
-            </motion.button>
-          </div>
-        </motion.div>
-        
-        {/* Right Column - Details */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-col h-full"
-        >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-1">
-            {/* Title and price */}
-            <div className="flex justify-between items-start mb-4">
-              <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-              <div className="text-xl font-bold text-secondary">GH₵ {typeof price === 'number' ? price.toFixed(2) : price}</div>
-            </div>
-            
-            {/* Description */}
-            <div className="mb-6">
-              <p className="text-gray-700">{description}</p>
-            </div>
-            
-            {/* Item details */}
-            <div className="space-y-4 mb-6">
-              <h3 className="font-medium text-gray-900">Item Details</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                    <Package size={16} className="text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Condition</p>
-                    <p className="text-sm font-medium">{condition}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                    <Tag size={16} className="text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Brand</p>
-                    <p className="text-sm font-medium">{brand}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
-                    <Calendar size={16} className="text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Purchase Date</p>
-                    <p className="text-sm font-medium">{formattedPurchaseDate}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
-                    <Tag size={16} className="text-yellow-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Category</p>
-                    <p className="text-sm font-medium">{itemCategory}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Location */}
-            <div className="mb-6">
-              <h3 className="font-medium text-gray-900 mb-2">Pickup Location</h3>
-              <div className="flex items-center">
-                <MapPin size={16} className="text-gray-500 mr-2" />
-                <span className="text-sm text-gray-600">{pickupLocation}</span>
-              </div>
-            </div>
-            
-            {/* Seller info */}
-            <div className="border-t border-gray-100 pt-4 mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center mr-3 overflow-hidden">
-                    <img src="/assets/images/evans.png" alt="Evans Image" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Evans Acheampong</p>
-                    <p className="text-xs text-gray-500">
-                      Posted {createdAt ? formatDate(createdAt) : 'recently'} • University of Ghana
-                    </p>
-                  </div>
-                </div>
-                <Link
-                  to="/dashboard/messages"
-                  className="inline-flex items-center px-4 py-2 bg-secondary/10 text-secondary rounded-lg text-sm font-medium hover:bg-secondary/20 transition-colors"
-                >
-                  <MessageSquare size={16} className="mr-2" />
-                  Message
-                </Link>
-              </div>
-            </div>
-            
-            {/* Payment button */}
-            <motion.button
-              className="w-full bg-secondary text-white py-3 rounded-lg font-medium flex items-center justify-center relative overflow-hidden"
-              whileHover={{ 
-                scale: 1.02,
-                transition: { duration: 0.2 }
-              }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handlePaymentInitiation}
-              disabled={isProcessingPayment}
-            >
-              {isProcessingPayment ? (
-                <>
-                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  Processing...
-                </>
               ) : (
-                <>
-                  Pay GH₵ {typeof price === 'number' ? price.toFixed(2) : price}
-                  <ChevronRight size={16} className="ml-1" />
-                </>
+                <div className="bg-gray-100 rounded-xl flex items-center justify-center h-80">
+                  <Package size={64} className="text-gray-400" />
+                </div>
               )}
-            </motion.button>
-          </div>
-          
-          {/* Payment details */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-4">
-            <h3 className="font-medium text-gray-900 mb-4">Payment Information</h3>
+              
+              {/* Social buttons */}
+              <div className="flex mt-4 gap-3">
+                <motion.button 
+                  className="flex items-center justify-center gap-1 bg-white rounded-lg border border-gray-200 py-2 px-4 text-gray-600 hover:bg-gray-50"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Heart size={16} />
+                  <span className="text-sm">Save</span>
+                </motion.button>
+                <motion.button 
+                  className="flex items-center justify-center gap-1 bg-white rounded-lg border border-gray-200 py-2 px-4 text-gray-600 hover:bg-gray-50"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Share size={16} />
+                  <span className="text-sm">Share</span>
+                </motion.button>
+              </div>
+            </motion.div>
             
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Item Price</span>
-                <span className="font-medium">GH₵ {typeof price === 'number' ? price.toFixed(2) : price}</span>
+            {/* Right Column - Details */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col h-full"
+            >
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-1">
+                {/* Title and price */}
+                <div className="flex justify-between items-start mb-4">
+                  <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+                  <div className="text-xl font-bold text-secondary">GH₵ {typeof price === 'number' ? price.toFixed(2) : price}</div>
+                </div>
+                
+                {/* Description */}
+                <div className="mb-6">
+                  <p className="text-gray-700">{description}</p>
+                </div>
+                
+                {/* Item details */}
+                <div className="space-y-4 mb-6">
+                  <h3 className="font-medium text-gray-900">Item Details</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                        <Package size={16} className="text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Condition</p>
+                        <p className="text-sm font-medium">{condition}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                        <Tag size={16} className="text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Brand</p>
+                        <p className="text-sm font-medium">{brand}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                        <Calendar size={16} className="text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Purchase Date</p>
+                        <p className="text-sm font-medium">{formattedPurchaseDate}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
+                        <Tag size={16} className="text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Category</p>
+                        <p className="text-sm font-medium">{itemCategory}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Location */}
+                <div className="mb-6">
+                  <h3 className="font-medium text-gray-900 mb-2">Pickup Location</h3>
+                  <div className="flex items-center">
+                    <MapPin size={16} className="text-gray-500 mr-2" />
+                    <span className="text-sm text-gray-600">{pickupLocation}</span>
+                  </div>
+                </div>
+                
+                {/* Seller info */}
+                <div className="border-t border-gray-100 pt-4 mb-6">
+                  {essential && (
+                    <SellerInfo 
+                      sellerId={essential.postedById}
+                      createdAt={essential.createdAt}
+                    />
+                  )}
+                </div>
+                
+                {/* Payment button */}
+                <motion.button
+                  className="w-full bg-secondary text-white py-3 rounded-lg font-medium flex items-center justify-center relative overflow-hidden"
+                  whileHover={{ 
+                    scale: 1.02,
+                    transition: { duration: 0.2 }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handlePaymentInitiation}
+                  disabled={isProcessingPayment}
+                >
+                  {isProcessingPayment ? (
+                    <>
+                      <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Pay GH₵ {typeof price === 'number' ? price.toFixed(2) : price}
+                      <ChevronRight size={16} className="ml-1" />
+                    </>
+                  )}
+                </motion.button>
               </div>
               
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Platform Fee (5%)</span>
-                <span className="font-medium">GH₵ {typeof price === 'number' ? (price * 0.05).toFixed(2) : '0.00'}</span>
+              {/* Payment details */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-4">
+                <h3 className="font-medium text-gray-900 mb-4">Payment Information</h3>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Item Price</span>
+                    <span className="font-medium">GH₵ {typeof price === 'number' ? price.toFixed(2) : price}</span>
+                  </div>
+                  
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Platform Fee (5%)</span>
+                    <span className="font-medium">GH₵ {typeof price === 'number' ? (price * 0.05).toFixed(2) : '0.00'}</span>
+                  </div>
+                  
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Payment Processing Fee (1.5%)</span>
+                    <span className="font-medium">GH₵ {typeof price === 'number' ? (price * 0.015).toFixed(2) : '0.00'}</span>
+                  </div>
+                  
+                  <div className="border-t border-gray-100 pt-2 mt-2 flex justify-between">
+                    <span className="font-medium">Total</span>
+                    <span className="font-bold text-secondary">
+                      GH₵ {typeof price === 'number' 
+                        ? (price + price * 0.05 + price * 0.015).toFixed(2) 
+                        : price}
+                    </span>
+                  </div>
+                  
+                  <div className="text-xs text-gray-500 mt-2">
+                    * Payments are processed securely via Paystack.
+                  </div>
+                </div>
               </div>
-              
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Payment Processing Fee (1.5%)</span>
-                <span className="font-medium">GH₵ {typeof price === 'number' ? (price * 0.015).toFixed(2) : '0.00'}</span>
-              </div>
-              
-              <div className="border-t border-gray-100 pt-2 mt-2 flex justify-between">
-                <span className="font-medium">Total</span>
-                <span className="font-bold text-secondary">
-                  GH₵ {typeof price === 'number' 
-                    ? (price + price * 0.05 + price * 0.015).toFixed(2) 
-                    : price}
-                </span>
-              </div>
-              
-              <div className="text-xs text-gray-500 mt-2">
-                * Payments are processed securely via Paystack.
-              </div>
-            </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
+      
       {paymentStatus === 'success' && (
         <motion.div 
           className="fixed top-4 right-4 z-50 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg shadow-lg"
