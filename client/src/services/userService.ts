@@ -21,48 +21,58 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+export interface UserProfile {
+  id: string;
+  name: string;
+  university: string;
+  profileImage: string | null;
+  bio: string | null;
+  rating: number;
+  createdAt: string;
+  email: string;
+  status?: string;
+}
+
 // User service
-export const userService = {
-  // Get current user profile (authenticated)
-  getCurrentUserProfile: async () => {
+const userService = {
+  getCurrentUserProfile: async (): Promise<UserProfile> => {
     try {
       const response = await apiClient.get('/auth/me');
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      console.error('Error fetching current user profile:', error);
+      console.error('Error fetching current user:', error);
+      throw error;
+    }
+  },
+
+  getCurrentUser: async (): Promise<UserProfile> => {
+    try {
+      const response = await apiClient.get('/auth/me');
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching current user:', error);
       throw error;
     }
   },
 
   // Get user profile by ID (no auth required)
-  getUserProfileById: async (userId: string) => {
+  getUserById: async (userId: string): Promise<UserProfile> => {
     try {
       const response = await apiClient.get(`/users/${userId}`);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      console.error('Error fetching user profile by ID:', error);
+      console.error(`Error fetching user ${userId}:`, error);
       throw error;
     }
   },
 
   // Update user profile
-  updateUserProfile: async (userData: any) => {
+  updateProfile: async (userData: Partial<UserProfile>): Promise<UserProfile> => {
     try {
       const response = await apiClient.put('/users/profile', userData);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.error('Error updating user profile:', error);
-      throw error;
-    }
-  },
-
-  // Change password
-  changePassword: async (passwords: { currentPassword: string; newPassword: string }) => {
-    try {
-      const response = await apiClient.put('/users/password', passwords);
-      return response.data;
-    } catch (error) {
-      console.error('Error changing password:', error);
       throw error;
     }
   }
